@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Track That Money</title>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2"></script>
+</head>
+<body>
+<h1>Know why you're broke</h1>
+<form id="expense-form">
+<input type="text" id="description" placeholder="Enter description" required>
+<input type="number" id="amount" placeholder="Enter amount" required>
+<input type="date" id="date" placeholder="Date" required>
+<input type="category" select id="category" placeholder="Category">
+    <option value="groceries">Groceries</option>
+    <option value="bills">Bills</option>
+    <option value="entertainment">Entertainment</option>
+    <option value="others">Others</option>
+</inputselect>
+<button type="submit">Add Expenses</button>
+</form>
+<div id="expenses-list">
+<h2>Recent Expenses</h2>
+<!-- Expenses will be listed here -->
+</div>
+<input type="file" accept="image*/" id="upload-receipt" onchange="recognizeText(this)" placeholder="Upload Receipt";>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script>
+    function exportToExcel() {
+        const data = [['Date', 'Category', 'Amount', 'Description']];
+        expenses.forEach(expense => {
+            data.push([expense.date, expense.category, expense.amount, expense.description]);
+        });
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Expenses");
+        XLSX.writeFile(workbook, 'Expenses.xlsx');
+    }
+</script>
+</script>
+<button onclick="exportToExcel()">Export to XLSX</button>
+<div id="ocr_text"></div>
+<script>
+document.getElementById('receipt-input').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) {
+        // Initialize Tesseract
+        Tesseract.recognize(
+            file,
+            'eng',
+            {
+                logger: m => console.log(m)
+            }
+        ).then(({ data: { text } }) => {
+            console.log(text);
+            document.getElementById('ocr_results').innerText = text;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+});
+</script>
+<script src="script.js"></script>
+<link rel="manifest" href="/manifest.json">
+</body>
+</html>
