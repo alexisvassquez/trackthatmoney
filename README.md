@@ -1,2 +1,2 @@
 # trackthatmoney
-Expense tracking app to know why you're broke.
+An expense tracking mobile app to know why you're broke.
