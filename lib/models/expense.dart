@@ -1,3 +1,7 @@
+// lib/models/expense.dart
+
+import 'package:uuid/uuid.dart';
+
 class Expense {
     final String id;
     final String category;
@@ -5,13 +9,15 @@ class Expense {
     final DateTime date;
     final String note;
 
+    static const _uuid = Uuid();
+
     Expense({
-        required this.id,
+        String? id,
         required this.category,
         required this.amount,
         required this.date,
         required this.note,
-    });
+    }) : id = id ?? _uuid.v4();
 
     // Convert to JSON (Map<String, dynamic>)
     Map<String, dynamic> toJson() {
