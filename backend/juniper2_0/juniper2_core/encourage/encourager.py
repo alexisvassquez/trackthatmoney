@@ -17,7 +17,7 @@ class EncouragementEngine:
 
         # loads tips.json once
         base_dir = Path(__file__).resolve().parents[2]
-        tips_path = base_dir / "data" / "processed" / "tips.json"
+        tips_path = base_dir / "data" / "processed" / "tips_with_mood_and_weights.json"
         with tips_path.open(encoding="utf-8") as fh:
             self._tips = json.load(fh)
 
@@ -35,22 +35,37 @@ class EncouragementEngine:
         """
         score = self.predictor.predict(entry)     # 0-1 overspend probability
         tone = self._select_tone(score)
+        mood = entry.get("mood", None)
 
         cat = entry.get("category", "General")
-        tips = self._tips.get(cat, []) + self._tips["General"]
-        tip = random.choice(tips) if tips else ""
+        cat_tips = self._tips.get(cat, {}).get(tone, [])
+        general_tips = self._tips.get("General", {}).get(tone, [])
+        combined = cat_tips + general_tips
 
-        if tone == "alert":
-            message = f"⚠️ Heads up! This looks like it could hinder your budget."
-        elif tone == "caution":
-            message = f"😅 Careful! This expense could stretch things a bit."
+        # Filter tips by mood if mood is supplied
+        if mood:
+            filtered = [tip for tip in combined if tip.get("mood") == mood]
+            tips = filtered if filtered else combined    # fallback if no match
         else:
-            message = f"👏 Good work! You're right on track."
+            tips = combined
+
+        # Weighted random selection
+        tip = random.choice(
+            tips,
+            weights=[tip.get("weight", 1) for tip in tips],
+            k=1
+        )[0] if tips else {"text": ""}
+
+        message = {
+            "alert": "⚠️ Heads up! This looks like it could hinder your budget.",
+            "caution": "😅 Careful! This expense could stretch things a bit.",
+            "celebrate": "👏 Good work! You're right on track."
+        }[tone]
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "tone": tone,
             "probability_overspend": round(score, 2),
             "message": message,
-            "suggestion": tip,
+            "suggestion": tip["text"]
         }

@@ -1,35 +1,128 @@
 {
-  "Groceries": [
-    "Let's do a meal prep or batch-cook day this week.",
-    "Let's check for any coupons or cheaper items at the local farmers market this week.",
-    "Make a pantry-first recipe night - use what you already have!",
-    "Uber Eats is cool, but have you ever tried cooking a delicious new recipe from your own kitchen? 😄"
-  ],
-  "Dining": [
-    "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist! 🎧",
-    "Let's swap one delivery for a picnic this week - same treat, half the cost!",
-    "Set a max-spend rule for take-out this week and stick to it. 🦾",
-    "Do your best to limit dining out, including Happy Hours. Those $5 apps and $7 cocktails add up! 🥂"
-  ],
-  "Entertainment": [
-    "Browse your library's free streaming catalogue - hidden gems awat.",
-    "We can make progress on an unfinished game instead of buying new games this month.",
-    "They have many low-cost or donation-based concerts in some areas. Check your local event listings.",
-    "You don't need to spend money to have fun. 🙂"
-  ],
-  "Transportation": [
-    "I hear GasBuddy is a great mobile app to find the best low gas prices in your area.",
-    "Bundle errands to cut down on fuel costs AND time!",
-    "Public transit can be a great way to cut transportation costs. Check your city's government website for rates on any weekly or monthly passes!",
-    "Have you checked the air on your tires lately? I know you may have a lot on your plate, but keeping up with routine vehicle maintenance saves costs on gas money and mileage in the long run."
-  ],
-  "General": [
-    "Every dollar saved in 🦾 toward your top goal!",
-    "Small swaps compound - great job noticing your habits.",
-    "Celebrate tiny wins; they pave the way for big change.",
-    "Remember - you don't have to have it all figured out today.",
-    "Maybe transfer an extra $5 to the Emergency Fund? A cushion is never a bad thing to have!",
-    "Do not be afraid of your credit score! It can always be repaired."
-  ]
+  "Groceries": {
+    "celebrate": [
+      "Let's do a meal prep or batch-cook day this week.",
+      "Make a pantry-first recipe night - use what you already have!",
+      "Grocery shopping can be considered a day out, too! 🙂",
+      "You stuck to your list at the store - that's real discipline! Go you! 🦾",
+      "You chose store-brand over name-brand and still made it delicious. That's the savvy life! 😎"
+    ],
+    "caution": [
+      "Let's check for any coupons or cheaper items at the local farmers market this week.",
+      "Go grocery shopping with a list prepared beforehand! It will reduce impulse buys or repeat items.",
+      "Check unit prices instead of brand names - some deals aren't actually cheaper.",
+      "Avoid grocery shopping when you're hungry - it *always* leads to spending more.",
+      "Never be ashamed to visit a local food pantry! That's what they're there for - to assist individuals with grocery costs.",
+      "Double-check your pantry before heading to the store. You might already have what you need.",
+      "It's easy to overspend on `healthy` snacks - try portioning what you already bought before buying more."
+    ],
+    "alert": [
+      "Uber Eats is cool, but those delivery costs can sneak up if you're ordering more than cooking.",
+      "I would highly recommend reviewing your budget for groceries this week to cut costs."
+    ]
+  },
+  "Dining": {
+    "celebrate": [
+      "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist! 🎧",
+      "Let's swap one delivery for a picnic this week - same treat, half the cost!",
+      "Host a potluck with friends - good food, great company, low cost.",
+      "You made a homemade version of your favorite takeout? That's a gourmet win! 🍜",
+      "You passed up fast food and made something at home - that's a strong win!",
+      "You picked a less expensive item on the menu and still had a great time. Yay for balance! 😃"
+    ],
+    "caution": [
+      "Set a max-spend rule for take-out this week and stick to it. 🦾",
+      "Keep track of how many meals you're eating out this week - awareness is a game-changer.",
+      "Apps like Too Good To Go or local food rescue groups can help you grab discounted meals near closing time.",
+      "Remember - there are many other ways to have fun besides dining out at a restaurant or bar. 🙂",
+      "Dining out solo? Consider a small treat rather than a full meal to keep it special *and* stay on-budget.",
+      "Avoid restaurants or bars when you're overly hungry - you're more likely to over-order and overspend."
+    ],
+    "alert": [
+      "Do your best to limit dining out, including Happy Hours. Those $5 apps and $7 cocktails add up! 🥂",
+      "Ordering takeout daily can quietly burn a hole in your wallet. Let's aim for just once or twice a week max.",
+      "If you're regularly skipping groceries in favor of eating out, you may be trading long-term stability for short-term ease. Let's reset." 
+    ]
+  },
+  "Entertainment": {
+    "celebrate": [
+      "You don't need to spend money to have fun. 🙂",
+      "We can make progress on an unfinished game instead of buying new games this month."
+    ],
+    "caution": [
+      "Browse your library's free streaming catalogue - hidden gems await.",
+      "They have many low-cost or donation-based concerts in some areas. Check your local event listings."
+    ],
+    "alert": [
+      "Streaming subscriptions add up fast - check your auto-renewals and consider canceling one or two.",
+      "Buying games during emotional lows can lead to regret spending. Remember the 24-hour rule? Same applies here! Wait a day, then reassess. 🙂",
+      "Check your phone or card bill for microtransactions - they're sneaking and can pile up fast!"
+    ]
+  },
+  "Transportation": {
+    "celebrate": [
+      "Bundle errands to cut down on fuel costs AND time!",
+      "Public transit can be a great way to cut transportation costs. Check your city's government website for rates on any weekly or monthly passes!",
+      "Biking, scootering, or walking to errands? That's great! You're saving money *and* boosting your health. Great job! 🚶🚲🛴",
+      "You planned your week's drives in advance - that's budget-minded brilliance! 🦾",
+      "You skipped the drive and took the scenic route on foot. That's wellness and wealth working together.",
+      "Refueled during a discount window? Smart move!"
+    ],
+    "caution": [
+      "I hear GasBuddy is a great mobile app to find the best low gas prices in your area. ⛽",
+      "Try carpooling with a friend or co-worker this week - one less drive, one more connection.",
+      "If you're using rideshare apps frequently, compare the cost to a monthly public transit pass. It may surprise you.",
+      "Track your gas fill-ups this month to see if you can cut down just a little. You can do this by keeping track of your distance and mileage. Awareness is step one.",
+      "Do you *need* to make that trip today, or can it wait a day to save mileage?"
+    ],
+    "alert": [
+      "Have you checked the air on your tires lately? I know you may have a lot on your plate, but keeping up with routine vehicle maintenance saves costs on gas money and mileage in the long run.",
+      "Regularly driving on empty gas tanks can damage your car and waste fuel. Keep it above 1/4 when you can.",
+      "Ignoring strange car noises now can lead to expensive repairs later - budget for a checkup when possible."
+    ]
+  },
+  "General": {
+    "celebrate": [
+      "Every dollar saved in 🦾 toward your top goal!",
+      "Small swaps compound - great job noticing your habits.",
+      "Celebrate tiny wins; they pave the way for big change.",
+      "You chose rest over retail therapy. That's emotional wealth.",
+      "You made a budget and actually *used it*. That's self-trust in action."
+    ],
+    "caution": [
+      "Remember - you don't have to have it all figured out today.",
+      "Maybe transfer an extra $5 to the Emergency Fund? A cushion is never a bad thing to have!",
+      "Don't let comparison pressure you into spending - you're doing great with what you have.",
+      "Tempted to throw the whole budget out the window? Pause. A reset is okay, but do not spiral."
+    ],
+    "alert": [
+      "Do not be afraid of your credit score! It can always be repaired.",
+      "Carrying a credit card balance means you're paying more for everything - try to pay in full if you can.",
+      "If you're feeling overwhelmed, pause and prioritize: essentials first, then progress."
+    ]
+  },
+  "Shopping": {
+    "celebrate": [
+      "You found a great deal - and that's a win worth smiling about! 😃",
+      "Love that you waited for a sale instead of impulse-buying. That's progress!",
+      "You made a wishlist instead of checking out immediately - that's powerful restraint!",
+      "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. 🎯",
+      "You unsubscribed from a marketing email that kept tempting you - freedom!",
+      "You reused or repurposed something instead of buying new. Look at you - an eco-budget champion! 🦾"
+    ],
+    "caution": [
+      "Try the 24-hour rule before buying non-essentials. More often that not, the urge passes.",
+      "Do you really need to spend money on shopping, or are you soothing a feeling? No judgement however, be kind to yourself either way.",
+      "Everyone is guilty of impulse buying from time to time. Make sure you're keeping track of your spending habits that way you can continue to make progress in the future. Don't beat yourself up! 🙂",
+      "Do not allow shopping apps and web sites urge you into spending money you don't have or to take advantage of deals before they expire. Brands are known to create a false sense of urgency to get consumers to spend more money at a faster rate. Don't let them win!",
+      "If it's not in the budget this month, bookmark it for later - not a no, just a *not-now*.",
+      "Check your bank app *before* you shop to remind yourself what you're working with."
+    ],
+    "alert": [
+      "Multiple unplanned purchases can hinder or derail your budget - deep breath, check your balance first.",
+      "If you're stress shopping, pause first and notice the trigger. You deserve peace, not pressure.",
+      "Store credit cards are one of the primary ways individuals go into debt. Be careful with opening up credit cards and never leave a balance!"
+    ]
+  }
 }
 

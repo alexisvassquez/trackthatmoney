@@ -1,0 +1,435 @@
+{
+  "Groceries": {
+    "celebrate": [
+      {
+        "text": "Let's do a meal prep or batch-cook day this week.",
+        "mood": "calm",
+        "weight": 4
+      },
+      {
+        "text": "Make a pantry-first recipe night - use what you already have!",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "Grocery shopping can be considered a day out, too! \ud83d\ude42",
+        "mood": "motivated",
+        "weight": 4
+      },
+      {
+        "text": "You stuck to your list at the store - that's real discipline! Go you! \ud83e\uddbe",
+        "mood": "discouraged",
+        "weight": 4
+      },
+      {
+        "text": "You chose store-brand over name-brand and still made it delicious. That's the savvy life! \ud83d\ude0e",
+        "mood": "motivated",
+        "weight": 4
+      }
+    ],
+    "caution": [
+      {
+        "text": "Let's check for any coupons or cheaper items at the local farmers market this week.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Go grocery shopping with a list prepared beforehand! It will reduce impulse buys or repeat items.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Check unit prices instead of brand names - some deals aren't actually cheaper.",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "Avoid grocery shopping when you're hungry - it *always* leads to spending more.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Never be ashamed to visit a local food pantry! That's what they're there for - to assist individuals with grocery costs.",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "Double-check your pantry before heading to the store. You might already have what you need.",
+        "mood": "tired",
+        "weight": 1
+      },
+      {
+        "text": "It's easy to overspend on `healthy` snacks - try portioning what you already bought before buying more.",
+        "mood": "calm",
+        "weight": 3
+      }
+    ],
+    "alert": [
+      {
+        "text": "Uber Eats is cool, but those delivery costs can sneak up if you're ordering more than cooking.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "I would highly recommend reviewing your budget for groceries this week to cut costs.",
+        "mood": "discouraged",
+        "weight": 1
+      }
+    ]
+  },
+  "Dining": {
+    "celebrate": [
+      {
+        "text": "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist! \ud83c\udfa7",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Let's swap one delivery for a picnic this week - same treat, half the cost!",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Host a potluck with friends - good food, great company, low cost.",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "You made a homemade version of your favorite takeout? That's a gourmet win! \ud83c\udf5c",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "You passed up fast food and made something at home - that's a strong win!",
+        "mood": "motivated",
+        "weight": 3
+      },
+      {
+        "text": "You picked a less expensive item on the menu and still had a great time. Yay for balance! \ud83d\ude03",
+        "mood": "calm",
+        "weight": 4
+      }
+    ],
+    "caution": [
+      {
+        "text": "Set a max-spend rule for take-out this week and stick to it. \ud83e\uddbe",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Keep track of how many meals you're eating out this week - awareness is a game-changer.",
+        "mood": "motivated",
+        "weight": 1
+      },
+      {
+        "text": "Apps like Too Good To Go or local food rescue groups can help you grab discounted meals near closing time.",
+        "mood": "motivated",
+        "weight": 1
+      },
+      {
+        "text": "Remember - there are many other ways to have fun besides dining out at a restaurant or bar. \ud83d\ude42",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "Dining out solo? Consider a small treat rather than a full meal to keep it special *and* stay on-budget.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Avoid restaurants or bars when you're overly hungry - you're more likely to over-order and overspend.",
+        "mood": "calm",
+        "weight": 2
+      }
+    ],
+    "alert": [
+      {
+        "text": "Do your best to limit dining out, including Happy Hours. Those $5 apps and $7 cocktails add up! \ud83e\udd42",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Ordering takeout daily can quietly burn a hole in your wallet. Let's aim for just once or twice a week max.",
+        "mood": "calm",
+        "weight": 1
+      },
+      {
+        "text": "If you're regularly skipping groceries in favor of eating out, you may be trading long-term stability for short-term ease. Let's reset.",
+        "mood": "discouraged",
+        "weight": 2
+      }
+    ]
+  },
+  "Entertainment": {
+    "celebrate": [
+      {
+        "text": "You don't need to spend money to have fun. \ud83d\ude42",
+        "mood": "tired",
+        "weight": 4
+      },
+      {
+        "text": "We can make progress on an unfinished game instead of buying new games this month.",
+        "mood": "calm",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "Browse your library's free streaming catalogue - hidden gems await.",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "They have many low-cost or donation-based concerts in some areas. Check your local event listings.",
+        "mood": "calm",
+        "weight": 1
+      }
+    ],
+    "alert": [
+      {
+        "text": "Streaming subscriptions add up fast - check your auto-renewals and consider canceling one or two.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Buying games during emotional lows can lead to regret spending. Remember the 24-hour rule? Same applies here! Wait a day, then reassess. \ud83d\ude42",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Check your phone or card bill for microtransactions - they're sneaking and can pile up fast!",
+        "mood": "motivated",
+        "weight": 2
+      }
+    ]
+  },
+  "Transportation": {
+    "celebrate": [
+      {
+        "text": "Bundle errands to cut down on fuel costs AND time!",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "Public transit can be a great way to cut transportation costs. Check your city's government website for rates on any weekly or monthly passes!",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Biking, scootering, or walking to errands? That's great! You're saving money *and* boosting your health. Great job! \ud83d\udeb6\ud83d\udeb2\ud83d\udef4",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "You planned your week's drives in advance - that's budget-minded brilliance! \ud83e\uddbe",
+        "mood": "calm",
+        "weight": 4
+      },
+      {
+        "text": "You skipped the drive and took the scenic route on foot. That's wellness and wealth working together.",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "Refueled during a discount window? Smart move!",
+        "mood": "motivated",
+        "weight": 2
+      }
+    ],
+    "caution": [
+      {
+        "text": "I hear GasBuddy is a great mobile app to find the best low gas prices in your area. \u26fd",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "Try carpooling with a friend or co-worker this week - one less drive, one more connection.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "If you're using rideshare apps frequently, compare the cost to a monthly public transit pass. It may surprise you.",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Track your gas fill-ups this month to see if you can cut down just a little. You can do this by keeping track of your distance and mileage. Awareness is step one.",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Do you *need* to make that trip today, or can it wait a day to save mileage?",
+        "mood": "motivated",
+        "weight": 3
+      }
+    ],
+    "alert": [
+      {
+        "text": "Have you checked the air on your tires lately? I know you may have a lot on your plate, but keeping up with routine vehicle maintenance saves costs on gas money and mileage in the long run.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Regularly driving on empty gas tanks can damage your car and waste fuel. Keep it above 1/4 when you can.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Ignoring strange car noises now can lead to expensive repairs later - budget for a checkup when possible.",
+        "mood": "calm",
+        "weight": 2
+      }
+    ]
+  },
+  "General": {
+    "celebrate": [
+      {
+        "text": "Every dollar saved in \ud83e\uddbe toward your top goal!",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Small swaps compound - great job noticing your habits.",
+        "mood": "discouraged",
+        "weight": 3
+      },
+      {
+        "text": "Celebrate tiny wins; they pave the way for big change.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "You chose rest over retail therapy. That's emotional wealth.",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "You made a budget and actually *used it*. That's self-trust in action.",
+        "mood": "tired",
+        "weight": 4
+      }
+    ],
+    "caution": [
+      {
+        "text": "Remember - you don't have to have it all figured out today.",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Maybe transfer an extra $5 to the Emergency Fund? A cushion is never a bad thing to have!",
+        "mood": "motivated",
+        "weight": 1
+      },
+      {
+        "text": "Don't let comparison pressure you into spending - you're doing great with what you have.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Tempted to throw the whole budget out the window? Pause. A reset is okay, but do not spiral.",
+        "mood": "motivated",
+        "weight": 3
+      }
+    ],
+    "alert": [
+      {
+        "text": "Do not be afraid of your credit score! It can always be repaired.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Carrying a credit card balance means you're paying more for everything - try to pay in full if you can.",
+        "mood": "tired",
+        "weight": 1
+      },
+      {
+        "text": "If you're feeling overwhelmed, pause and prioritize: essentials first, then progress.",
+        "mood": "tired",
+        "weight": 1
+      }
+    ]
+  },
+  "Shopping": {
+    "celebrate": [
+      {
+        "text": "You found a great deal - and that's a win worth smiling about! \ud83d\ude03",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Love that you waited for a sale instead of impulse-buying. That's progress!",
+        "mood": "discouraged",
+        "weight": 3
+      },
+      {
+        "text": "You made a wishlist instead of checking out immediately - that's powerful restraint!",
+        "mood": "calm",
+        "weight": 4
+      },
+      {
+        "text": "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. \ud83c\udfaf",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "You unsubscribed from a marketing email that kept tempting you - freedom!",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "You reused or repurposed something instead of buying new. Look at you - an eco-budget champion! \ud83e\uddbe",
+        "mood": "discouraged",
+        "weight": 2
+      }
+    ],
+    "caution": [
+      {
+        "text": "Try the 24-hour rule before buying non-essentials. More often that not, the urge passes.",
+        "mood": "motivated",
+        "weight": 1
+      },
+      {
+        "text": "Do you really need to spend money on shopping, or are you soothing a feeling? No judgement however, be kind to yourself either way.",
+        "mood": "discouraged",
+        "weight": 3
+      },
+      {
+        "text": "Everyone is guilty of impulse buying from time to time. Make sure you're keeping track of your spending habits that way you can continue to make progress in the future. Don't beat yourself up! \ud83d\ude42",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Do not allow shopping apps and web sites urge you into spending money you don't have or to take advantage of deals before they expire. Brands are known to create a false sense of urgency to get consumers to spend more money at a faster rate. Don't let them win!",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "If it's not in the budget this month, bookmark it for later - not a no, just a *not-now*.",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Check your bank app *before* you shop to remind yourself what you're working with.",
+        "mood": "calm",
+        "weight": 3
+      }
+    ],
+    "alert": [
+      {
+        "text": "Multiple unplanned purchases can hinder or derail your budget - deep breath, check your balance first.",
+        "mood": "calm",
+        "weight": 1
+      },
+      {
+        "text": "If you're stress shopping, pause first and notice the trigger. You deserve peace, not pressure.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Store credit cards are one of the primary ways individuals go into debt. Be careful with opening up credit cards and never leave a balance!",
+        "mood": "motivated",
+        "weight": 2
+      }
+    ]
+  }
+}
