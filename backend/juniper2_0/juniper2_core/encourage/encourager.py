@@ -5,21 +5,13 @@ import json
 import random
 from datetime import datetime
 from ..predict.predictor import SpendingPredictor
+from ..data.tips_loader import load_tips
 
 class EncouragementEngine:
-    """
-    Turns predictor scores + raw fields into messages, pulling tips from
-    `data/processed/tips.json` to never duplicate tip text.
-    """
     def __init__(self, threshold: float = 0.6):
         self.predictor = SpendingPredictor()
         self.threshold = threshold     # probability of 'overspend'
-
-        # loads tips.json once
-        base_dir = Path(__file__).resolve().parents[2]
-        tips_path = base_dir / "data" / "processed" / "tips_with_mood_and_weights.json"
-        with tips_path.open(encoding="utf-8") as fh:
-            self._tips = json.load(fh)
+        self._tips = load_tips()       # loads tips JSON schema once
 
     def _select_tone(self, score: float) -> str:
         """Choose overall tone based on score."""
@@ -32,10 +24,11 @@ class EncouragementEngine:
     def suggest(self, entry: dict) -> dict:
         """
         Returns encouragement + suggestion dict for one expense row.
+        Includes tone, tip text, and source category.
         """
-        score = self.predictor.predict(entry)     # 0-1 overspend probability
+        score = self.predictor.predict(entry)     # 0.0-1.0 overspend probability
         tone = self._select_tone(score)
-        mood = entry.get("mood", None)
+        mood = entry.get("mood")
 
         cat = entry.get("category", "General")
         cat_tips = self._tips.get(cat, {}).get(tone, [])
@@ -50,7 +43,7 @@ class EncouragementEngine:
             tips = combined
 
         # Weighted random selection
-        tip = random.choice(
+        tip = random.choices(
             tips,
             weights=[tip.get("weight", 1) for tip in tips],
             k=1
@@ -67,5 +60,6 @@ class EncouragementEngine:
             "tone": tone,
             "probability_overspend": round(score, 2),
             "message": message,
-            "suggestion": tip["text"]
+            "suggestion": tip["text"],
+            "source_category": cat
         }

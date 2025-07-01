@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from backend.juniper2_0.juniper2_core.encourage.encourager import EncouragementEngine
 from backend.juniper2_0.juniper2_core.mood.mood_utils import map_mood_from_input
+from backend.juniper2_0.juniper2_core.data.tips_loader import load_tips
 
 @pytest.fixture(scope="module")
 def engine():
@@ -35,9 +36,7 @@ def test_missing_category_defaults_to_general(engine):
     assert res["tone"] == "celebrate"
 
     # General-bank suggestions from tip bank
-    tips_path = Path(__file__).resolve().parents[2] / "juniper2_0" / "data" / "processed" / "tips_with_mood_and_weights.json"
-    with tips_path.open(encoding="utf-8") as fh:
-        tips_data = json.load(fh)
+    tips_data = load_tips()
     general_tips = [tip["text"] for tip in tips_data["General"]["celebrate"]]
     assert res["suggestion"] in general_tips
 
