@@ -1,3 +1,5 @@
+# track_that_money
+# backend/juniper2_0/juniper2_core/predict/predictor.py
 import os
 from pathlib import Path
 import numpy as np
@@ -18,13 +20,21 @@ class SpendingPredictor:
         y = df['target'].values
         self.model.fit(X, y)
 
+    def _nz(value, fallback=0):
+        """Return numeric value or fallback when None/NaN/blank."""
+        if value is None:
+            return fallback
+        if ininstance(value, float) and np.isnan(value):
+            return fallback
+        return value
+
     def predict(self, data: dict) -> float:
         features = np.array([[
-            data.get('amount', 0),
-            data.get('is_essential', 0),
-            data.get('mood_score', 0),
-            data.get('goal_contribution', 0)
-        ]])
+            _nz(data.get("amount")),
+            _nz(data.get("is_essential")),
+            _nz(data.get("mood_score")),
+            _nz(data.get("goal_contribution")),
+        ]], dtype=float)
         return float(self.model.predict(features)[0])
 
 # Create example dataset

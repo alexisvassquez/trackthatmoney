@@ -1,14 +1,25 @@
+# track_that_money
+# backend/juniper2_0/juniper2_core/encourage/encourager.py
+from pathlib import Path
+import json
 import random
 from datetime import datetime
-from juniper2_core.predict.predictor import SpendingPredictor
+from ..predict.predictor import SpendingPredictor
 
 class EncouragementEngine:
     """
-    Turns predictor scores + raw fields into messages.
+    Turns predictor scores + raw fields into messages, pulling tips from
+    `data/processed/tips.json` to never duplicate tip text.
     """
     def __init__(self, threshold: float = 0.6):
         self.predictor = SpendingPredictor()
         self.threshold = threshold     # probability of 'overspend'
+
+        # loads tips.json once
+        base_dir = Path(__file__).resolve().parents[2]
+        tips_path = base_dir / "data" / "processed" / "tips.json"
+        with tips_path.open(encoding="utf-8") as fh:
+            self._tips = json.load(fh)
 
     def _select_tone(self, score: float) -> str:
         """Choose overall tone based on score."""
@@ -18,37 +29,16 @@ class EncouragementEngine:
             return "caution"
         return "celebrate"
 
-    def _tips_bank(self):
-        """Small pool of generic tips (expand later / load from DB)."""
-        return {
-            "Groceries": [
-                "Let's do a meal prep or batch-cook day this week.",
-                "Let's check for any coupons or cheaper items at the local farmers market this week."
-            ],
-            "Dining": [
-                "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist!",
-                "Let's swap one delivery for a picnic this week - same treat, half the cost!"
-            ],
-            "Entertainment": [
-                "Browse your library's free streaming catalogue - hidden gems await.",
-                "We can make progress on an unfinished game instead of buying new games this month."
-            ],
-            "General": [
-                "Every dollar saved is 🦾 toward your top goal!",
-                "Small swaps compound - great job noticing your habits."
-            ],
-        }
-
     def suggest(self, entry: dict) -> dict:
         """
-        Takes a raw expense dict -> returns encouragement + suggestion.
+        Returns encouragement + suggestion dict for one expense row.
         """
         score = self.predictor.predict(entry)     # 0-1 overspend probability
         tone = self._select_tone(score)
 
         cat = entry.get("category", "General")
-        tips = self._tips_bank().get(cat, []) + self._tips_bank()["General"]
-        tip = random.choice(tips)
+        tips = self._tips.get(cat, []) + self._tips["General"]
+        tip = random.choice(tips) if tips else ""
 
         if tone == "alert":
             message = f"⚠️ Heads up! This looks like it could hinder your budget."
@@ -62,5 +52,5 @@ class EncouragementEngine:
             "tone": tone,
             "probability_overspend": round(score, 2),
             "message": message,
-            "suggestion": tip
-        } 
+            "suggestion": tip,
+        }
