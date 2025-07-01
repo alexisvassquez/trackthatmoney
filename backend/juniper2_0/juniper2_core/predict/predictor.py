@@ -6,6 +6,17 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
+def _nz(value, fallback=0.0):
+    """Return numeric value or fallback when None/NaN/blank."""
+    if value is None:
+        return fallback
+    try:
+        if np.isnan(value):
+            return fallback
+    except TypeError:
+        pass
+    return value
+
 class SpendingPredictor:
     def __init__(self):
         self.model = LinearRegression()
@@ -20,14 +31,6 @@ class SpendingPredictor:
         y = df['target'].values
         self.model.fit(X, y)
 
-    def _nz(value, fallback=0):
-        """Return numeric value or fallback when None/NaN/blank."""
-        if value is None:
-            return fallback
-        if ininstance(value, float) and np.isnan(value):
-            return fallback
-        return value
-
     def predict(self, data: dict) -> float:
         features = np.array([[
             _nz(data.get("amount")),
@@ -35,6 +38,7 @@ class SpendingPredictor:
             _nz(data.get("mood_score")),
             _nz(data.get("goal_contribution")),
         ]], dtype=float)
+
         return float(self.model.predict(features)[0])
 
 # Create example dataset
