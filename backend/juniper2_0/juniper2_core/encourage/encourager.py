@@ -5,13 +5,14 @@ import json
 import random
 from datetime import datetime
 from ..predict.predictor import SpendingPredictor
-from ..data.tips_loader import load_tips
+from backend.juniper2_0.juniper2_core.data.tips_loader import load_tips, load_affirmations
 
 class EncouragementEngine:
     def __init__(self, threshold: float = 0.6):
         self.predictor = SpendingPredictor()
         self.threshold = threshold     # probability of 'overspend'
         self._tips = load_tips()       # loads tips JSON schema once
+        self._affirmations = load_affirmations()    # loads affirmations JSON schema
 
     def _select_tone(self, score: float) -> str:
         """Choose overall tone based on score."""
@@ -20,6 +21,14 @@ class EncouragementEngine:
         if score >= self.threshold:
             return "caution"
         return "celebrate"
+
+    def _affirmation_fallback(self, mood: str = None) -> str:
+        affirmations = self._affirmations
+        if mood:
+            mood_matches = [a for a in affirmations if a.get("mood") == mood]
+            if mood_matches:
+                affirmations = mood_matches
+        return random.choice(affirmations)["text"]
 
     def suggest(self, entry: dict) -> dict:
         """
@@ -54,6 +63,7 @@ class EncouragementEngine:
             "caution": "😅 Careful! This expense could stretch things a bit.",
             "celebrate": "👏 Good work! You're right on track."
         }[tone]
+        affirmation = self._affirmation_fallback(mood)
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -61,5 +71,6 @@ class EncouragementEngine:
             "probability_overspend": round(score, 2),
             "message": message,
             "suggestion": tip["text"],
+            "affirmation": affirmation,
             "source_category": cat
         }

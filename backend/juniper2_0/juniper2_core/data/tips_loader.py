@@ -11,3 +11,8 @@ def load_tips(filename="tips_with_mood_and_weights.json") -> dict:
     tips_path = base_dir / "data" / "processed" / filename
     with tips_path.open(encoding="utf-8") as fh:
         return json.load(fh)
+
+def load_affirmations() -> list:
+    affirmations_path = Path(__file__).parent / "affirmations.json"
+    with open(affirmations_path, "r", encoding="utf-8") as f:
+        return json.load(f)

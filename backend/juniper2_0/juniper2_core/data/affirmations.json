@@ -1,0 +1,266 @@
+[
+  {
+    "text": "You chose store-brand over name-brand and still made it delicious. That's the savvy life! 😎",
+    "mood": "motivated",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "groceries",
+      "emotional"
+    ]
+  },
+  {
+    "text": "If you're regularly skipping groceries in favor of eating out, you may be trading long-term stability for short-term ease. Let's reset.",
+    "mood": "discouraged",
+    "tone": "alert",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "dining",
+      "emotional"
+    ]
+  },
+  {
+    "text": "We can make progress on an unfinished game instead of buying new games this month.",
+    "mood": "calm",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "entertainment",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Biking, scootering, or walking to errands? That's great! You're saving money *and* boosting your health. Great job! 🚶🚲🛴",
+    "mood": "tired",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "transportation",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Every dollar saved in 🦾 toward your top goal!",
+    "mood": "motivated",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Small swaps compound - great job noticing your habits.",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Celebrate tiny wins; they pave the way for big change.",
+    "mood": "calm",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You chose rest over retail therapy. That's emotional wealth.",
+    "mood": "tired",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You made a budget and actually *used it*. That's self-trust in action.",
+    "mood": "tired",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Don't let comparison pressure you into spending - you're doing great with what you have.",
+    "mood": "calm",
+    "tone": "caution",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "If you're feeling overwhelmed, pause and prioritize: essentials first, then progress.",
+    "mood": "tired",
+    "tone": "alert",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "general",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Love that you waited for a sale instead of impulse-buying. That's progress!",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You made a wishlist instead of checking out immediately - that's powerful restraint!",
+    "mood": "calm",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. 🎯",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You unsubscribed from a marketing email that kept tempting you - freedom!",
+    "mood": "calm",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You reused or repurposed something instead of buying new. Look at you - an eco-budget champion! ",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "Everyone is guilty of impulse buying from time to time. Make sure you're keeping track of your spending habits that way you can continue to make progress in the future. Don't beat yourself up! 🙂",
+    "mood": "calm",
+    "tone": "caution",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "If you're stress shopping, pause first and notice the trigger. You deserve peace, not pressure.",
+    "mood": "calm",
+    "tone": "alert",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "shopping",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You took care of yourself *without* spending money today. That's radical self-love. 💚",
+    "mood": "tired",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "self-care",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You made that appointment you've been putting off. That's financial *and* physical wellness. Proud of you! 🙌",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "medical",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You made a payment toward your debt today. Even a small amount counts - and it means you showed up for your future self. That's a win! 🦾",
+    "mood": "discouraged",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "debt",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You looked at your balance today instead of avoiding it. That takes courage - and that's progress! 🦾",
+    "mood": "tired",
+    "tone": "celebrate",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "debt",
+      "emotional"
+    ]
+  },
+  {
+    "text": "PSA: debt is NOT a moral failure! It's a system. Remember - your worth is not measured by your balance.",
+    "mood": "discouraged",
+    "tone": "caution",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "debt",
+      "emotional"
+    ]
+  },
+  {
+    "text": "You deserve peace at every stage of your life, not just when you're debt-free. 💸",
+    "mood": "discouraged",
+    "tone": "alert",
+    "type": "affirmation",
+    "isAffirmation": true,
+    "context": [
+      "debt",
+      "emotional"
+    ]
+  }
+]
