@@ -558,5 +558,64 @@
         "weight": 2
       }
     ]
+  },
+  "Debt": {
+    "celebrate": [
+      {
+        "text": "You made a payment toward your debt today. Even a small amount counts - and it means you showed up for your future self. That's a win! 🦾",
+        "mood": "discouraged",
+        "weight": 4
+      },
+      {
+        "text": "You looked at your balance today instead of avoiding it. That takes courage - and that's progress! 🦾",
+        "mood": "tired",
+        "weight": 4
+      },
+      {
+        "text": "You said no to a new purchase so you could focus on improving your debt or avoiding it altogether. That's long-term thinking. Good job.",
+        "mood": "motivated",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "Let's review which of your debts has the highest interest rate - it might help you prioritize without overwhelming.",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "If your minimums feel too high, don't worry. You're not failing. We can make a plan to call the issuer to ask about hardship plans or pauses. It's always an option.",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "PSA: debt is NOT a moral failure! It's a system. Remember - your worth is not measured by your balance.",
+        "mood": "discouraged",
+        "weight": 4
+      }
+    ],
+    "alert": [
+      {
+        "text": "If you're paying interest every month, your purchases are costing more than you think. Let's strategize what to tackle first.",
+        "mood": "motivated",
+        "weight": 3
+      },
+      {
+        "text": "Avoiding payments or letters won't make them go away. I know they may be scary or overwhelming, but awareness is the first step to power.",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "If debt is keeping you up at night, you're not alone. But let's take one small action today: log in, breathe, and just look at the balance.",
+        "mood": "discouraged",
+        "weight": 4
+      },
+      {
+        "text": "You deserve peace at every stage of your life, not just when you're debt-free. 💸",
+        "mood": "discouraged",
+        "weight": 4
+      }
+    ]
   }
-}
+} 
+
