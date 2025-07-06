@@ -12,17 +12,22 @@
         "weight": 3
       },
       {
-        "text": "Grocery shopping can be considered a day out, too! \ud83d\ude42",
+        "text": "Grocery shopping can be considered a day out, too! 🙂",
         "mood": "motivated",
         "weight": 4
       },
       {
-        "text": "You stuck to your list at the store - that's real discipline! Go you! \ud83e\uddbe",
+        "text": "You stuck to your list at the store - that's real discipline! Go you! 🦾",
         "mood": "discouraged",
         "weight": 4
       },
       {
-        "text": "You chose store-brand over name-brand and still made it delicious. That's the savvy life! \ud83d\ude0e",
+        "text": "You chose store-brand over name-brand and still made it delicious. That's the savvy life! 😎",
+        "mood": "motivated",
+        "weight": 4
+      },
+      {
+        "text": "Swapped white sugar for brown sugar and saved over $2? That's a sweet budgeting win! 🍯",
         "mood": "motivated",
         "weight": 4
       }
@@ -62,6 +67,11 @@
         "text": "It's easy to overspend on `healthy` snacks - try portioning what you already bought before buying more.",
         "mood": "calm",
         "weight": 3
+      },
+      {
+        "text": "Double-check the unit price on basics like sugar and flour - sometimes the *fancier* option is actually cheaper.",
+        "mood": "tired",
+        "weight": 3
       }
     ],
     "alert": [
@@ -74,13 +84,18 @@
         "text": "I would highly recommend reviewing your budget for groceries this week to cut costs.",
         "mood": "discouraged",
         "weight": 1
+      },
+      {
+        "text": "Overpaying for staples like sugar and oil? That adds up fast. Let's compare store-brand prices next time.",
+        "mood": "calm",
+        "weight": 2
       }
     ]
   },
   "Dining": {
     "celebrate": [
       {
-        "text": "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist! \ud83c\udfa7",
+        "text": "How about we set a fun cook-at-home challenge tonight? It will pair beautifully with a lo-fi Spotify playlist! 🎧",
         "mood": "calm",
         "weight": 2
       },
@@ -95,7 +110,7 @@
         "weight": 2
       },
       {
-        "text": "You made a homemade version of your favorite takeout? That's a gourmet win! \ud83c\udf5c",
+        "text": "You made a homemade version of your favorite takeout? That's a gourmet win! 🍜",
         "mood": "discouraged",
         "weight": 2
       },
@@ -105,14 +120,14 @@
         "weight": 3
       },
       {
-        "text": "You picked a less expensive item on the menu and still had a great time. Yay for balance! \ud83d\ude03",
+        "text": "You picked a less expensive item on the menu and still had a great time. Yay for balance! 😃",
         "mood": "calm",
         "weight": 4
       }
     ],
     "caution": [
       {
-        "text": "Set a max-spend rule for take-out this week and stick to it. \ud83e\uddbe",
+        "text": "Set a max-spend rule for take-out this week and stick to it. 🦾",
         "mood": "motivated",
         "weight": 2
       },
@@ -127,7 +142,7 @@
         "weight": 1
       },
       {
-        "text": "Remember - there are many other ways to have fun besides dining out at a restaurant or bar. \ud83d\ude42",
+        "text": "Remember - there are many other ways to have fun besides dining out at a restaurant or bar. 🙂",
         "mood": "discouraged",
         "weight": 2
       },
@@ -144,7 +159,7 @@
     ],
     "alert": [
       {
-        "text": "Do your best to limit dining out, including Happy Hours. Those $5 apps and $7 cocktails add up! \ud83e\udd42",
+        "text": "Do your best to limit dining out, including Happy Hours. Those $5 apps and $7 cocktails add up! 🥂",
         "mood": "motivated",
         "weight": 2
       },
@@ -163,7 +178,7 @@
   "Entertainment": {
     "celebrate": [
       {
-        "text": "You don't need to spend money to have fun. \ud83d\ude42",
+        "text": "You don't need to spend money to have fun. 🙂",
         "mood": "tired",
         "weight": 4
       },
@@ -192,7 +207,7 @@
         "weight": 2
       },
       {
-        "text": "Buying games during emotional lows can lead to regret spending. Remember the 24-hour rule? Same applies here! Wait a day, then reassess. \ud83d\ude42",
+        "text": "Buying games during emotional lows can lead to regret spending. Remember the 24-hour rule? Same applies here! Wait a day, then reassess. 🙂",
         "mood": "tired",
         "weight": 2
       },
@@ -216,12 +231,12 @@
         "weight": 2
       },
       {
-        "text": "Biking, scootering, or walking to errands? That's great! You're saving money *and* boosting your health. Great job! \ud83d\udeb6\ud83d\udeb2\ud83d\udef4",
+        "text": "Biking, scootering, or walking to errands? That's great! You're saving money *and* boosting your health. Great job! 🚶🚲🛴",
         "mood": "tired",
         "weight": 2
       },
       {
-        "text": "You planned your week's drives in advance - that's budget-minded brilliance! \ud83e\uddbe",
+        "text": "You planned your week's drives in advance - that's budget-minded brilliance! 🦾",
         "mood": "calm",
         "weight": 4
       },
@@ -238,7 +253,7 @@
     ],
     "caution": [
       {
-        "text": "I hear GasBuddy is a great mobile app to find the best low gas prices in your area. \u26fd",
+        "text": "I hear GasBuddy is a great mobile app to find the best low gas prices in your area. ⛽",
         "mood": "tired",
         "weight": 3
       },
@@ -284,7 +299,7 @@
   "General": {
     "celebrate": [
       {
-        "text": "Every dollar saved in \ud83e\uddbe toward your top goal!",
+        "text": "Every dollar saved in 🦾 toward your top goal!",
         "mood": "motivated",
         "weight": 2
       },
@@ -352,7 +367,7 @@
   "Shopping": {
     "celebrate": [
       {
-        "text": "You found a great deal - and that's a win worth smiling about! \ud83d\ude03",
+        "text": "You found a great deal - and that's a win worth smiling about! 😃",
         "mood": "tired",
         "weight": 2
       },
@@ -367,7 +382,7 @@
         "weight": 4
       },
       {
-        "text": "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. \ud83c\udfaf",
+        "text": "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. 🎯",
         "mood": "discouraged",
         "weight": 2
       },
@@ -377,7 +392,7 @@
         "weight": 3
       },
       {
-        "text": "You reused or repurposed something instead of buying new. Look at you - an eco-budget champion! \ud83e\uddbe",
+        "text": "You reused or repurposed something instead of buying new. Look at you - an eco-budget champion! ",
         "mood": "discouraged",
         "weight": 2
       }
@@ -394,7 +409,7 @@
         "weight": 3
       },
       {
-        "text": "Everyone is guilty of impulse buying from time to time. Make sure you're keeping track of your spending habits that way you can continue to make progress in the future. Don't beat yourself up! \ud83d\ude42",
+        "text": "Everyone is guilty of impulse buying from time to time. Make sure you're keeping track of your spending habits that way you can continue to make progress in the future. Don't beat yourself up! 🙂",
         "mood": "calm",
         "weight": 2
       },
@@ -428,6 +443,118 @@
       {
         "text": "Store credit cards are one of the primary ways individuals go into debt. Be careful with opening up credit cards and never leave a balance!",
         "mood": "motivated",
+        "weight": 2
+      }
+    ]
+  },
+  "Utilities": [
+    "celebrate": [
+      {
+        "text": "You turned off the lights when leaving a room - tiny habit, real savings. Good job! 💡",
+        "mood": "motivated",
+        "weight": 3
+      },
+      {
+        "text": "Lowering your thermostat by just 1-2 degrees is a mindful and money-smart decision! 🌡️",
+        "mood": "calm",
+        "weight": 2
+      }
+    ],
+    "caution": [
+      {
+        "text": "Try running laundry at off-peak hours to cut energy costs. Your bill might thank you. 😉",
+        "mood": "tired",
+        "weight": 2
+      },
+      {
+        "text": "Unplugging unused devices can reduce phantom energy drain. Worth checking! 🔌",
+        "mood": "calm",
+        "weight": 2
+      }
+    ],
+    "alert": [
+      {
+        "text": "If your utility bill spiked this month, don't panic! Let's review usage and ask about budget billing options. ⚡",
+        "mood": "discouraged",
+        "weight": 2
+      }
+    ]
+  },
+  "Self-Care": [
+    "celebrate": [
+      {
+        "text": "You took care of yourself *without* spending money today. That's radical self-love. 💚",
+        "mood": "tired",
+        "weight": 4
+      },
+      {
+        "text": "Bubble bath with candles or incense instead of a shopping binge? That's a whole mood. 🛁",
+        "mood": "discouraged",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "It's okay to treat yourself, but let's plan for it. Self-care doesn't need to sabotage your budget.",
+        "mood": "motivated",
+        "weight": 3
+      }
+    ],
+    "alert": [
+      {
+        "text": "If you're using spending as emotional escape, don't feel down on yourself. There's nothing wrong with you. Let's just pause and reflect before clicking 'Buy'.",
+        "mood": "tired",
+        "weight": 2
+      }
+    ]
+  },
+  "Medical": [
+    "celebrate": [
+      {
+        "text": "You made that appointment you've been putting off. That's financial *and* physical wellness. Proud of you! 🙌",
+        "mood": "discouraged",
+        "weight": 3
+      },
+      {
+        "text": "GoodRX is a great resource to find coupons for prescriptions. Keep those savings up anywhere you can! 🏪",
+        "mood": "motivated",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "Check if your local pharmacy offers a discount savings card - it could make your prescriptions more affordable.",
+        "mood": "calm",
+        "weight": 2
+      }
+    ],
+    "alert": [
+      {
+        "text": "Avoiding medical care due to cost? Try calling the provider directly - some offer sliding scale or payment plans.",
+        "mood": "tired",
+        "weight": 2
+      }
+    ]
+  },
+  "Housing": [
+    "celebrate": [
+      {
+        "text": "You stayed home and made it cozy instead of going out. That's mindful nesting AND budget-friendly. 🏡",
+        "mood": "calm",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "Rent feeling high this month? Let's see if we can trim elsewhere to protect your stability and peace of mind.",
+        "mood": "tired",
+        "weight": 2
+      }
+    ],
+    "alert": [
+      {
+        "text": "If rent is more than 50% of your income, you're not alone. Let's make a gameplan while staying gentle with yourself.",
+        "mood": "discouraged",
         "weight": 2
       }
     ]
