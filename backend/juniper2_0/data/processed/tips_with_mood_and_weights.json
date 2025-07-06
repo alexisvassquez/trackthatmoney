@@ -447,7 +447,7 @@
       }
     ]
   },
-  "Utilities": [
+  "Utilities": {
     "celebrate": [
       {
         "text": "You turned off the lights when leaving a room - tiny habit, real savings. Good job! 💡",
@@ -480,7 +480,7 @@
       }
     ]
   },
-  "Self-Care": [
+  "Self-Care": {
     "celebrate": [
       {
         "text": "You took care of yourself *without* spending money today. That's radical self-love. 💚",
@@ -508,7 +508,7 @@
       }
     ]
   },
-  "Medical": [
+  "Medical": {
     "celebrate": [
       {
         "text": "You made that appointment you've been putting off. That's financial *and* physical wellness. Proud of you! 🙌",
@@ -536,7 +536,7 @@
       }
     ]
   },
-  "Housing": [
+  "Housing": {
     "celebrate": [
       {
         "text": "You stayed home and made it cozy instead of going out. That's mindful nesting AND budget-friendly. 🏡",
