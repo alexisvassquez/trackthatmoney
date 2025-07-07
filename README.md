@@ -18,7 +18,7 @@ _An Expense Tracking App To Know Why You're Broke_
 ---
 
 ## Why?
-Because understanding and managing your finances shouldn't feel shameful, overwhemling, anxiety-inducing, inaccessible, bloated, or like a sales pitch.
+Because understanding and managing your finances shouldn't feel shameful, overwhelming, anxiety-inducing, inaccessible, bloated, or like a sales pitch.
 
 ---
 
