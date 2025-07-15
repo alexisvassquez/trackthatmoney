@@ -13,6 +13,8 @@ _An Expense Tracking App To Know Why You're Broke_
 - Emotional insights + spending data analytics/visualization
 - Savings goals & financial milestones + achievements tracker (Built for real life: even $1 saved is a win)
 - AI chatbot (Juniper2.0) to assist users with real-world financial suggestions, affirmations, and words of encouragement
+- Data analytics + visualization tools
+- Educational financial resources
 - *Optional feature for users:* OAuth2 for bank linking
 
 ---
