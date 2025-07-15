@@ -299,7 +299,7 @@
   "General": {
     "celebrate": [
       {
-        "text": "Every dollar saved in 🦾 toward your top goal!",
+        "text": "Every dollar saved is 🦾 toward your top goal!",
         "mood": "motivated",
         "weight": 2
       },
@@ -382,7 +382,7 @@
         "weight": 4
       },
       {
-        "text": "Window shopping without buying anything? Wow! That's a huge win for your budge awareness. Very proud of you. 🎯",
+        "text": "Window shopping without buying anything? Wow! That's a huge win for your budget awareness. Very proud of you. 🎯",
         "mood": "discouraged",
         "weight": 2
       },
