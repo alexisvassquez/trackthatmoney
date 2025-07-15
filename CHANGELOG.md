@@ -19,4 +19,23 @@
 
 ---
 
-> Next Steps: Begin `dashboard.dart` wiring, then integrate mood + savings input UI. Juniper2.0 backend logic to follow.
+## [0.3.0] - 2025-07-15
+
+### Added
+- `Subscriptions` category added to `tips_with_mood_and_weights.json` with mood-based tips across `celebrate`, `caution`, and `alert`
+- `isSubscription` field added to `expense.dart` model and JSON serialization logic
+- `is_subscription` feature added to `predictor.py` model training and prediction logic
+- New backend module: `subscriptions_insights.py` under `juniper2_core/subscription/`, which:
+  - Calculates monthly subscription totals
+  - Tracks % of budget spent on subscriptions
+  - Detects "subscription fatigue" and assigns a `fatigue_rating` (celebrate / caution / alert)
+
+### Changed
+- Updated training data structure in `predictor.py` to support `is_subscription` feature for better model granularity
+
+### Fixed
+- Normalized subscription category handling across JSON inputs, predictor, and insights engine
+
+---
+
+> Next Steps: Integrate subscription insights into analytics dashboard. Begin testing OAuth2 data ingestion to auto-detect recurring vendors.
