@@ -616,6 +616,64 @@
         "weight": 4
       }
     ]
+  },
+  "Subscriptions": {
+    "celebrate": [
+      {
+        "text": "Let's review your subscriptions for this month. Awareness is financial power. 🧠",
+        "mood": "motivated",
+        "weight": 4
+      },
+      {
+        "text": "You canceled a service you weren't using anymore. That's clarity *and* cash flow! 😎",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "You downgraded a plan to better match your usage. Smart budgeting move! 🦾",
+        "mood": "discouraged",
+        "weight": 3
+      }
+    ],
+    "caution": [
+      {
+        "text": "Let's scan your bank app or statements for any forgotten auto-renewals this week.",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "Before starting a new subscription, check if there's a free trial - and then set a cancel reminder. ⏳",
+        "mood": "motivated",
+        "weight": 2
+      },
+      {
+        "text": "Are you stacking subscriptions again? Let's see which ones actually add value vs noise - and a hole in the pocket.",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "Regularly review your statements and app store for subscriptions. SaaS companies bank on you forgetting to cancel your free trials.",
+        "mood": "motivated",
+        "weight": 2
+      } 
+    ],
+    "alert": [
+      {
+        "text": "You might be paying for tools you don't use anymore. Let's review your app store and card charges.",
+        "mood": "calm",
+        "weight": 2
+      },
+      {
+        "text": "Be mindful of free trials auto-converting! It's easy to forget about them but those quiet charges can build up fast.",
+        "mood": "discouraged",
+        "weight": 2
+      },
+      {
+        "text": "Subscription overload? Pause and ask yourself: does this spark clarity or add clutter to my life?",
+        "mood": "tired",
+        "weight": 2
+      }
+    ]
   }
-} 
+}
 

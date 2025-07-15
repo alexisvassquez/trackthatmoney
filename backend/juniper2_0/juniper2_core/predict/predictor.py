@@ -27,7 +27,7 @@ class SpendingPredictor:
 
         df = pd.read_csv(csv_path)
 
-        X = df[['amount', 'is_essential', 'mood_score', 'goal_contribution']].values
+        X = df[['amount', 'is_essential', 'mood_score', 'goal_contribution', 'is_subscription']].values
         y = df['target'].values
         self.model.fit(X, y)
 
