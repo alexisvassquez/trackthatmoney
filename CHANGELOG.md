@@ -38,4 +38,14 @@
 
 ---
 
-> Next Steps: Integrate subscription insights into analytics dashboard. Begin testing OAuth2 data ingestion to auto-detect recurring vendors.
+## [0.3.0] - 2025-07-16
+
+### Added
+- `resources_library.json` with curated beginner-friendly financial education topics
+- `educational_resource.dart` model for parsing JSON entries
+- `resource_loader.dart` service for loading and decoding the educational content
+
+### Planned
+- `learn_tab.dart` UI screen to browse educational cards
+- `resource_card.dart` widget for resource previews
+- Optional: tag filters, category sections, and link buttons for user guidance

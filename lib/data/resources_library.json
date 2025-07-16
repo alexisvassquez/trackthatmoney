@@ -1,0 +1,44 @@
+[
+  {
+    "title": "What Is a Budget?",
+    "category": "Budgeting",
+    "description": "A budget is a plan for how you'll use your money - giving every dollar a job before you spend it.",
+    "url": "https://www.consumerfinance.gov/consumer-tools/budgeting/",
+    "tag": "Beginner"
+  },
+  {
+    "title": "The 50/30/20 Rule",
+    "category": "Budgeting",
+    "description": "Allocate 50% to needs, 30% to wants, and 20% to savings and debt. A common starting point.",
+    "url": "https://www.investopedia.com/50-30-20-rule-5188980",
+    "tag": "Framework"
+  },
+  {
+    "title": "Understanding Credit Scores",
+    "category": "Credit",
+    "description": "Learn how your credit score is calculated and how it affects loans, rent, opportunies, and more.",
+    "url": "https://www.equifax.com/personal/education/credit/score/",
+    "tag": "Core Knowledge"
+  },
+  {
+    "title": "What To Do If You're in Debt",
+    "category": "Debt",
+    "description": "There's no shame in debt. This guide helps you organize, prioritize, and make a plan.",
+    "url": "https://www.consumerfinance.gov/ask-cfpb/i-have-a-lot-of-debt-what-options-do-i-have-en-1457/",
+    "tag": "Actionable"
+  },
+  {
+    "title": "How to Start an Emergency Fund",
+    "category": "Emergency Funds",
+    "description": "An emergency fund is savings for unexpected expenses such as: medical bills, car repair, pet care, or job loss.",
+    "url": "https://www.nerdwallet.com/article/finance/emergency-fund",
+    "tag": "Beginner"
+  },
+  {
+    "title": "Financial Abuse: What It Is and How to Get Help",
+    "category": "Financial Rights",
+    "description": "Recognize the signs of financial control and find supportive resources for reclaiming autonomy.",
+    "url": "https://nnedv.org/content/financial-abuse/",
+    "tag": "Emotional Support"
+  }
+]
