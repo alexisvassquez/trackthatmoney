@@ -1,6 +1,6 @@
 # track_that_money
 # backend/juniper2_0/api.py
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn

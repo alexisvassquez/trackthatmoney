@@ -49,3 +49,17 @@
 - `learn_tab.dart` UI screen to browse educational cards
 - `resource_card.dart` widget for resource previews
 - Optional: tag filters, category sections, and link buttons for user guidance
+
+---
+
+## [0.4.0] - 2025-07-17 Advanced Backend Sprint & Second GitHub Star!
+
+- Implemented OAuth2 authentication via `auth.py`
+- Patched `api.py` with FastAPI `Depends` for secure route access
+- Resolved goblins related to module imports, model features, and Uvicorn startup
+- Created `train_model.py` to decouple data generation from prediction logic
+- Refactored `predictor.py` to be model-only (Mop Theory™ aligned)
+- Verified API runs via Swagger UI and `curl` with token-based access
+- Installed `python-multipart` to support form data in `/token` route
+- 🌟 Project received its **second GitHub star** during development sprint!
+
