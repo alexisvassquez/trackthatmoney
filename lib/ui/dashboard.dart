@@ -1,6 +1,3 @@
-/// track_that_money
-/// lib/ui/dashboard.dart
-
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../ui/theme/colors.dart';
@@ -39,9 +36,9 @@ class DashboardPage extends StatelessWidget {
                     Text(
                       'Track That Money 💸',
                       style: TextStyle(
-                        fontSize: 22, 
+                        fontSize: 22,
                         fontWeight: FontWeight.w600,
-                      ), 
+                      ),
                     ),
                     SizedBox(height: 2),  // subtle spacing
                     Text(
@@ -65,98 +62,86 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      body: WalletFrame(
-        child: ListView(
-          children: [
-            const SizedBox(height: 8),
-
-            // Greeting + Mood
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Hi, ${user.name}! 👋',
-                        style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 2), 
-                      Text('Create change through code.',
-                        style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.black54)),
-                      ],
-                    ),
-                  ),
-                  const Text(
-                    "Mood': 🤑 motivated",
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Affirmation tag
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: AppColors.softGold.withOpacity(.25),
-                  borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: AppColors.softGold.withOpacity(.5)),
-                ),
-                child: const Text(
-                  "💫 Celebrate tiny wins; they pave the way for big change.",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-            const Text(
-              'Top Expenses',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-
-            // Recent Expenses List
-            Expanded(
+      body: Column(
+        children: [
+          SizedBox(height: 8),
+     
+          // Greeting + Mood
+          Expanded(
+            child: WalletFrame(
               child: ListView(
-                children: const [
-                  ListTile(title: Text('Groceries - \$42.67')),
-                  ListTile(title: Text('Bus Pass - \$5.00')),
-                  ListTile(title: Text('Spotify - \$11.99')),
-                  ListTile(title: Text('Google Fi - \$55.36')),
-                  ListTile(title: Text('Work Clothes - \$13.98')),
+                children: [
+                  Text('Hi, ${user.name}! 👋',
+                  style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  Text('Create change through code.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.black54)),
                 ],
               ),
+            ),
+            const Text(
+              "Mood': 🤑 motivated",
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        // TODO: Tigger Juniper2.0 tip modal
-        },
-        child: const Icon(Icons.psychology_alt),
-        tooltip: 'Ask Juniper2.0 👀',
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-        // TODO: Handle nav routing
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Data'),
-          BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Piggybank'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
-      ),
-    );
-  }
-}
+        SizedBox(height: 8),
 
+        // Affirmation tag
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+          color: AppColors.softGold.withOpacity(.25),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: AppColors.softGold.withOpacity(.5)),
+        ),
+        child: Text(
+          "💫 Celebrate tiny wins; they pave the way for big change.",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        ),
+      ),
+    ),
+
+    // Recent Expenses List
+    const Text(
+      'Top Expenses',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    ),
+    SizedBox(height: 8),
+    Expanded(
+      child: WalletFrame(
+      child: ListView(
+      children: [
+        ListTile(title: Text('Groceries - \$42.67')),
+        ListTile(title: Text('Bus Pass - \$5.00')),
+        ListTile(title: Text('Spotify - \$11.99')),
+        ListTile(title: Text('Google Fi - \$55.36')),
+        ListTile(title: Text('Work Clothes - \$13.98')),
+      ],
+    ),
+  ),
+),
+],
+),
+floatingActionButton: FloatingActionButton(
+  onPressed: () { // TODO: Tigger Juniper2.0 tip modal },
+  child: const Icon(Icons.psychology_alt),
+  tooltip: 'Ask Juniper2.0 👀',
+),
+bottomNavigationBar: BottomNavigationBar(
+  currentIndex: 0,
+  onTap: (index) { // TODO: Handle nav routing },
+  items: const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Data'),
+    BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Piggybank'),
+    BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+  ],
+),
+),
 
 /// Wallet outer frame (leather + stitching)
 class WalletFrame extends StatelessWidget {
@@ -171,7 +156,7 @@ class WalletFrame extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [Color(0xFFFAF6EC), Color(0xFFF1E7D3)],    // sand tones
+          colors: [Color(0xFFFAF6EC), Color(0xFFF1E7D3)],    // sand/leather tones
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.leatherBrown.withOpacity(.25), width: 1.2),
@@ -184,7 +169,7 @@ class WalletFrame extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.leatherBrown.withOpactiy(.18), width: 1),
+          border: Border.all(color: AppColors.leatherBrown.withOpacity(.18), width: 1),
         ),
         child: Stack(
           children: [
@@ -212,15 +197,22 @@ class WalletFrame extends StatelessWidget {
 class _StitchOverlay extends StatelessWidget {
   final Color color;
   const _StitchOverlay({required this.color});
+
   @override
   Widget build(BuildContext context) => CustomPaint(painter: _StitchPainter(color));
 }
+
 class _StitchPainter extends CustomPainter {
   final Color color;
   _StitchPainter(this.color);
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color..strokeWidth = 1.2..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.2
+      ..style = PaintingStyle.stroke;
+
     const dash = 6.0, gap = 6.0;
     final rect = RRect.fromRectAndRadius(
       Rect.fromLTWH(6, 6, size.width - 12, size.height - 12), const Radius.circular(14));
@@ -234,6 +226,7 @@ class _StitchPainter extends CustomPainter {
       }
     }
   }
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -244,6 +237,7 @@ class _Section extends StatelessWidget {
   final Widget child;
   final Widget? trailing;
   const _Section({required this.title, required this.child, this.trailing});
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -252,7 +246,7 @@ class _Section extends StatelessWidget {
         const Spacer(),
         if (trailing != null) trailing!,
       ]),
-      const SizedBox(height: 10),
+      SizedBox(height: 10),
       Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -267,10 +261,11 @@ class _Section extends StatelessWidget {
 
 class _TopStatsRow extends StatelessWidget {
   const _TopStatsRow();
+
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
+      children: [
         Expanded(child: _StatCard(
           title: 'Expenses This Week',
           value: '\$80.75',
@@ -291,8 +286,47 @@ class _TopStatsRow extends StatelessWidget {
   }
 }
 
+class _WalletSlot extends StatelessWidget {
+  final String title, note;
+  final IconData icon;
+  final Color color;
+  const _WalletSlot({
+    required this.title, required this.icon,
+    required this.color, required this.note,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(.28)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Icon(icon, color: color),
+              SizedBox(width: 8),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+            ]),
+            const Spacer(),
+            Text(note, style: const TextStyle(color: Colors.black54)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _CardSlotsStrip extends StatelessWidget {
   const _CardSlotsStrip();
+
   @override
   Widget build(BuildContext context) {
     return _Section(
@@ -302,7 +336,7 @@ class _CardSlotsStrip extends StatelessWidget {
         height: 140,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: const [
+          children: [
             _WalletSlot(title: 'Budget', icon: Icons.account_balance_wallet_rounded,
               color: AppColors.brandPrimary, note: 'On track'),
             _WalletSlot(title: 'Bills', icon: Icons.receipt_long_rounded,
@@ -320,13 +354,14 @@ class _CardSlotsStrip extends StatelessWidget {
 
 class _GoalsPocket extends StatelessWidget {
   const _GoalsPocket();
+
   @override
   Widget build(BuildContext context) {
     return _Section(
       title: 'Piggy bank pocket',
       child: Wrap(
         spacing: 22, runSpacing: 16,
-        children: const [
+        children: [
           _GoalRing(percent: .42, label: 'Move to London'),
           _GoalRing(percent: .18, label: 'Emergency Fund'),
           _GoalRing(percent: .66, label: 'Charli xcx Tickets'),
@@ -338,13 +373,14 @@ class _GoalsPocket extends StatelessWidget {
 
 class _RecentActivity extends StatelessWidget {
   const _RecentActivity();
+
   @override
   Widget build(BuildContext context) {
     return _Section(
       title: 'Recent activity',
       trailing: TextButton(onPressed: () {}, child: const Text('See all')),
       child: Column(
-        children: const [
+        children: [
           _ExpenseTile(title: 'Groceries', note: 'Publix', amount: 44.55, dot: AppColors.moneyGreen),
           Divider(height: 1),
           _ExpenseTile(title: 'Dining', note: 'Bolay', amount: 26.05, dot: AppColors.cocoaBrown),
@@ -365,11 +401,14 @@ class _StatCard extends StatefulWidget {
     required this.title, required this.value, required this.subtitle,
     required this.icon, required this.bgFrom, required this.bgTo,
   });
+
   @override
   State<_StatCard> createState() => _StatCardState();
 }
+
 class _StatCardState extends State<_StatCard> {
   bool _hovered = false;
+
   @override
   Widget build(BuildContext context) {
     final c = AppColors.brandPrimary;
@@ -377,15 +416,15 @@ class _StatCardState extends State<_StatCard> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 140),
-        transform: Matrix4.identity()..translate(0.0, _hovered ? -2.0: 0.0),
+        duration: Duration(milliseconds: 140),
+        transform: Matrix4.translationValues(0, _hovered ? -2.0 : 0, 0),
         decoration: BoxDecoration(
           gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
-            colors: [widget.bgFrom.withOpacity(.22), widget.bgTo]),
+          colors: [widget.bgFrom.withOpacity(.22), widget.bgTo]),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(color: Colors.black.withOpacity(_hovered ? .12 : .06),
-              blurRadius: _hovered ? 18 : 10, offset: const Offset(0, 10))
+            blurRadius: _hovered ? 18 : 10, offset: const Offset(0, 10))
           ],
         ),
         child: Padding(
@@ -395,33 +434,53 @@ class _StatCardState extends State<_StatCard> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: c.withOpacity(.12),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(widget.icon, color: c),
+                color: c.withOpacity(.12),
+                borderRadius: BorderRadius.circular(14),
               ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.title, style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 2),
-                  Text(widget.subtitle, style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black54)),
-                ],
-              )),
-              Text(widget.value, style: Theme.of(context).textTheme.headlineSmall!.copyWith(letterSpacing: -0.5),
-            ],
+              child: Icon(widget.icon, color: c),
+            ),
+            SizedBox(width: 12),
+
+            Expanded(
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.title, 
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
           ),
+          SizedBox(height: 2),
+          Text(
+            widget.subtitle, 
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.black54),
+            ),
+          ],
         ),
       ),
-    );
-  }
+      Text(
+        widget.value, 
+        style: Theme.of(context)
+            .textTheme
+            .headlineSmall!
+            .copyWith(letterSpacing: -0.5),
+        ),
+      ],
+    ),
+  ),
+}
 }
 
 class _GoalRing extends StatelessWidget {
   final double percent;
   final String label;
   const _GoalRing({required this.percent, required this.label});
+
   @override
   Widget build(BuildContext context) {
     final ring = AppColors.piggyBankPink;
@@ -437,26 +496,32 @@ class _GoalRing extends StatelessWidget {
           ),
         ),
         Text('${(percent * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.w700)),
-      ]),
-      const SizedBox(height: 8),
-      SizedBox(width: 120, child: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center)),
-    ]);
-  }
+      ],
+    ),
+    SizedBox(height: 8),
+    SizedBox(width: 120, child: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis,
+    textAlign: TextAlign.center)),
+  ]);
+}
 }
 
 class _ExpenseTile extends StatelessWidget {
   final String title, note;
   final double amount;
   final Color dot;
-  const _ExpenseTile({required this.title, required this.note, required this.amount, required this.dot});
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(width: 12, height: 12, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-      subtitle: Text(note),
-      trailing: Text('\$${amount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w700)),
-    );
-  }
+  const _ExpenseTile({
+    required this.title, required this.note, 
+    required this.amount, required this.dot,
+  },
+),
+
+@override
+Widget build(BuildContext context) {
+  return ListTile(
+    leading: Container(width: 12, height: 12, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
+    title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+    subtitle: Text(note),
+    trailing: Text('\$${amount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w700)),
+  );
+}
 }
