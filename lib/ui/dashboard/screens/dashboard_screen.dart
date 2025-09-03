@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import '..lib/ui/theme/colors.dart';
+import '../lib/ui/theme/colors.dart';
+import '../data/data_container.dart';
+import '../widgets/header_row.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/dashboard_screen.dart
 
-class DashboardPage extends StatelessWidget {
+class DashboardScreen extends StatelessWidget {
   final DashboardData data;
   const DashboardPage({super.key, required this.data});
 
@@ -54,7 +56,7 @@ class DashboardPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: data.onOpenChatbot,
+        onPressed: () => _openJuniperAssistant(context),
         icon: const Icon(Icons.psychology_alt),
         label: const Text('Ask Juniper2.0 👀'),
       ),
@@ -71,3 +73,18 @@ class DashboardPage extends StatelessWidget {
     );
   }
 } 
+
+void _openJuniperAssistant(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (ctx) => DraggableScrollableSheet(
+      initialChildSize: 0.85,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (_, scroll) => _JuniperSheet(scrollController: scroll),
+    ),
+  );
+}
