@@ -1,12 +1,16 @@
-/// track_that_money
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'ui/app.dart';
+import 'ui/theme/colors.dart';
+import 'models/user.dart';
+import 'ui/dashboard/screens/dashboard_screen.dart';
+
+/// Track That Money
 /// lib/main.dart
 
-import 'package:flutter/material.dart';
-import 'models/user.dart';
-import 'ui/dashboard.dart';
-
 void main() {  
-  runApp(const TrackThatMoneyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ProviderScope(child: TrackThatMoneyApp()));
 }
 
 final colorScheme = ColorScheme(
@@ -30,7 +34,7 @@ class TrackThatMoneyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = User(name: 'Lexy');    // Changeable later to user name
+    final user = User(name: 'Lexy');
 
     return MaterialApp(
       title: 'Track That Money',
