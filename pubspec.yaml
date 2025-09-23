@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   go_router: ^16.2.2
+  shared_preferences: ^2.3.2
   flutter_riverpod: ^3.0.0
   riverpod_annotation: ^3.0.0
   # Networking
