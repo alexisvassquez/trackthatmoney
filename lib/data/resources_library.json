@@ -18,7 +18,7 @@
     "category": "Credit",
     "description": "Learn how your credit score is calculated and how it affects loans, rent, opportunies, and more.",
     "url": "https://www.equifax.com/personal/education/credit/score/",
-    "tag": "Core Knowledge"
+    "tag": "Beginner"
   },
   {
     "title": "What To Do If You're in Debt",
@@ -39,6 +39,76 @@
     "category": "Financial Rights",
     "description": "Recognize the signs of financial control and find supportive resources for reclaiming autonomy.",
     "url": "https://nnedv.org/content/financial-abuse/",
-    "tag": "Emotional Support"
+    "tag": "Awareness"
+  },
+  {
+    "title": "Understanding Subscriptions and Auto-Renewals",
+    "category": "Subscriptions",
+    "description": "Learn how recurring costs sneak up and how to audit, cancel, or pause services that no longer serve you.",
+    "url": "https://www.consumer.ftc.gov/articles/how-stop-automatic-payments-your-bank-account",
+    "tag": "Beginner"
+  },
+  {
+    "title": "Emotional Spending & Mood Triggers",
+    "category": "Self-Awareness",
+    "description": "A guide to the link between emotions, spending patterns, and how mindfulness can protect your wallet.",
+    "url": "https://psychcentral.com/blog/mental-wealth/2019/07/understanding-emotional-spending",
+    "tag": "Well-Being"
+  },
+  {
+    "title": "Setting Realistic Savings Goals",
+    "category": "Goals",
+    "description": "Learn to break down big dreams and goals into achievable milestones. Studies show that if you start with one small habit, momentum will follow.",
+    "url": "https://www.ramseysolutions.com/saving/how-to-set-smart-financial-goals",
+    "tag": "Motivation"
+  },
+  {
+    "title": "How to Track and Cut Everyday Expenses",
+    "category": "Expenses",
+    "description": "Practical methods to identify leaks in your spending habits and reclaim control of your daily cash flow.",
+    "url": "https://www.forbes.com/advisor/personal-finance/how-to-track-expenses/",
+    "tag": "Practical"
+  },
+  {
+    "title": "Managing Financial Fatigue",
+    "category": "Self-Care",
+    "description": "Tips on how to manage the very real problem of financial burnout. It's okay to rest without giving up on your goals.",
+    "url": "https://www.verywellmind.com/financial-burnout-and-how-to-cope-5216942",
+    "tag": "Mindfulness"
+  },
+  {
+    "title": "Healthy Relatonship With Money",
+    "category": "Mindset",
+    "description": "Our upbringing and beliefs shape our financial behavior. Learn way to rewrite your money story.",
+    "url": "https://www.thefinancialdiet.com/how-to-develop-a-healthy-relationship-with-money/",
+    "tag": "Reflective"
+  },
+  {
+    "title": "Understanding Needs vs Wants",
+    "category": "Budgeting",
+    "description": "Just because we want something, doesn't automatically mean we need it. Distinguish essentials from extras to spend more consciously without deprivation",
+    "url": "https://www.moneyunder30.com/needs-vs-wants",
+    "tag": "Awareness"
+  },
+  {
+    "title": "How to Negotiate Bills and Rates",
+    "category": "Utilities",
+    "description": "Learn simple reusable scripts and tactics while speaking with creditors to reduce monthly bills on phone, internet, or insurance.",
+    "url": "https://www.nerdwallet.com/article/finance/negotiate-bills",
+    "tag": "Empowerment"
+  },
+  {
+    "title": "Financial Planning for Neurodivergent Minds",
+    "category": "Accessibility",
+    "description": "Strategies for autism, ADHD, and sensory-friendly finance routines that actually work with your brain, not against it.",
+    "url": "https://www.autism.org.uk/advice-and-guidance/topics/benefits-and-finance/money-management",
+    "tag": "Inclusivity"
+  },
+  {
+    "title": "Building Credit Safely",
+    "category": "Credit",
+    "description": "Learn safe ways to build or rebuild credit without falling into high-interest traps.",
+    "url": "https://www.nerdwallet.com/article/finance/how-to-build-credit",
+    "tag": "Actionable"
   }
 ]
