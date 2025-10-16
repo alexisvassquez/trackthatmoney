@@ -85,6 +85,43 @@ By merging fintech precision with wellness empathy, we create a new class of tec
 
 ---
 
+### App Color Palette: "Playfully Productive" Theme
+**Track That Money’s** palette blends *emotional approachability* with *financial clarity.*
+Instead of corporate blues, reds, or sterile greys, it uses soft, dopamine-balanced tones that make money feel human, calm, and even a little fun.
+
+| Role               | Color Name      | Hex Code  | Purpose / Mood                   |
+| ------------------ | --------------- | --------- | -------------------------------- |
+| 💸 Primary         | Money Green     | `#479761` | Trust · growth · prosperity      |
+| 🐷 Accent 1        | Piggy Bank Pink | `#FFA3C5` | Warmth · self-kindness · reward  |
+| ✨ Accent 2         | Soft Gold       | `#CEBC81` | Achievement · illumination       |
+| ☁️ Neutral         | Sand Beige      | `#EDE3D1` | Comfort · balance · focus        |
+| 💼 Text / Contrast | Deep Navy       | `#1F3B4D` | Stability · clarity · legibility |
+| 🌊 Highlight       | Calm Blue       | `#4F7CAC` | Reflection · trust · flow state  |
+
+**Design Intent:**
+- 💚 Greens - security and progress without anxiety.
+- 💗 Pinks - compassion → reframe money as self-care.
+- 🪙 Gold - celebration of milestones instead of guilt over spending.
+- 🌫️ Neutrals - reduce visual overload; neurodivergent-friendly.
+- 🌊 Blue - anchors focus, aligns with mindful breathing UI moments.
+
+**Accessibility:**
+- All primary/contrast pairs meet WCAG AA (≥ 4.5 : 1 ratio).
+- Minimal saturated orange tones (no red) to avoid urgency or shame cues.
+- Tested under light/dark modes for color-blind safety.
+
+**Psychological Goal:**
+> Color itself becomes a grounding technique.
+Users should feel calmer *after* opening the app than before.
+
+### Why No Red?
+Traditional finance apps use bright red to flag expenses, overdrafts, or “bad” behavior.
+**Track That Money** avoids punitive color language; we use *soft contrast and temperature* instead of alarm cues.
+
+By replacing threat cues with warmth and encouragement, the palette itself becomes part of the CBT-informed user experience—supportive, self-compassionate, and emotionally safe.
+
+---
+
 ## License
 Designed and built by Alexis M Vasquez [@alexisvassquez](https://github.com/alexisvassquez)
 
