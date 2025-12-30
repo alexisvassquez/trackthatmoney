@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
-import '../models/model_mapping.dart';
-import '../models/expense_tile_vm.dart';
-import '../lib/ui/dashboard/data/mock_data_expenses.dart';
 
 /// Track That Money
 /// lib/ui/models/dashboard_tile_vm.dart
-/// UI Dashboard View Model
+/// Dashboard tile model for InsightsGrid
 
-final List<ExpenseTileVM> top5ExpenseTiles =
-  top5DomainExpenses.map(mapExpenseToTileVM).toList(growable: false);
+class DashboardTileVM {
+  final String title;
+  final String value;
+  final String subtext;
+  final IconData icon;
+
+  const DashboardTileVM({
+    required this.title,
+    required this.value,
+    required this.subtext,
+    required this.icon,
+  });
+}
