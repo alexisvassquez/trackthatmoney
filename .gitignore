@@ -42,6 +42,7 @@ venv/
 .env/
 .menv/
 myenv/
+backend/trackenv/
 # IDEs
 *.vscode/
 .idea/
