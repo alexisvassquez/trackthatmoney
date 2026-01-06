@@ -5,7 +5,7 @@ import json
 import random
 from datetime import datetime
 from ..predict.predictor import SpendingPredictor
-from backend.juniper2_0.juniper2_core.data.tips_loader import load_tips, load_affirmations
+from ..data.tips_loader import load_tips, load_affirmations
 
 class EncouragementEngine:
     def __init__(self, threshold: float = 0.6):

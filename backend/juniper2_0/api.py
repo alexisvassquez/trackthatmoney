@@ -4,9 +4,9 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
-from .juniper2_core.predict.predictor import SpendingPredictor
-from .juniper2_core.encourage.encourager import EncouragementEngine
-from backend.juniper2_0.auth.auth import verify_token
+from juniper2_core.predict.predictor import SpendingPredictor
+from juniper2_core.encourage.encourager import EncouragementEngine
+from auth.auth import verify_token
 from fastapi.security import OAuth2PasswordRequestForm
 
 app = FastAPI(title="Track That Money API")
