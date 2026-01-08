@@ -1,0 +1,15 @@
+# Track That Money - Backend requirements
+# FastAPI + Juniper2.0 core
+
+# API
+fastapi
+pydantic
+uvicorn
+
+# Data / ML
+joblib
+numpy
+pandas
+scikit-learn
+scipy
+threadpoolctl
