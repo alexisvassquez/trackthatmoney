@@ -1,16 +1,19 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../lib/ui/theme/colors.dart';
-import '../screens/dashboard_screen.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/wallet_frame.dart
-
+///
+/// Wallet container frame
 class WalletFrame extends StatelessWidget {
   final Widget child;
-  final EdgeInsetsGeometry padding;
-  final double radius;
-  final bool showStitches;
-  final bool showTab;
+  final EdgeInsetsGeometry padding;    /// inner padding for content
+  final double radius;                 /// outer corner radius
+  final bool showStitches;             /// draw dashed stitch border inside frame
+  final bool showTab;                  /// show small tab badge above frame
+  final Widget? tab;                   /// optional override for tab widget
+  final Alignment tabAlignment;        /// where to place tab (only used if showTab == true)
+  final double tabLift;                /// how far tab floats above frame
 
   const WalletFrame({
     super.key,
@@ -19,11 +22,20 @@ class WalletFrame extends StatelessWidget {
     this.radius = 28,
     this.showStitches = true,
     this.showTab = true,
+    this.tab,
+    this.tabAlignment = Alignment.topRight,
+    this.tabLift = 12,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    /// guard against tiny radius values, avoids negative radius downstream
+    final safeRadius = math.max(4.0, radius);
+    final innerRadius = math.max(0.0, safeRadius - 1);
+    final stitchRadius = math.max(0.0, safeRadius - 8);
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -37,7 +49,7 @@ class WalletFrame extends StatelessWidget {
                 cs.secondaryContainer.withOpacity(.45),
               ],
             ),
-            borderRadius: BorderRadius.circular(radius),
+            borderRadius: BorderRadius.circular(safeRadius),
             border: Border.all(
               color: cs.outlineVariant.withOpacity(.6),
               width: 1.2,
@@ -51,23 +63,28 @@ class WalletFrame extends StatelessWidget {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(radius - 1),
+            borderRadius: BorderRadius.circular(innerRadius),
             child: CustomPaint(
               painter: showStitches
                 ? _StitchesPainter(
                     color: cs.outline.withOpacity(.55),
-                    radius: radius - 8,
+                    radius: stitchRadius,
                   )
                 : null,
               child: Padding(padding: padding, child: child),
             ),
           ),
         ),
+
         if (showTab)
-          Positioned(
-            top: -12,
-            right: 24,
-            child: _WalletTab(),
+          Positioned.fill(
+            child: Align(
+              alignment: tabAlignment,
+              child: Transform.translate(
+                offset: Offset(0, -tabLift),
+                child: tab ?? const _WalletTab(),
+              ),
+            ),
           ),
       ],
     );
@@ -75,6 +92,8 @@ class WalletFrame extends StatelessWidget {
 }
 
 class _WalletTab extends StatelessWidget {
+  const _WalletTab();
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -93,7 +112,11 @@ class _WalletTab extends StatelessWidget {
         ],
       ),
       alignment: Alignment.center,
-      child: const Icon(Icons.wallet_rounded, size: 16, color: Colors.white),
+      child: Icon(
+        Icons.wallet_rounded,
+        size: 16,
+        color: cs.onPrimary,
+      ),
     );
   }
 }
@@ -105,7 +128,7 @@ class _StitchesPainter extends CustomPainter {
   final double dash;
   final double gap;
 
-  _StitchesPainter({
+  const _StitchesPainter({
     required this.color,
     required this.radius,
     this.inset = 10,
@@ -116,7 +139,12 @@ class _StitchesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(inset, inset, size.width - inset * 2, size.height - inset * 2),
+      Rect.fromLTWH(
+        inset,
+        inset,
+        size.width - inset * 2,
+        size.height - inset * 2,
+      ),
       Radius.circular(radius),
     );
 
@@ -138,5 +166,9 @@ class _StitchesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _StitchesPainter old) =>
-      old.color != color || old.radius != radius || old.inset != inset || old.dash != dash || old.gap != gap;
+      old.color != color ||
+      old.radius != radius ||
+      old.inset != inset ||
+      old.dash != dash ||
+      old.gap != gap;
 }
