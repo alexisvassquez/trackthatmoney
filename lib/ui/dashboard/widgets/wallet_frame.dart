@@ -14,6 +14,9 @@ class WalletFrame extends StatelessWidget {
   final Widget? tab;                   /// optional override for tab widget
   final Alignment tabAlignment;        /// where to place tab (only used if showTab == true)
   final double tabLift;                /// how far tab floats above frame
+  final bool useGradient;              /// use themed gradient background
+  final Color? backgroundColor;        /// optional solid background override
+  final double borderWidth;            /// frame border width
 
   const WalletFrame({
     super.key,
@@ -25,34 +28,42 @@ class WalletFrame extends StatelessWidget {
     this.tab,
     this.tabAlignment = Alignment.topRight,
     this.tabLift = 12,
+    this.useGradient = true,
+    this.backgroundColor,
+    this.borderWidth = 1.2,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    /// guard against tiny radius values, avoids negative radius downstream
+    // guard against tiny radius values; avoids negative radii downstream
     final safeRadius = math.max(4.0, radius);
     final innerRadius = math.max(0.0, safeRadius - 1);
     final stitchRadius = math.max(0.0, safeRadius - 8);
+    final safeTabLift = math.max(0.0, tabLift);
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                cs.primaryContainer.withOpacity(.65),
-                cs.secondaryContainer.withOpacity(.45),
-              ],
+            color: backgroundColor ?? (useGradient ? null : cs.surfaceContainerHighest.withOpacity(.55)),
+            gradient: useGradient
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      cs.primaryContainer.withOpacity(.65),
+                      cs.secondaryContainer.withOpacity(.45),
+                    ],
+                  )
+                : null,
             ),
             borderRadius: BorderRadius.circular(safeRadius),
             border: Border.all(
               color: cs.outlineVariant.withOpacity(.6),
-              width: 1.2,
+              width: borderWidth,
             ),
             boxShadow: [
               BoxShadow(
@@ -81,7 +92,7 @@ class WalletFrame extends StatelessWidget {
             child: Align(
               alignment: tabAlignment,
               child: Transform.translate(
-                offset: Offset(0, -tabLift),
+                offset: Offset(0, -safeTabLift),
                 child: tab ?? const _WalletTab(),
               ),
             ),
