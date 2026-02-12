@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../lib/ui/theme/colors.dart';
+import 'package:track_that_money/ui/theme/colors.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/container_card.dart
