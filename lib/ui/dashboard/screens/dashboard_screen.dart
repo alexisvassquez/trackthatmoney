@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/wallet_frame.dart';
+import 'package:track_that_money/ui/dashboard/widgets/wallet_frame.dart';
+import 'package:track_that_money/ui/theme/colors.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/dashboard_screen.dart
@@ -126,10 +127,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _navIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() => _navIndex = index);
           _toast(context, "TODO: route index=$index. In development.");
         },
+
+        // design tweaks
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onSurface.withOpacity(.60),
+       
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Data"),
@@ -174,8 +183,9 @@ class _AffirmationPill extends StatelessWidget {
   const _AffirmationPill({required this.text});
 
   @override
-  Widget build(BuildContext cont) {
+  Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
@@ -380,5 +390,7 @@ String _formatCurrency(double value) {
 }
 
 void _toast(BuildContext context, String msg) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)))
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(msg)),
+  );
 }

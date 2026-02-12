@@ -1,10 +1,12 @@
-// track_that_money
-// lib/ui/theme/colors.dart
-
 import 'package:flutter/material.dart';
 
+/// Track That Money
+/// lib/ui/theme/colors.dart
+///
 /// Brand palette - NO RED ANYWHERE :)
+
 class AppColors {
+  // ----- Light theme -----
   // Core brand
   static const moneyGreen      = Color(0xFF479761);
   static const piggyBankPink   = Color(0xFFFFA3C5);
@@ -41,4 +43,56 @@ class AppColors {
 
   // Opacities
   static Color o(Color c, int a) => c.withAlpha(a);    // ex; o(moneyGreen, 32)
+
+  // ----- Dark theme -----
+  // Dark mode foundation
+  static const darkBg          = Color(0xFF0F1412);    // deep, slightly green-black
+  static const darkSurface     = Color(0xFF151B18);    // lifted surface
+  static const darkCard        = Color(0xFF1B2320);    // card / container
+  static const darkOutline     = Color(0xFF2A3530);    // subtle borders
+
+  // Slightly softened pink for dark mode (keeps piggy vibe, less neon)
+  static const piggyBankPinkDark = Color(0xFFE98FAF);
+
+  // ----- ColorSchemes -----
+  static final ColorScheme lightScheme =
+    ColorScheme.fromSeed(seedColor: moneyGreen, brightness: Brightness.light)
+        .copyWith(
+      primary: moneyGreen,
+      secondary: piggyBankPink,
+      tertiary: softGold,
+
+      background: mistGreen,
+      surface: cloud,
+
+      // Semantic (NO RED)
+      error: amber,
+      onError: ink,
+
+      // Helpful tuning
+      outline: neutralGrey.withOpacity(0.45),
+      surfaceTint: moneyGreen,
+    );
+
+  static final ColorScheme darkScheme =
+    ColorScheme.fromSeed(seedColor: moneyGreen, brightness: Brightness.dark)
+        .copyWith(
+      primary: leafGreen,             // pops on dark
+      secondary: piggyBankPinkDark,   // less intense than full pink
+      tertiary: softGold,             // gold accents remain warm
+
+      background: darkBg,
+      surface: darkSurface,
+
+      // Semantic (NO RED)
+      error: amber,
+      onError: Colors.black,
+
+      outline: darkOutline,
+      surfaceTint: leafGreen,
+
+      // Helps text/icons feel less "glarey"
+      onSurface: const Color(0xFFE9F1EC),
+      onBackground: const Color(0xFFE9F1EC),
+    );
 }
