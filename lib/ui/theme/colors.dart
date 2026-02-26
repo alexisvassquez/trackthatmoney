@@ -19,8 +19,8 @@ class AppColors {
   static const deepNavy        = Color(0xFF1F3B4D);  // for text/icons on light mode
 
   // Browns (wallet leather vibes)
-  static const leatherBrown    = Color(0xFF6D4C41);
-  static const cocoaBrown      = Color(0xFF8D6E63);
+  static const leatherBrown    = Color(0xFF6D4C41);  // main body
+  static const cocoaBrown      = Color(0xFF8D6E63);  // dark
   static const sand            = Color(0xFFEDE3D1);  // light leather lining
 
   // Greens (shades + tints)
