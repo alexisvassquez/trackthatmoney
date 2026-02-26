@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:track_that_money/ui/theme/colors.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/wallet_frame.dart
 ///
 /// Wallet container frame
+
 class WalletFrame extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;    /// inner padding for content
@@ -36,6 +38,7 @@ class WalletFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // guard against tiny radius values; avoids negative radii downstream
     final safeRadius = math.max(4.0, radius);
@@ -48,18 +51,9 @@ class WalletFrame extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: backgroundColor ?? (useGradient ? null : cs.surfaceContainerHighest.withOpacity(.55)),
-            gradient: useGradient
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      cs.primaryContainer.withOpacity(.65),
-                      cs.secondaryContainer.withOpacity(.45),
-                    ],
-                  )
-                : null,
-            ),
+            color: AppColors.leatherBrown,
+            gradient: null,
+
             borderRadius: BorderRadius.circular(safeRadius),
             border: Border.all(
               color: cs.outlineVariant.withOpacity(.6),
@@ -73,19 +67,46 @@ class WalletFrame extends StatelessWidget {
               ),
             ],
           ),
+
           child: ClipRRect(
             borderRadius: BorderRadius.circular(innerRadius),
-            child: CustomPaint(
+            child: Stack(
+              children: [
+              
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: const Alignment(-0.8, -0.8),
+                        radius: 1.2,
+                        colors: [
+                          Colors.white.withOpacity(0.08),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+            CustomPaint(
               painter: showStitches
                 ? _StitchesPainter(
-                    color: cs.outline.withOpacity(.55),
+                    color: Colors.white.withOpacity(.55),
                     radius: stitchRadius,
+                    dash: 5,
+                    gap: 3,
+                    strokeWidth: 1.8,
                   )
                 : null,
-              child: Padding(padding: padding, child: child),
+              child: Padding(
+                padding: padding, 
+                child: child,
+              ),
             ),
-          ),
+          ],
         ),
+      ),
+    ),
 
         if (showTab)
           Positioned.fill(
@@ -97,10 +118,10 @@ class WalletFrame extends StatelessWidget {
               ),
             ),
           ),
-      ],
-    );
+        ],
+      );
+    }
   }
-}
 
 class _WalletTab extends StatelessWidget {
   const _WalletTab();
@@ -138,6 +159,7 @@ class _StitchesPainter extends CustomPainter {
   final double inset;
   final double dash;
   final double gap;
+  final double strokeWidth;
 
   const _StitchesPainter({
     required this.color,
@@ -145,6 +167,7 @@ class _StitchesPainter extends CustomPainter {
     this.inset = 10,
     this.dash = 6,
     this.gap = 4,
+    this.strokeWidth = 1.6,
   });
 
   @override
@@ -163,7 +186,7 @@ class _StitchesPainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = strokeWidth;
 
     for (final metric in path.computeMetrics()) {
       double distance = 0;
