@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class JournalForm extends StatefulWidget {
     final Function(String content, String? moodTag) onSubmit;
 
-    const JournalForm({Key? key, required this.onSubmit}) : super(key: key);
+    const JournalForm({super.key, required this.onSubmit});
 
     @override
     _JournalFormState createState() => _JournalFormState();
@@ -50,7 +50,7 @@ class _JournalFormState extends State<JournalForm> {
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                    value: _selectedMood,
+                    initialValue: _selectedMood,
                     items: _moodOptions
                         .map((mood) => DropdownMenuItem(
                                 value: mood,

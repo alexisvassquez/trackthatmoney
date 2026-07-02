@@ -1,6 +1,7 @@
 /// Track That Money
 /// lib/ui/models/expense_tile_vm.dart
 /// UI View Model
+library;
 
 class ExpenseTileVM {
   final String uuid;        // identity for actions/nav

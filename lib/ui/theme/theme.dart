@@ -13,11 +13,9 @@ ThemeData buildAppTheme() {
     secondary: AppColors.brandSecondary,
     tertiary: AppColors.softGold,
     surface: AppColors.cloud,
-    background: AppColors.mistGreen,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
     onSurface: AppColors.ink,
-    onBackground: AppColors.ink,
     error: AppColors.caution,    // Use amber instead of red for "error-like" UI (non-destructive)
     onError: AppColors.ink,
   );
@@ -25,7 +23,7 @@ ThemeData buildAppTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
-    scaffoldBackgroundColor: scheme.background,
+    scaffoldBackgroundColor: scheme.surface,
     textTheme: const TextTheme(
       headlineSmall: TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.2),
       titleMedium:  TextStyle(fontWeight: FontWeight.w600),

@@ -12,7 +12,7 @@ class TrackThatMoneyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _router = GoRouter(
+    final router = GoRouter(
       routes: [
         GoRoute(path: '/', builder: (_, __) => const DashboardScreen()),
         GoRoute(path: '/journal', builder: (_, __) => const JournalScreen()),
@@ -21,7 +21,7 @@ class TrackThatMoneyApp extends StatelessWidget {
 
     return MaterialApp.router(
       title: 'Track That Money',
-      routerConfig: _router,
+      routerConfig: router,
       theme: buildAppTheme(),
     );
   }

@@ -54,7 +54,7 @@ ExpenseTileVM mapExpenseToTileVM(DomainExpense e) {
   );
 }
 
-String _formatCurrencyCents(int cents) => '\$' + (cents / 100).toStringAsFixed(2);
+String _formatCurrencyCents(int cents) => '\$${(cents / 100).toStringAsFixed(2)}';
 
 String _formatDate(DateTime d) => "${d.month}/${d.day}/${d.year}";
 

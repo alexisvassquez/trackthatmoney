@@ -8,7 +8,7 @@ import '../ui/theme/colors.dart';
 // lib/ui/screens/learn_and_grow_screen.dart
 
 class LearnAndGrowScreen extends StatefulWidget {
-  const LearnAndGrowScreen({Key? key}) : super(key: key);
+  const LearnAndGrowScreen({super.key});
 
   @override
   State<LearnAndGrowScreen> createState() => _LearnAndGrowScreenState();

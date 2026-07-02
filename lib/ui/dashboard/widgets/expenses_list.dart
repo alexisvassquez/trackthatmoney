@@ -70,5 +70,5 @@ class _ExpenseTile extends StatelessWidget {
   }
 }
 
-String _formatCurrency(double v) => '\$' + v.toStringAsFixed(2);
+String _formatCurrency(double v) => '\$${v.toStringAsFixed(2)}';
 String _formatDate(DateTime d) => '${d.month}/${d.day}/${d.year}';

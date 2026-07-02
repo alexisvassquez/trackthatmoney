@@ -30,7 +30,7 @@ class JournalEntry {
     }
 
     // Factory constructor for reading from JSON
-    factory JournalEntry.fromJson(Map<String, dynamic> json) {
+    void JournalEntry.dynamic fromJson(Map<String, dynamic> json) {
         return JournalEntry(
             id: json['id'],
             date: DateTime.parse(json['date']),

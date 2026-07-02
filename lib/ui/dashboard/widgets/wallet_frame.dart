@@ -164,10 +164,13 @@ class _StitchesPainter extends CustomPainter {
   const _StitchesPainter({
     required this.color,
     required this.radius,
+<<<<<<< HEAD
     this.inset = 10,
     this.dash = 6,
     this.gap = 4,
     this.strokeWidth = 1.6,
+=======
+>>>>>>> 9becfba (updating project)
   });
 
   @override

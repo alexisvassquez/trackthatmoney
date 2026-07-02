@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
 import 'package:track_that_money/models/journal_entry.dart';
-import 'dart:convert';
 
 void main() {
     group('JournalEntry Mood + Savings Input', () {

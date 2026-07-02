@@ -5,7 +5,7 @@ import '../../models/journal_entry.dart';
 import 'journal_form.dart';
 
 class JournalScreen extends StatefulWidget {
-  const JournalScreen({Key? key}) : super(key: key);
+  const JournalScreen({super.key});
   
   @override
   _JournalScreenState createState() => _JournalScreenState();

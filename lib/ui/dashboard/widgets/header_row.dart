@@ -60,7 +60,7 @@ class _HeaderRow extends StatelessWidget {
 
 String _greetingText(String name) {
   final h = DateTime.now().hour,
-  final s = h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening');
+  final String s = h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening');
   return '$s, $name';
 }
 

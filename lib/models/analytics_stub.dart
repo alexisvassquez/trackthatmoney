@@ -1,5 +1,6 @@
 /// track_that_money
 /// lib/models/analytics_stub.dart
+library;
 import 'dart:convert';
 
 /// Represents a single financial insight from a transaction

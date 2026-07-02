@@ -1,4 +1,5 @@
 /// lib/models/piggy_bank_goal.dart
+library;
 
 import 'package:uuid/uuid.dart';
 

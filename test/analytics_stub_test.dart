@@ -1,5 +1,6 @@
 /// track_that_money
 /// test/analytics_stub_test.dart
+library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:track_that_money/models/analytics_stub.dart';
 

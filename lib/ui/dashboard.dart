@@ -32,7 +32,7 @@ class DashboardPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Track That Money 💸',
                       style: TextStyle(
@@ -84,7 +84,7 @@ class DashboardPage extends StatelessWidget {
             ),
             const Text(
               "Mood': 🤑 motivated",
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
             ),
           ],
         ),
@@ -228,7 +228,7 @@ class _StitchPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 /// Sections
@@ -244,7 +244,6 @@ class _Section extends StatelessWidget {
       Row(children: [
         Text(title, style: Theme.of(context).textTheme.titleMedium),
         const Spacer(),
-        if (trailing != null) trailing!,
       ]),
       SizedBox(height: 10),
       Container(

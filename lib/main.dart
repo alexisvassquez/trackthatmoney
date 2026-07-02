@@ -23,8 +23,6 @@ final colorScheme = ColorScheme(
   onTertiary: Colors.black,
   surface: const Color(0xFFFAFAFA),         // light background
   onSurface: Colors.black87,
-  background: const Color(0xFFF5F5F5),      // neutral grey background
-  onBackground: Colors.black,
   error: const Color(0xFFFFB74D),           // amber, no red
   onError: Colors.black,
 );
