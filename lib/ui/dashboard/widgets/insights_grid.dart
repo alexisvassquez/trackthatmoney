@@ -1,18 +1,17 @@
-import 'package:flutter/matrial.dart';
-import '..lib/ui/theme/colors.dart';
-import '../dashboard/dashboard_screen.dart';
+import 'package:flutter/material.dart';
+import '../../models/model_mapping.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/insights_grid.dart
 
-class _InsightsGrid extends StatelessWidget {
+class InsightsGrid extends StatelessWidget {
   final List<Insight> insights;
-  const _InsightsGrid({required this.insights});
+  const InsightsGrid({super.key, required this.insights});
 
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
-    final cross = w >= 1000 ? 4 : (w >= 760 ? 3 :2);
+    final cross = w >= 1000 ? 4 : (w >= 760 ? 3 : 2);
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -23,7 +22,7 @@ class _InsightsGrid extends StatelessWidget {
         mainAxisSpacing: 12,
       ),
       itemCount: insights.length,
-      itemBuilder: (context, i) => _InsightsCard(insight: insights[i]),
+      itemBuilder: (context, i) => _InsightCard(insight: insights[i]),
     );
   }
 }
@@ -35,30 +34,41 @@ class _InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return _ContainerCard(
+    return Container(
       padding: const EdgeInsets.all(16),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Icon(insight.icon, size: 28, color: theme.colorScheme.primary),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              insight.title, 
-              style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .55),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: .55)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(insight.icon, size: 28, color: theme.colorScheme.primary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  insight.title,
+                  style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  insight.value,
+                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  insight.subtext,
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
             ),
-            SizedBox(height: 8),
-            Text(
-              insight.value, 
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            SizedBox(height: 4),
-            Text(
-              insight.subtext, 
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-            ),
-          ]),
-        ),
-      ]),
+          ),
+        ],
+      ),
     );
   }
 }
