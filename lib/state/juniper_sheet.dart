@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
-import '../screens/dashboard_screen.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/state/juniper_sheet.dart
-
-class _JuniperSheet extended StatefulWidget {
-  final ScrollController scrollController;
-  const _JuniperSheet({required this.scrollController});
-  @override State<_JuniperSheet> createState () => _JuniperSheetState();
-}
+/// Junper2.0 bottom sheet
+/// UI shell, API wiring(todo)
 
 enum _Role { user, assistant }
+
 class _ChatMessage {
   final _Role role;
   final String text;
   const _ChatMessage({required this.role, required this.text});
 }
 
-class _JuniperSheetState extends State<_JuniperSheet> {
+class JuniperSheet extends StatefulWidget {
+  final ScrollController scrollController;
+  const JuniperSheet({super.key, required this.scrollController});
+
+  @override
+  State<JuniperSheet> createState() => _JuniperSheetState();
+}
+
+class _JuniperSheetState extends State<JuniperSheet> {
   final _controller = TextEditingController();
-  final List<_ChatMessage> _messages = const [
-    _ChatMessage(
+  final List<_ChatMessage> _messages = [
+    const _ChatMessage(
       role: _Role.assistant,
       text: "Hi! I'm Juniper2.0. How can I help with your budget today? 🙂",
     ),
   ];
 
-  @override void dispose() {
+  @override
+  void dispose() {
     _controller.dispose();
     super.dispose();
   }
@@ -35,10 +40,12 @@ class _JuniperSheetState extends State<_JuniperSheet> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: cs.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
@@ -50,18 +57,18 @@ class _JuniperSheetState extends State<_JuniperSheet> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
               width: 44,
               height: 5,
               decoration: BoxDecoration(
                 color: cs.outlineVariant,
-                borderRadius: BorderRadius.circuler(999),
+                borderRadius: BorderRadius.circular(999),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             const ListTile(
-              leading: Icon(Icons.smart_toy_outline),
+              leading: Icon(Icons.smart_toy_outlined),
               title: Text('Juniper2.0'),
               subtitle: Text('Your budgeting copilot'),
             ),
@@ -76,14 +83,23 @@ class _JuniperSheetState extends State<_JuniperSheet> {
                   final msg = _messages[_messages.length - 1 - index];
                   final isUser = msg.role == _Role.user;
                   return Align(
-                    alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 6),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
-                        color: isUser ? cs.primaryContainer : cs.secondaryContainer,
+                        color: isUser
+                            ? cs.primaryContainer
+                            : cs.secondaryContainer,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: cs.outlineVariant.withValues(alpha: .6)),
+                        border: Border.all(
+                          color: cs.outlineVariant.withValues(alpha: .6),
+                        ),
                       ),
                       child: Text(msg.text),
                     ),
@@ -91,7 +107,7 @@ class _JuniperSheetState extends State<_JuniperSheet> {
                 },
               ),
             ),
-            const Divider (height: 1),
+            const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
               child: Row(
@@ -103,27 +119,39 @@ class _JuniperSheetState extends State<_JuniperSheet> {
                       onSubmitted: (_) => _send(),
                       decoration: const InputDecoration(
                         hintText: 'Ask me about budgets, goals, or tips...',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(14)),
+                        ),
                         isDense: true,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
-                  IconButton(icon: const Icon(Icons.send_rounded), onPressed: _send),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.send_rounded),
+                    onPressed: _send,
+                  ),
                 ],
               ),
             ),
           ],
         ),
-      );
-    }
+      ),
+    );
+  }
 
   void _send() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     setState(() {
-      // FastAPI: POST /encourage + /predict
-      setState(() => _messages.add(_ChatMessage(role: _Role.assistant, text:reply)));
-    });    
+      _messages.add(_ChatMessage(role: _Role.user, text: text));
+      // call POST /encourage and replace stub (todo)
+      _messages.add(
+        const _ChatMessage(
+          role: _Role.assistant,
+          text: "Got it! Full responses coming soon. 💚",
+        ),
+      );
+    });
   }
 }
