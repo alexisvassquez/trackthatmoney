@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:track_that_money/ui/theme/colors.dart';
-=======
-import 'package:track_that_money/ui/dashboard/lib/ui/theme/colors.dart';
->>>>>>> 9becfba (updating project)
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/container_card.dart

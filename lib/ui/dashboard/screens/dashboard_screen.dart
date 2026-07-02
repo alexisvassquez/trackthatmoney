@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:track_that_money/ui/dashboard/widgets/wallet_frame.dart';
-import 'package:track_that_money/ui/theme/colors.dart';
+import '../widgets/wallet_frame.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/dashboard_screen.dart
@@ -22,7 +21,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _navIndex = 0;
 
-  // TODO: replace with real data source. These are hardcoded for a reason.
+  // replace with real data source. These are hardcoded for a reason. (todo)
   final String _affirmation = "✨ Awareness is progress. Tiny wins count.";
   final double _spentThisMonth = 312.45;
   final double _budgetThisMonth = 650.00;
@@ -105,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: "Top expenses",
               actionLabel: "View all",
               onAction: () {
-                // TODO: route to full expenses screen
+                // route to full expenses screen (todo)
                 _toast(
                   context,
                   "TODO: Navigate to full expenses list. In development.",
@@ -148,7 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(
           context,
-        ).colorScheme.onSurface.withValues(alpha: $1)(.60),
+        ).colorScheme.onSurface.withValues(alpha: .60),
 
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
@@ -206,9 +205,9 @@ class _AffirmationPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: cs.secondaryContainer.withValues(alpha: $1)(.55),
+        color: cs.secondaryContainer.withValues(alpha: .55),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.6)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: .6)),
       ),
       child: Text(
         text,
@@ -279,9 +278,9 @@ class _ExpenseTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: $1)(.55),
+        color: cs.surfaceContainerHighest.withValues(alpha: .55),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.55)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: .55)),
       ),
       child: Row(
         children: [
@@ -289,7 +288,7 @@ class _ExpenseTile extends StatelessWidget {
             height: 36,
             width: 36,
             decoration: BoxDecoration(
-              color: cs.primaryContainer.withValues(alpha: $1)(.55),
+              color: cs.primaryContainer.withValues(alpha: .55),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(expense.icon, color: cs.onPrimaryContainer, size: 18),
@@ -327,9 +326,9 @@ class _EmptyExpensesCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: $1)(.45),
+        color: cs.surfaceContainerHighest.withValues(alpha: .45),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.55)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: .55)),
       ),
       child: Row(
         children: [
@@ -348,44 +347,6 @@ class _EmptyExpensesCard extends StatelessWidget {
       ),
     );
   }
-}
-
-void _openJuniperAssistant(BuildContext context) {
-  // Placeholder until real Juniper2.0 sheet is ready
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) => DraggableScrollableSheet(
-      initialChildSize: 0.75,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (ctx, scroll) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(ctx).colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
-        ),
-        child: ListView(
-          controller: scroll,
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              "Juniper2.0 assistant",
-              style: Theme.of(
-                ctx,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "In development: insights, nudges, and encouragment mode.",
-              style: Theme.of(ctx).textTheme.bodyMedium,
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 String _formatCurrency(double value) {

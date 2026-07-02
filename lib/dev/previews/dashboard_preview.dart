@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../preview_shell.dart';
 import 'package:track_that_money/ui/dashboard/screens/dashboard_screen.dart';
-import 'package:track_that_money/ui/theme/colors.dart';
 
 /// Track That Money
 /// lib/dev/preview/dashboard_preview.dart

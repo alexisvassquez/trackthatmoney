@@ -84,19 +84,25 @@ String _formatDate(DateTime d) => "${d.month}/${d.day}/${d.year}";
 String _emojiForCategory(String category, {bool isSubscription = false}) {
   final c = category.toLowerCase();
   if (isSubscription) return '☁️';
-  if (c.contains('grocery') || c.contains('grocer') || c.contains('food'))
+  if (c.contains('grocery') || c.contains('grocer') || c.contains('food')) {
     return '🍅';
-  if (c.contains('dining') || c.contains('restaurant') || c.contains('cafe'))
+  }
+  if (c.contains('dining') || c.contains('restaurant') || c.contains('cafe')) {
     return '🍽️';
+  }
   if (c.contains('transportation') ||
       c.contains('transit') ||
-      c.contains('bus'))
+      c.contains('bus')) {
     return '🚍';
-  if (c.contains('utilities') || c.contains('internet') || c.contains('phone'))
+  }
+  if (c.contains('utilities') || c.contains('internet') || c.contains('phone')) {
     return '📱';
-  if (c.contains('health') || c.contains('copay') || c.contains('pharmacy'))
+  }
+  if (c.contains('health') || c.contains('copay') || c.contains('pharmacy')) {
     return '🏥';
-  if (c.contains('entertain') || c.contains('music') || c.contains('gaming'))
+  }
+  if (c.contains('entertain') || c.contains('music') || c.contains('gaming')) {
     return '🎧';
+  }
   return '💳';
 }

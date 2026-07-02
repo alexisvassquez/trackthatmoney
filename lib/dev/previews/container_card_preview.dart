@@ -12,7 +12,7 @@ void main() {
       child: Padding(
         padding: EdgeInsets.all(16),
         child: ContainerCard(
-          child: const Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
