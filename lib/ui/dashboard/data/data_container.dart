@@ -9,7 +9,7 @@ class DashboardData {
   final Mood mood;
   final String affirmation;
   final List<Insight> insights;
-  final List<Expense> topExpenses;
+  final List<DomainExpense> topExpenses;
   final VoidCallback onOpenChatbot;
   final VoidCallback onViewAllExpenses;
 
