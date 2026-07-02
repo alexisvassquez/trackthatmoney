@@ -58,7 +58,6 @@ Even $1 saved is a win. This app will treat it like one.
 | AI purpose | Categorization | Encouragement |
 | Built for | Financially stable optimizers | People starting from overwhelmed |
 | Emotional design | None | CBT-informed throughout |
-| Cost | $99–$199/year (Monarch) | Free |
 
 ---
 
@@ -125,19 +124,17 @@ By merging fintech precision with wellness empathy, we create a new class of tec
 
 ## Tech Stack
 
-**Frontend**
+- **Frontend**
+  - Flutter `^3.8.1` / Dart
+  - Riverpod for state management
+  - GoRouter for navigation
+  - Target platform: Android (mobile-first)
 
-- Flutter `^3.8.1` / Dart
-- Riverpod for state management
-- GoRouter for navigation
-- Target platform: Android (mobile-first)
-
-**Backend**
-
-- Python / FastAPI
-- Uvicorn (ASGI server)
-- scikit-learn, pandas, numpy (Juniper2.0 ML core)
-- OAuth2 authentication
+- **Backend**
+  - Python / FastAPI
+  - Uvicorn (ASGI server)
+  - scikit-learn, pandas, numpy (Juniper2.0 ML core)
+  - OAuth2 authentication
 
 ---
 
@@ -218,7 +215,7 @@ flutter build apk --debug
 
 ## Project Structure
 
-```bash
+```cpp
 trackthatmoney/
 ├── backend/
 │   └── juniper2_0/          # FastAPI backend + Juniper2.0 AI engine
@@ -246,7 +243,7 @@ trackthatmoney/
 ## API Endpoints
 
 | Method | Endpoint | Description | Auth |
-| --- | --- | ---  | --- |
+| --- | --- | --- | --- |
 | `POST` | `/token` | Get dev access token | None |
 | `POST` | `/encourage` | Get Juniper2.0 encouragement for an expense | Bearer token |
 | `POST` | `/predict` | Predict spending behavior | Bearer token |
