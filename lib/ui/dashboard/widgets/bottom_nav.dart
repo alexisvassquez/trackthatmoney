@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:track_that_money/ui/dashboard/lib/ui/theme/colors.dart';
-import '../widgets/dashboard_screen.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/bottom_nav.dart
 
-class _BottomBar extends StatelessWidget {
-  const _BottomBar();
+class BottomBar extends StatelessWidget {
+  const BottomBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
       selectedIndex: 0,
       onDestinationSelected: (i) {
-        /// TODO: wire bottom nav to other screens -> future
+        /// wire bottom nav to other screens (todo)
       },
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

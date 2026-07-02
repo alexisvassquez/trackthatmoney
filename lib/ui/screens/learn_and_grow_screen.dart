@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../services/resource_loader.dart';
-import '../models/educational_resource.dart';
-import '../ui/theme/colors.dart';
+import '../../services/resource_loader.dart';
+import '../../models/educational_resource.dart';
+import '../theme/colors.dart';
 
-// track_that_money
-// lib/ui/screens/learn_and_grow_screen.dart
+/// Track That Money
+/// lib/ui/screens/learn_and_grow_screen.dart
 
 class LearnAndGrowScreen extends StatefulWidget {
   const LearnAndGrowScreen({super.key});
@@ -34,7 +34,7 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
     return Scaffold(
       backgroundColor: AppColors.cloud,
       appBar: AppBar(
-        title: const Text("Learn & Grow),
+        title: const Text("Learn & Grow"),
         centerTitle: true,
         backgroundColor: AppColors.moneyGreen,
         foregroundColor: Colors.white,
@@ -100,9 +100,9 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
 
                 /// Category dropdown
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizonal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: DecoratedBox(
-                    decoration: BoxDecoraton(
+                    decoration: BoxDecoration(
                       color: AppColors.cloud,
                       border: Border.all(color: AppColors.mintGreen),
                       borderRadius: BorderRadius.circular(25),

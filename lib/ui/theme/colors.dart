@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Track That Money
 /// lib/ui/theme/colors.dart
-///
 /// Brand palette - NO RED ANYWHERE :)
 
 class AppColors {
@@ -66,7 +65,6 @@ class AppColors {
         secondary: piggyBankPink,
         tertiary: softGold,
 
-        background: mistGreen,
         surface: cloud,
 
         // Semantic (NO RED)
@@ -74,7 +72,7 @@ class AppColors {
         onError: ink,
 
         // Helpful tuning
-        outline: neutralGrey.withValues(alpha: $1)(0.45),
+        outline: neutralGrey.withValues(alpha: .45),
         surfaceTint: moneyGreen,
       );
 
@@ -87,7 +85,6 @@ class AppColors {
         secondary: piggyBankPinkDark, // less intense than full pink
         tertiary: softGold, // gold accents remain warm
 
-        background: darkBg,
         surface: darkSurface,
 
         // Semantic (NO RED)
@@ -99,6 +96,5 @@ class AppColors {
 
         // Helps text/icons feel less "glarey"
         onSurface: const Color(0xFFE9F1EC),
-        onBackground: const Color(0xFFE9F1EC),
       );
 }
