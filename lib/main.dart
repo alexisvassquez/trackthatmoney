@@ -1,47 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/app.dart';
-import 'ui/theme/colors.dart';
-import 'models/user.dart';
-import 'ui/dashboard/screens/dashboard_screen.dart';
 
-/// Track That Money
-/// lib/main.dart
+// Track That Money
+// main.dart
+// TrackThatMoneyApp lives in app.dart
 
-void main() {  
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: TrackThatMoneyApp()));
-}
-
-final colorScheme = ColorScheme(
-  brightness: Brightness.light,
-  primary: const Color(0xFF479761),         // money green
-  onPrimary: Colors.white,
-  secondary:  const Color(0xFFF48FB1),      // piggy bank pink
-  onSecondary: Colors.white,
-  tertiary: const Color(0xFFCEBC81),        // soft gold
-  onTertiary: Colors.black,
-  surface: const Color(0xFFFAFAFA),         // light background
-  onSurface: Colors.black87,
-  error: const Color(0xFFFFB74D),           // amber, no red
-  onError: Colors.black,
-);
-
-class TrackThatMoneyApp extends StatelessWidget {
-  const TrackThatMoneyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = User(name: 'Lexy');
-
-    return MaterialApp(
-      title: 'Track That Money',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        useMaterial3: true,
-      ),
-      home: DashboardPage(user: user),
-    );
-  }
 }

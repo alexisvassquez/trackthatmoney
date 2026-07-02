@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'expense_tile_vm.dart';
+import 'package:uuid/uuid.dart';
 
 /// Track That Money
 /// lib/ui/models/model_mapping.dart
 /// Central place for domain models + UI mapping helpers
 
 class Mood {
-  final String hint;    // mood label "motivated"
+  final String hint; // mood label "motivated"
   final String emoji;
   const Mood({required this.hint, required this.emoji});
 }
 
 class Insight {
-  final String title;    // "this week"
-  final String value;    // currency formatted "$0.00"
-  final String subtext;  // category
-  final IconData icon;   // UI
+  final String title; // "this week"
+  final String value; // currency formatted "$0.00"
+  final String subtext; // category
+  final IconData icon; // UI
   const Insight({
-    required this.title, 
-    required this.value, 
+    required this.title,
+    required this.value,
     required this.subtext,
     required this.icon,
   });
@@ -42,6 +43,27 @@ class DomainExpense {
     required this.postedAt,
     required this.isSubscription,
   });
+
+  static const _uuid = Uuid();
+
+  factory DomainExpense.create({
+    required String userUuid,
+    required String merchant,
+    required String category,
+    required int amountCents,
+    required DateTime date,
+    required bool isSubscription,
+  }) {
+    return DomainExpense(
+      uuid: _uuid.v4(),
+      userUuid: userUuid,
+      merchant: merchant,
+      category: category,
+      amountCents: amountCents,
+      postedAt: date,
+      isSubscription: isSubscription,
+    );
+  }
 }
 
 ExpenseTileVM mapExpenseToTileVM(DomainExpense e) {
@@ -54,18 +76,27 @@ ExpenseTileVM mapExpenseToTileVM(DomainExpense e) {
   );
 }
 
-String _formatCurrencyCents(int cents) => '\$${(cents / 100).toStringAsFixed(2)}';
+String _formatCurrencyCents(int cents) =>
+    '\$${(cents / 100).toStringAsFixed(2)}';
 
 String _formatDate(DateTime d) => "${d.month}/${d.day}/${d.year}";
 
 String _emojiForCategory(String category, {bool isSubscription = false}) {
   final c = category.toLowerCase();
   if (isSubscription) return '☁️';
-  if (c.contains('grocery') || c.contains('grocer') || c.contains('food')) return '🍅';
-  if (c.contains('dining') || c.contains('restaurant') || c.contains('cafe')) return '🍽️';
-  if (c.contains('transportation') || c.contains('transit') || c.contains('bus')) return '🚍';
-  if (c.contains('utilities') || c.contains('internet') || c.contains('phone')) return '📱';
-  if (c.contains('health') || c.contains('copay') || c.contains('pharmacy')) return '🏥';
-  if (c.contains('entertain') || c.contains('music') || c.contains('gaming')) return '🎧';
+  if (c.contains('grocery') || c.contains('grocer') || c.contains('food'))
+    return '🍅';
+  if (c.contains('dining') || c.contains('restaurant') || c.contains('cafe'))
+    return '🍽️';
+  if (c.contains('transportation') ||
+      c.contains('transit') ||
+      c.contains('bus'))
+    return '🚍';
+  if (c.contains('utilities') || c.contains('internet') || c.contains('phone'))
+    return '📱';
+  if (c.contains('health') || c.contains('copay') || c.contains('pharmacy'))
+    return '🏥';
+  if (c.contains('entertain') || c.contains('music') || c.contains('gaming'))
+    return '🎧';
   return '💳';
 }
