@@ -70,16 +70,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text(
                         _formatCurrency(_spentThisMonth),
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                       const SizedBox(width: 8),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Text(
                           "spent",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
                                 color: cs.onSurfaceVariant,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -91,8 +91,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     "Budget: ${_formatCurrency(_budgetThisMonth)}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
+                      color: cs.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -106,7 +106,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               actionLabel: "View all",
               onAction: () {
                 // TODO: route to full expenses screen
-                _toast(context, "TODO: Navigate to full expenses list. In development.");
+                _toast(
+                  context,
+                  "TODO: Navigate to full expenses list. In development.",
+                );
               },
             ),
             const SizedBox(height: 10),
@@ -114,13 +117,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (_topExpenses.isEmpty)
               _EmptyExpensesCard(
                 message: "No expenses yet - future you says thanks. 🙂",
-                onAdd: () => _toast(context, "TODO: open add expense flow. In development."),
+                onAdd: () => _toast(
+                  context,
+                  "TODO: open add expense flow. In development.",
+                ),
               )
             else
-              ..._topExpenses.take(5).map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: _ExpenseTile(expense: e),
-                  )),
+              ..._topExpenses
+                  .take(5)
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _ExpenseTile(expense: e),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -136,14 +146,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         // design tweaks
         backgroundColor: Theme.of(context).colorScheme.surface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor:
-            Theme.of(context).colorScheme.onSurface.withOpacity(.60),
-       
+        unselectedItemColor: Theme.of(
+          context,
+        ).colorScheme.onSurface.withValues(alpha: $1)(.60),
+
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Data"),
-          BottomNavigationBarItem(icon: Icon(Icons.savings), label: "Piggybank"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.savings),
+            label: "Piggybank",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Settings",
+          ),
         ],
       ),
     );
@@ -161,17 +178,17 @@ class _DashboardHeader extends StatelessWidget {
       children: [
         Text(
           "Track That Money 💸",
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 4),
         Text(
           "An expense tracking app to know why you're broke",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
-              ),
+            color: cs.onSurfaceVariant,
+            fontStyle: FontStyle.italic,
+          ),
         ),
       ],
     );
@@ -189,15 +206,15 @@ class _AffirmationPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: cs.secondaryContainer.withOpacity(.55),
+        color: cs.secondaryContainer.withValues(alpha: $1)(.55),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: cs.outlineVariant.withOpacity(.6)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.6)),
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -222,19 +239,16 @@ class _SectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         TextButton(
           onPressed: onAction,
           child: Text(
             actionLabel,
-            style: TextStyle(
-              color: cs.primary,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(color: cs.primary, fontWeight: FontWeight.w700),
           ),
         ),
       ],
@@ -265,9 +279,9 @@ class _ExpenseTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withOpacity(.55),
+        color: cs.surfaceContainerHighest.withValues(alpha: $1)(.55),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withOpacity(.55)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.55)),
       ),
       child: Row(
         children: [
@@ -275,29 +289,25 @@ class _ExpenseTile extends StatelessWidget {
             height: 36,
             width: 36,
             decoration: BoxDecoration(
-              color: cs.primaryContainer.withOpacity(.55),
+              color: cs.primaryContainer.withValues(alpha: $1)(.55),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              expense.icon,
-              color: cs.onPrimaryContainer,
-              size: 18,
-            ),
+            child: Icon(expense.icon, color: cs.onPrimaryContainer, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               expense.label,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           Text(
             _formatCurrency(expense.amount),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
         ],
       ),
@@ -309,10 +319,7 @@ class _EmptyExpensesCard extends StatelessWidget {
   final String message;
   final VoidCallback onAdd;
 
-  const _EmptyExpensesCard({
-    required this.message,
-    required this.onAdd,
-  });
+  const _EmptyExpensesCard({required this.message, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -320,9 +327,9 @@ class _EmptyExpensesCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withOpacity(.45),
+        color: cs.surfaceContainerHighest.withValues(alpha: $1)(.45),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withOpacity(.55)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: $1)(.55)),
       ),
       child: Row(
         children: [
@@ -330,16 +337,13 @@ class _EmptyExpensesCard extends StatelessWidget {
             child: Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: cs.onSurfaceVariant,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: cs.onSurfaceVariant,
+              ),
             ),
           ),
           const SizedBox(width: 12),
-          ElevatedButton(
-            onPressed: onAdd,
-            child: const Text("Add"),
-          ),
+          ElevatedButton(onPressed: onAdd, child: const Text("Add")),
         ],
       ),
     );
@@ -368,9 +372,9 @@ void _openJuniperAssistant(BuildContext context) {
           children: [
             Text(
               "Juniper2.0 assistant",
-              style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+              style: Theme.of(
+                ctx,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
             Text(
@@ -390,7 +394,5 @@ String _formatCurrency(double value) {
 }
 
 void _toast(BuildContext context, String msg) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(msg)),
-  );
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }

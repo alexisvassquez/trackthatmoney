@@ -42,7 +42,7 @@ class _JuniperSheetState extends State<_JuniperSheet> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withOpacity(.18),
+              color: cs.shadow.withValues(alpha: .18),
               blurRadius: 24,
               offset: const Offset(0, -8),
             ),
@@ -83,7 +83,7 @@ class _JuniperSheetState extends State<_JuniperSheet> {
                       decoration: BoxDecoration(
                         color: isUser ? cs.primaryContainer : cs.secondaryContainer,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: cs.outlineVariant.withOpacity(.6)),
+                        border: Border.all(color: cs.outlineVariant.withValues(alpha: .6)),
                       ),
                       child: Text(msg.text),
                     ),

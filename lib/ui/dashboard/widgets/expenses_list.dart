@@ -19,13 +19,13 @@ class _ExpenseTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withOpacity(.06),
+            color: theme.colorScheme.shadow.withValues(alpha: .06),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
         border: Border.all(
-          color: theme.colorScheme.outlineVariant.withOpacity(.5),
+          color: theme.colorScheme.outlineVariant.withValues(alpha: .5),
           width: 1,
         ),
       ),

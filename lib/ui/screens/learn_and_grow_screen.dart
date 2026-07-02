@@ -165,7 +165,7 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                           ),
                           trailing: Chip(
                             label: Text(r.tag),
-                            backgroundColor: AppColors.leafGreen.withOpacity(.2),
+                            backgroundColor: AppColors.leafGreen.withValues(alpha: .2),
                             labelStyle: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,

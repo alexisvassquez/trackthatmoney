@@ -56,12 +56,12 @@ class WalletFrame extends StatelessWidget {
 
             borderRadius: BorderRadius.circular(safeRadius),
             border: Border.all(
-              color: cs.outlineVariant.withOpacity(.6),
+              color: cs.outlineVariant.withValues(alpha: .6),
               width: borderWidth,
             ),
             boxShadow: [
               BoxShadow(
-                color: cs.shadow.withOpacity(.08),
+                color: cs.shadow.withValues(alpha: .08),
                 blurRadius: 24,
                 offset: const Offset(0, 12),
               ),
@@ -80,7 +80,7 @@ class WalletFrame extends StatelessWidget {
                         center: const Alignment(-0.8, -0.8),
                         radius: 1.2,
                         colors: [
-                          Colors.white.withOpacity(0.08),
+                          Colors.white.withValues(alpha: 0.08),
                           Colors.transparent,
                         ],
                       ),
@@ -91,7 +91,7 @@ class WalletFrame extends StatelessWidget {
             CustomPaint(
               painter: showStitches
                 ? _StitchesPainter(
-                    color: Colors.white.withOpacity(.55),
+                    color: Colors.white.withValues(alpha: .55),
                     radius: stitchRadius,
                     dash: 5,
                     gap: 3,
@@ -137,7 +137,7 @@ class _WalletTab extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(.16),
+            color: cs.shadow.withValues(alpha: .16),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

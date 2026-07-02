@@ -3,7 +3,7 @@ import '../services/user_prefs.dart';
 
 /// Track That Money
 /// lib/state/user_providers.dart
-// Current user name (null if not set)
+/// Current user name (null if not set)
 
 final userNameProvider = FutureProvider<String?>((ref) async {
   return UserPrefs.getUserName();
