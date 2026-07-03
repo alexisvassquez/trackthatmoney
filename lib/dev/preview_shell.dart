@@ -34,10 +34,6 @@ class _PreviewShellState extends State<PreviewShell> {
         colorScheme: AppColors.lightScheme,    // from colors.dart
         useMaterial3: true,
       ),
-      darkTheme: ThemeData(
-        colorScheme: AppColors.darkScheme,
-        useMaterial3: true,
-      ),
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
         appBar: AppBar(
