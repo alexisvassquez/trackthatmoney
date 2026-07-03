@@ -2,99 +2,78 @@ import 'package:flutter/material.dart';
 
 /// Track That Money
 /// lib/ui/theme/colors.dart
-/// Brand palette - NO RED ANYWHERE :)
+/// Brand palette
+/// "Warm & Hopeful" — NO RED ANYWHERE :)
+/// No red for a fintech app is a design choice by the
+/// developer.
 
 class AppColors {
-  // ----- Light theme -----
-  // Core brand
-  static const moneyGreen = Color(0xFF479761);
-  static const piggyBankPink = Color(0xFFFFA3C5);
-  static const softGold = Color(0xFFCEBC81);
-  static const neutralGrey = Color(0xFF9E9E9E);
-  static const amber = Color(0xFFFFB74D);
+  AppColors._(); // non-instantiable
 
-  // Blues
-  static const calmBlue = Color(0xFF4F7CAC); // calm, trustworthy
-  static const deepNavy = Color(0xFF1F3B4D); // for text/icons on light mode
+  // ----- Core brand -----
+  static const sage = Color(0xFF7AAE82); // primary — growth, calm, safety
+  static const peach = Color(0xFFF2A98A); // warmth, self-kindness, reward
+  static const honeyGold = Color(0xFFD4A843); // achievement, celebration
+  static const seafoam = Color(0xFF7EB5A6); // reflection, calm, flow
 
-  // Browns (wallet leather vibes)
-  static const leatherBrown = Color(0xFF6D4C41); // main body
-  static const cocoaBrown = Color(0xFF8D6E63); // dark
-  static const sand = Color(0xFFEDE3D1); // light leather lining
+  // ----- Neutrals & backgrounds -----
+  static const cream = Color(0xFFFAF6F0); // app background
+  static const sand = Color(0xFFE8D9BC); // card surfaces
+  static const warmLinen = Color(0xFFE8DFC8); // borders, dividers
+  static const deepMoss = Color(0xFF2C3828); // primary text
 
-  // Greens (shades + tints)
-  static const forestGreen = Color(0xFF2E7D32); // deep accent color
-  static const leafGreen = Color(0xFF66BB6A); // mid accent
-  static const mintGreen = Color(
-    0xFFA5D6A7,
-  ); // light accent for calm, encouragement, and trustworthiness
-  static const mistGreen = Color(0xFFE6F3EA); // very light background
+  // ----- Supporting tones -----
+  static const sageDark = Color(0xFF4E7A55); // pressed states, deep accents
+  static const sageLight = Color(
+    0xFFB8D9BC,
+  ); // light accents, success backgrounds
+  static const sageMist = Color(0xFFEBF4EC); // very light surface tint
+  static const peachLight = Color(0xFFFADDD3); // soft peach backgrounds
+  static const amber = Color(0xFFE8A020); // caution — warm, not punitive
 
-  // Greys (UI)
-  static const ink = Color(0xFF1E1E1E);
-  static const graphite = Color(0xFF444444);
-  static const cloud = Color(0xFFF7F7F8);
+  // ----- Text -----
+  static const inkWarm = Color(
+    0xFF2C3828,
+  ); // same as deepMoss — alias for clarity
+  static const inkMuted = Color(0xFF6B6560); // secondary text, hints
 
-  // Semantic tokens (use in widgets)
-  static const brandPrimary = moneyGreen;
-  static const brandSecondary = piggyBankPink;
-  static const success = mintGreen;
+  // ----- Semantic tokens -----
+  static const brandPrimary = sage;
+  static const brandSecondary = peach;
+  static const brandAccent = honeyGold;
+  static const success = sageLight;
   static const caution = amber; // no red for errors or negative balances
-  static const info = calmBlue;
 
-  // Opacities
-  static Color o(Color c, int a) => c.withAlpha(a); // ex; o(moneyGreen, 32)
+  // ----- Utility -----
+  /// Apply alpha to any color. e.g. o(sage, 80)
+  static Color o(Color c, int a) => c.withAlpha(a);
 
-  // ----- Dark theme -----
-  // Dark mode foundation
-  static const darkBg = Color(0xFF0F1412); // deep, slightly green-black
-  static const darkSurface = Color(0xFF151B18); // lifted surface
-  static const darkCard = Color(0xFF1B2320); // card / container
-  static const darkOutline = Color(0xFF2A3530); // subtle borders
-
-  // Slightly softened pink for dark mode (keeps piggy vibe, less neon)
-  static const piggyBankPinkDark = Color(0xFFE98FAF);
-
-  // ----- ColorSchemes -----
+  // ----- ColorScheme -----
   static final ColorScheme lightScheme =
       ColorScheme.fromSeed(
-        seedColor: moneyGreen,
+        seedColor: sage,
         brightness: Brightness.light,
       ).copyWith(
-        primary: moneyGreen,
-        secondary: piggyBankPink,
-        tertiary: softGold,
+        primary: sage,
+        onPrimary: Colors.white,
+        primaryContainer: sageMist,
 
-        surface: cloud,
+        secondary: peach,
+        onSecondary: Colors.white,
+        secondaryContainer: peachLight,
 
-        // Semantic (NO RED)
+        tertiary: honeyGold,
+        onTertiary: Colors.white,
+
+        surface: cream,
+        onSurface: deepMoss,
+        surfaceContainerHighest: sand,
+
         error: amber,
-        onError: ink,
+        onError: Colors.white,
 
-        // Helpful tuning
-        outline: neutralGrey.withValues(alpha: .45),
-        surfaceTint: moneyGreen,
-      );
-
-  static final ColorScheme darkScheme =
-      ColorScheme.fromSeed(
-        seedColor: moneyGreen,
-        brightness: Brightness.dark,
-      ).copyWith(
-        primary: leafGreen, // pops on dark
-        secondary: piggyBankPinkDark, // less intense than full pink
-        tertiary: softGold, // gold accents remain warm
-
-        surface: darkSurface,
-
-        // Semantic (NO RED)
-        error: amber,
-        onError: Colors.black,
-
-        outline: darkOutline,
-        surfaceTint: leafGreen,
-
-        // Helps text/icons feel less "glarey"
-        onSurface: const Color(0xFFE9F1EC),
+        outline: warmLinen,
+        outlineVariant: warmLinen.withValues(alpha: .6),
+        surfaceTint: sage,
       );
 }

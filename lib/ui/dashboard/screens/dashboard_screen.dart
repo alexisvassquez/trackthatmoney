@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/wallet_frame.dart';
+import '../../theme/colors.dart';
 
 /// Track That Money
-/// lib/ui/dashboard/dashboard_screen.dart
-///
-/// v0.1 dashboard layout. Includes only:
-/// - Header (title + subtitle)
-/// - Affirmation (one line)
-/// - WalletFrame (with monthly summary)
-/// - Top 3-5 expenses
-/// Hardcoded placeholders until my wiring is complete
+/// lib/ui/dashboard/screens/dashboard_screen.dart
+/// v0.2 Removed wallet frame
+/// Pivoting in different design
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -21,7 +16,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _navIndex = 0;
 
-  // replace with real data source. These are hardcoded for a reason. (todo)
   final String _affirmation = "✨ Awareness is progress. Tiny wins count.";
   final double _spentThisMonth = 312.45;
   final double _budgetThisMonth = 650.00;
@@ -46,76 +40,105 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             // 1. Header
             const _DashboardHeader(),
-
             const SizedBox(height: 12),
 
             // 2. Affirmation
             _AffirmationPill(text: _affirmation),
-
             const SizedBox(height: 14),
 
-            // 3. Monthly summary (inside WalletFrame)
-            WalletFrame(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "This month",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        _formatCurrency(_spentThisMonth),
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Text(
-                          "spent",
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: cs.onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "Budget: ${_formatCurrency(_budgetThisMonth)}",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurfaceVariant,
-                    ),
+            // 3. Monthly summary card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEDE4CC),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.warmLinen),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.deepMoss.withValues(alpha: .08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Sage accent bar
+                    Container(
+                      width: 4,
+                      margin: const EdgeInsets.only(right: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.sage,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    // Content
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "This month",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                _formatCurrency(_spentThisMonth),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(width: 8),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: Text(
+                                  "spent",
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: cs.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Budget: ${_formatCurrency(_budgetThisMonth)}",
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: cs.onSurfaceVariant),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
             const SizedBox(height: 16),
 
-            // 4. Top expenses (3-5 of the month)
+            // 4. Top expenses
             _SectionHeader(
               title: "Top expenses",
               actionLabel: "View all",
-              onAction: () {
-                // route to full expenses screen (todo)
-                _toast(
-                  context,
-                  "TODO: Navigate to full expenses list. In development.",
-                );
-              },
+              onAction: () => _toast(
+                context,
+                "TODO: Navigate to full expenses list. In development.",
+              ),
             ),
             const SizedBox(height: 10),
 
             if (_topExpenses.isEmpty)
               _EmptyExpensesCard(
-                message: "No expenses yet - future you says thanks. 🙂",
+                message: "No expenses yet — future you says thanks. 🙂",
                 onAdd: () => _toast(
                   context,
                   "TODO: open add expense flow. In development.",
@@ -134,6 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
 
+      // Bottom nav
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _navIndex,
         type: BottomNavigationBarType.fixed,
@@ -141,14 +165,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           setState(() => _navIndex = index);
           _toast(context, "TODO: route index=$index. In development.");
         },
-
-        // design tweaks
         backgroundColor: Theme.of(context).colorScheme.surface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(
           context,
         ).colorScheme.onSurface.withValues(alpha: .60),
-
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Data"),
@@ -165,6 +186,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
+// Widgets
 
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
@@ -200,20 +223,19 @@ class _AffirmationPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: cs.secondaryContainer.withValues(alpha: .55),
+        color: AppColors.peachLight,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: .6)),
+        border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
       ),
       child: Text(
         text,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+          color: AppColors.deepMoss,
+        ),
       ),
     );
   }
@@ -274,13 +296,12 @@ class _ExpenseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: .55),
+        color: AppColors.sand,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: .55)),
+        border: Border.all(color: AppColors.warmLinen),
       ),
       child: Row(
         children: [
@@ -288,10 +309,10 @@ class _ExpenseTile extends StatelessWidget {
             height: 36,
             width: 36,
             decoration: BoxDecoration(
-              color: cs.primaryContainer.withValues(alpha: .55),
+              color: AppColors.sageMist,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(expense.icon, color: cs.onPrimaryContainer, size: 18),
+            child: Icon(expense.icon, color: AppColors.sageDark, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -349,11 +370,11 @@ class _EmptyExpensesCard extends StatelessWidget {
   }
 }
 
-String _formatCurrency(double value) {
-  // Lightweight formatting
-  return "\$${value.toStringAsFixed(2)}";
-}
+// Helpers
 
+String _formatCurrency(double value) => "\$${value.toStringAsFixed(2)}";
+
+// Toast notification
 void _toast(BuildContext context, String msg) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }
