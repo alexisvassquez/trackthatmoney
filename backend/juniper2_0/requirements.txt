@@ -13,3 +13,6 @@ pandas
 scikit-learn
 scipy
 threadpoolctl
+
+# Security
+python-dotenv

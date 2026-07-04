@@ -94,4 +94,4 @@ Thumbs.db
 #  SECURITY
 ################################################################################
 .env
-*_key.dart
+*_key.dartbackend/juniper2_0/.env

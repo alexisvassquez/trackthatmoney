@@ -1,6 +1,7 @@
 # Track That Money
 # backend/juniper2_0/api.py
 
+import os
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
@@ -9,11 +10,17 @@ from typing import Optional
 from datetime import datetime, timezone
 import uuid
 import uvicorn
+from dotenv import load_dotenv
 
 from juniper2_core.predict.predictor import SpendingPredictor
 from juniper2_core.encourage.encourager import EncouragementEngine
 from auth.auth import verify_token
 
+load_dotenv()
+
+DEV_USERNAME = os.getenv("TTM_DEV_USERNAME")
+DEV_PASSWORD = os.getenv("TTM_DEV_PASSWORD")
+DEV_TOKEN = os.getenv("TTM_DEV_TOKEN")
 
 app = FastAPI(title="Track That Money API")
 
@@ -144,8 +151,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     Dev-only token exchange. 
     Will be replaced with Firebase/Auth0 before public release.
     """
-    if form_data.username == "test" and form_data.password == "password":
-        return {"access_token": "REDACTED", "token_type": "bearer"}
+    if form_data.username == DEV_USERNAME and form_data.password == DEV_PASSWORD:
+        return {"access_token": DEV_TOKEN, "token_type": "bearer"}
     raise HTTPException(status_code=400, detail="Invalid credentials")
 
 if __name__ == "__main__":
