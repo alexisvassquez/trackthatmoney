@@ -60,13 +60,9 @@ venv/
 .env/
 .menv/
 myenv/
-<<<<<<< HEAD
+.venv/
 backend/trackenv/
-=======
-trackenv/
-trackthatmoney/
 
->>>>>>> fee5db5 (chore: clean working tree)
 # IDEs
 *.vscode/
 .idea/
