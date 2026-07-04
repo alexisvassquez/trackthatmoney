@@ -1,0 +1,88 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+/// Track That Money
+/// lib/services/expense_api.dart
+/// HTTP service for expense CRUD + Juniper2.0 responses.
+/// Token is hardcoded for dev, will be replaced with
+/// real auth.
+
+class ExpenseApi {
+  // Android emulator -> localhost
+  static const _base = 'http://10.0.2.2:8000';
+  static const _token = 'REDACTED'; // dev only
+
+  static const _headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $_token',
+  };
+
+  // Fetch all expenses, newest first
+  static Future<List<Map<String, dynamic>>> fetchExpenses() async {
+    final response = await http.get(
+      Uri.parse('$_base/expenses'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    }
+    throw Exception('Failed to fetch expenses: ${response.statusCode}');
+  }
+
+  // Log a new expense
+  // Returns the saved record including Juniper's message
+  static Future<Map<String, dynamic>> addExpense({
+    required String merchant,
+    required String category,
+    required double amount,
+    int isEssential = 0,
+    String? moodTag,
+    double? moodScore,
+    String? note,
+  }) async {
+    final body = jsonEncode({
+      'merchant': merchant,
+      'category': category,
+      'amount': amount,
+      'is_essential': isEssential,
+      'mood_tag': moodTag,
+      'mood_score': moodScore,
+      'note': note,
+      'entry_day_of_week': _dayOfWeek(),
+      'entry_time': _timeOfDay(),
+    });
+
+    final response = await http.post(
+      Uri.parse('$_base/expenses'),
+      headers: _headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+    throw Exception('Failed to add expense: ${response.statusCode}');
+  }
+
+  static String _dayOfWeek() {
+    const days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    return days[DateTime.now().weekday - 1];
+  }
+
+  static String _timeOfDay() {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'morning';
+    if (h < 17) return 'afternoon';
+    return 'evening';
+  }
+}
