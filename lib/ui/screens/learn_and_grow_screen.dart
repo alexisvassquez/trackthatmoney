@@ -6,6 +6,7 @@ import '../theme/colors.dart';
 
 /// Track That Money
 /// lib/ui/screens/learn_and_grow_screen.dart
+/// color palette has changed
 
 class LearnAndGrowScreen extends StatefulWidget {
   const LearnAndGrowScreen({super.key});
@@ -54,19 +55,21 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
 
           /// Filtering
           final filtered = allResources.where((r) {
-            final matchesCategory = _selectedCategory == 'All' ||
+            final matchesCategory =
+                _selectedCategory == 'All' ||
                 r.category.toLowerCase() == _selectedCategory.toLowerCase();
-            final matchesSearch = _searchQuery.isEmpty ||
+            final matchesSearch =
+                _searchQuery.isEmpty ||
                 r.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                r.description
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase());
+                r.description.toLowerCase().contains(
+                  _searchQuery.toLowerCase(),
+                );
             return matchesCategory && matchesSearch;
           }).toList();
 
           final categories = [
             'All',
-            ...{for (var r in allResources) r.category}
+            ...{for (var r in allResources) r.category},
           ];
 
           return RefreshIndicator(
@@ -85,14 +88,22 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                       hintText: "Search topics...",
                       filled: true,
                       fillColor: AppColors.cloud,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide(color: AppColors.mintGreen, width: 1),
+                        borderSide: BorderSide(
+                          color: AppColors.mintGreen,
+                          width: 1,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide(color: AppColors.forestGreen, width: 2),
+                        borderSide: BorderSide(
+                          color: AppColors.forestGreen,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -100,7 +111,10 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
 
                 /// Category dropdown
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: AppColors.cloud,
@@ -115,10 +129,12 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                         underline: const SizedBox.shrink(),
                         iconEnabledColor: AppColors.deepNavy,
                         items: categories
-                            .map((cat) => DropdownMenuItem(
-                                  value: cat,
-                                  child: Text(cat),
-                                ))
+                            .map(
+                              (cat) => DropdownMenuItem(
+                                value: cat,
+                                child: Text(cat),
+                              ),
+                            )
                             .toList(),
                         onChanged: (value) {
                           if (value != null) {
@@ -139,7 +155,10 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                       final r = filtered[index];
                       return Card(
                         color: AppColors.mistGreen,
-                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -165,7 +184,9 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                           ),
                           trailing: Chip(
                             label: Text(r.tag),
-                            backgroundColor: AppColors.leafGreen.withValues(alpha: .2),
+                            backgroundColor: AppColors.leafGreen.withValues(
+                              alpha: .2,
+                            ),
                             labelStyle: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -174,7 +195,10 @@ class _LearnAndGrowScreenState extends State<LearnAndGrowScreen> {
                           onTap: () async {
                             final url = Uri.parse(r.url);
                             if (await canLaunchUrl(url)) {
-                              await launchUrl(url, mode: LaunchMode.externalApplication);
+                              await launchUrl(
+                                url,
+                                mode: LaunchMode.externalApplication,
+                              );
                             }
                           },
                         ),
