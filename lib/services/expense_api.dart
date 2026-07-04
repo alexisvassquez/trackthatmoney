@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Track That Money
 /// lib/services/expense_api.dart
@@ -9,10 +10,11 @@ import 'package:http/http.dart' as http;
 
 class ExpenseApi {
   // Android emulator -> localhost
-  static const _base = 'http://10.0.2.2:8000';
-  static const _token = 'REDACTED'; // dev only
+  static String get _base =>
+      dotenv.env['TTM_API_BASE'] ?? 'http://10.0.2.2:8000';
+  static String get _token => dotenv.env['TTM_API_TOKEN'] ?? '';
 
-  static const _headers = {
+  static Map<String, String> get _headers => {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $_token',
   };
