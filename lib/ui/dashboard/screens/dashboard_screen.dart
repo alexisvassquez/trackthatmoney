@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../state/user_providers.dart';
 import '../../theme/colors.dart';
 
 /// Track That Money
@@ -6,27 +8,19 @@ import '../../theme/colors.dart';
 /// v0.2 Removed wallet frame
 /// Pivoting in different design
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _navIndex = 0;
 
   final String _affirmation = "✨ Awareness is progress. Tiny wins count.";
   final double _spentThisMonth = 312.45;
   final double _budgetThisMonth = 650.00;
-
-  final List<_ExpenseRow> _topExpenses = const [
-    _ExpenseRow(label: "Groceries", amount: 95.76, icon: Icons.shopping_cart),
-    _ExpenseRow(label: "Bus pass", amount: 5.00, icon: Icons.directions_bus),
-    _ExpenseRow(label: "Spotify", amount: 13.47, icon: Icons.music_note),
-    _ExpenseRow(label: "Google Fi", amount: 55.36, icon: Icons.phone_android),
-    _ExpenseRow(label: "Work clothes", amount: 17.98, icon: Icons.checkroom),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -136,23 +130,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 10),
 
-            if (_topExpenses.isEmpty)
-              _EmptyExpensesCard(
-                message: "No expenses yet — future you says thanks. 🙂",
-                onAdd: () => _toast(
-                  context,
-                  "TODO: open add expense flow. In development.",
-                ),
-              )
-            else
-              ..._topExpenses
-                  .take(5)
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _ExpenseTile(expense: e),
+            ref
+                .watch(expensesProvider)
+                .when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Text(
+                    "Couldn't load expenses - is the background running?",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
+                  data: (expenses) {
+                    if (expenses.isEmpty) {
+                      return _EmptyExpensesCard(
+                        message: "No expenses yet - future you says thanks. 🙂",
+                        onAdd: () => _toast(
+                          context,
+                          "TODO: open add expense flow. In development.",
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: expenses
+                          .take(5)
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: _ExpenseTile(
+                                expense: _ExpenseRow(
+                                  label:
+                                      e['merchant'] ??
+                                      e['category'] ??
+                                      ['Expense'],
+                                  amount: (e['amount'] as num).toDouble(),
+                                  icon: _iconForCategory(e['category'] ?? ''),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
+                ),
           ],
         ),
       ),
@@ -188,7 +208,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
 // Widgets
-
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
 
@@ -370,8 +389,29 @@ class _EmptyExpensesCard extends StatelessWidget {
 }
 
 // Helpers
-
 String _formatCurrency(double value) => "\$${value.toStringAsFixed(2)}";
+
+// Category icon
+IconData _iconForCategory(String category) {
+  switch (category.toLowerCase()) {
+    case 'food':
+      return Icons.restaurant;
+    case 'groceries':
+      return Icons.shopping_cart;
+    case 'transport':
+      return Icons.directions_bus;
+    case 'entertainment':
+      return Icons.movie;
+    case 'subscriptions':
+      return Icons.repeat;
+    case 'clothing':
+      return Icons.checkroom;
+    case 'health':
+      return Icons.favorite;
+    default:
+      return Icons.attach_money;
+  }
+}
 
 // Toast notification
 void _toast(BuildContext context, String msg) {
