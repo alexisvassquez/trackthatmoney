@@ -96,7 +96,10 @@ def create_expense(
     """
     # Get Juniper's take on this expense
     juniper_result = engine.suggest(expense.model_dump())
-    juniper_message = juniper_result.get("message") or juniper_result.get("tip")
+    juniper_message = (
+        juniper_result.get("message", "") + " " +
+        juniper_result.get("suggestion", "")
+    ).strip()
 
     record = Expense(
         id=str(uuid.uuid4()),

@@ -1,9 +1,10 @@
-# track_that_money
+# Track That Money
 # backend/juniper2_0/juniper2_core/encourage/encourager.py
+
 from pathlib import Path
 import json
 import random
-from datetime import datetime
+from datetime import datetime, timezone
 from ..predict.predictor import SpendingPredictor
 from ..data.tips_loader import load_tips, load_affirmations
 
@@ -22,7 +23,7 @@ class EncouragementEngine:
             return "caution"
         return "celebrate"
 
-    def _affirmation_fallback(self, mood: str = None) -> str:
+    def _affirmation_fallback(self, mood: str | None = None) -> str:
         affirmations = self._affirmations
         if mood:
             mood_matches = [a for a in affirmations if a.get("mood") == mood]
@@ -63,10 +64,10 @@ class EncouragementEngine:
             "caution": "😅 Careful! This expense could stretch things a bit.",
             "celebrate": "👏 Good work! You're right on track."
         }[tone]
-        affirmation = self._affirmation_fallback(mood)
+        affirmation = self._affirmation_fallback(mood if isinstance(mood, str) else None)
 
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "tone": tone,
             "probability_overspend": round(score, 2),
             "message": message,
