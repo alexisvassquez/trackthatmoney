@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/user_providers.dart';
+import '../widgets/add_expense_sheet.dart';
 import '../../theme/colors.dart';
 
 /// Track That Money
@@ -28,10 +29,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: cs.surface,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.sage,
+        foregroundColor: Colors.white,
+        onPressed: () => showModalBottomSheet (
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => const AddExpenseSheet(),
+        ),
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
           children: [
+            
             // 1. Header
             const _DashboardHeader(),
             const SizedBox(height: 12),
@@ -145,9 +158,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     if (expenses.isEmpty) {
                       return _EmptyExpensesCard(
                         message: "No expenses yet - future you says thanks. 🙂",
-                        onAdd: () => _toast(
-                          context,
-                          "TODO: open add expense flow. In development.",
+                        onAdd: () => showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => const AddExpenseSheet(),
                         ),
                       );
                     }
