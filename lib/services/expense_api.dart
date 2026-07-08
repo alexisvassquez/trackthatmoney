@@ -87,4 +87,16 @@ class ExpenseApi {
     if (h < 17) return 'afternoon';
     return 'evening';
   }
+
+  // Delete saved expenses
+  static Future<void> deleteExpense(String id) async {
+    final response = await http.delete(
+      Uri.parse('$_base/expenses/$id'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete expense: ${response.statusCode}');
+    }
+  }
 }

@@ -90,7 +90,8 @@ class ExpenseIn(BaseModel):
     mood_score: Optional[float] = None
     goal_contribution: Optional[float] = None
 
-# Expense CRUD
+# Expense CRUD endpoints
+# Add Expenses
 @app.post("/expenses", response_model=Expense)
 def create_expense(
     expense: ExpenseCreate,
@@ -118,12 +119,31 @@ def create_expense(
     _expenses.append(record.model_dump())
     return record
 
+# List Expenses
 @app.get("/expenses", response_model=list[Expense])
 def list_expenses(user_id: str = Depends(verify_token)):
     """
     Return all logged expenses with newest first.
     """
     return list(reversed(_expenses))
+
+# Delete Expenses
+@app.delete("/expenses/{expense_id}")
+def delete_expense(
+    expense_id: str,
+    user_id: str = Depends(verify_token),
+):
+    """
+    Delete an expense by ID
+    """
+    global _expenses
+    original_count = len(_expenses)
+    _expenses = [e for e in _expenses if e["id"] != expense_id]
+
+    if len(_expenses) == original_count:
+        raise HTTPException(status_code=404, detail="Expense not found.")
+    
+    return {"deleted": expense_id}
 
 # Existing Endpoints
 @app.post("/predict")

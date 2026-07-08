@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/user_providers.dart';
+import '../../../services/expense_api.dart';
 import '../widgets/add_expense_sheet.dart';
 import '../../theme/colors.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/screens/dashboard_screen.dart
-/// v0.2 Removed wallet frame
-/// Pivoting in different design
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -23,6 +22,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final double _spentThisMonth = 312.45;
   final double _budgetThisMonth = 650.00;
 
+  void _openAddExpense() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const AddExpenseSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -32,19 +40,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.sage,
         foregroundColor: Colors.white,
-        onPressed: () => showModalBottomSheet (
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => const AddExpenseSheet(),
-        ),
+        onPressed: _openAddExpense,
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
           children: [
-            
             // 1. Header
             const _DashboardHeader(),
             const SizedBox(height: 12),
@@ -73,7 +75,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Sage accent bar
                     Container(
                       width: 4,
                       margin: const EdgeInsets.only(right: 16),
@@ -82,7 +83,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    // Content
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,48 +143,71 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
             const SizedBox(height: 10),
 
+            // ExpensesTile wrapped in dismissible
             ref
                 .watch(expensesProvider)
                 .when(
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text(
-                    "Couldn't load expenses - is the background running?",
+                    "Couldn't load expenses — is the backend running?",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                     ),
                   ),
                   data: (expenses) {
                     if (expenses.isEmpty) {
                       return _EmptyExpensesCard(
-                        message: "No expenses yet - future you says thanks. 🙂",
-                        onAdd: () => showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => const AddExpenseSheet(),
-                        ),
+                        message: "No expenses yet — future you says thanks. 🙂",
+                        onAdd: _openAddExpense,
                       );
                     }
                     return Column(
-                      children: expenses
-                          .take(5)
-                          .map(
-                            (e) => Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: _ExpenseTile(
-                                expense: _ExpenseRow(
-                                  label:
-                                      e['merchant'] ??
-                                      e['category'] ??
-                                      ['Expense'],
-                                  amount: (e['amount'] as num).toDouble(),
-                                  icon: _iconForCategory(e['category'] ?? ''),
+                      children: expenses.take(5).map((e) {
+                        final id = e['id'] as String;
+                        return Dismissible(
+                          key: Key(id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.amber,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onDismissed: (_) async {
+                            try {
+                              await ExpenseApi.deleteExpense(id);
+                              ref.invalidate(expensesProvider);
+                            } catch (err) {
+                              if (context.mounted) {
+                                _toast(context, 'Could not delete expense.');
+                              }
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _ExpenseTile(
+                              expense: _ExpenseRow(
+                                label:
+                                    e['merchant'] as String? ??
+                                    e['category'] as String? ??
+                                    'Expense',
+                                amount: (e['amount'] as num).toDouble(),
+                                icon: _iconForCategory(
+                                  e['category'] as String? ?? '',
                                 ),
                               ),
                             ),
-                          )
-                          .toList(),
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),
@@ -200,11 +223,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           setState(() => _navIndex = index);
           _toast(context, "TODO: route index=$index. In development.");
         },
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Theme.of(
-          context,
-        ).colorScheme.onSurface.withValues(alpha: .60),
+        backgroundColor: cs.surface,
+        selectedItemColor: cs.primary,
+        unselectedItemColor: cs.onSurface.withValues(alpha: .60),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Data"),
@@ -222,7 +243,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 }
 
-// Widgets
+// ─── Widgets ────────────────────────────────────────────────────────────────
+
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
 
@@ -403,10 +425,10 @@ class _EmptyExpensesCard extends StatelessWidget {
   }
 }
 
-// Helpers
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
 String _formatCurrency(double value) => "\$${value.toStringAsFixed(2)}";
 
-// Category icon
 IconData _iconForCategory(String category) {
   switch (category.toLowerCase()) {
     case 'food':
@@ -428,7 +450,6 @@ IconData _iconForCategory(String category) {
   }
 }
 
-// Toast notification
 void _toast(BuildContext context, String msg) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }
