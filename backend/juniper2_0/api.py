@@ -120,6 +120,7 @@ def create_expense(
     # Build the database record
     record = ExpenseRecord(
         id=str(uuid.uuid4()),
+        user_id=user_id or "dev_user",    # fallback for safety
         posted_at=datetime.now(timezone.utc).isoformat(),
         juniper_message=juniper_message,
         **expense.model_dump(),
