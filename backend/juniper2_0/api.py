@@ -11,16 +11,22 @@ from datetime import datetime, timezone
 import uuid
 import uvicorn
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
 from juniper2_core.predict.predictor import SpendingPredictor
 from juniper2_core.encourage.encourager import EncouragementEngine
 from auth.auth import verify_token
+from database.database import engine, get_db, Base
+from database.models import ExpenseRecord
 
 load_dotenv()
 
 DEV_USERNAME = os.getenv("TTM_DEV_USERNAME")
 DEV_PASSWORD = os.getenv("TTM_DEV_PASSWORD")
 DEV_TOKEN = os.getenv("TTM_DEV_TOKEN")
+
+# Create all tables on startup if they don't exist yet
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Track That Money API")
 
@@ -35,13 +41,9 @@ app.add_middleware(
 
 # Engines
 predictor = SpendingPredictor()    # Spending Predictor
-engine = EncouragementEngine()     # Encouragement
+engine_juniper = EncouragementEngine()     # Encouragement
 
-# In-memory store
-# TODO: swap for SQLite in later phase
-_expenses: list[dict] = []
-
-# Models
+# Pydantic Models
 class ExpenseCreate(BaseModel):
     """
     What Flutter sends when the user logs an expense.
@@ -59,16 +61,21 @@ class ExpenseCreate(BaseModel):
 
 class Expense(ExpenseCreate):
     """
-    Stored expense, includes server-generated fields
+    Stored full expense
+    Includes server-generated fields returned to Flutter
     """
     id: str
     posted_at: str
     juniper_message: Optional[str] = None
 
+    # allows building from SQLAlchemy model
+    class Config:
+        from_attributes = True
+
 class ExpenseEntry(BaseModel):
     """
     Prediction engine input
-    Kept for backwards compat
+    Kept for backwards compat.
     """
     amount: float
     is_essential: int
@@ -96,61 +103,85 @@ class ExpenseIn(BaseModel):
 def create_expense(
     expense: ExpenseCreate,
     user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
 ):
     """
     Log a new expense.
-    Runs the encouragement engine and returns Juniper's response
-    alongside the saved record.
+    Runs the encouragement engine and stores the result in SQLite.
+    Returns Juniper's response alongside the saved record.
     """
     # Get Juniper's take on this expense
-    juniper_result = engine.suggest(expense.model_dump())
+    juniper_result = engine_juniper.suggest(expense.model_dump())
     juniper_message = (
         juniper_result.get("message", "") + " " +
         juniper_result.get("suggestion", "")
     ).strip()
 
-    record = Expense(
+    # Build the database record
+    record = ExpenseRecord(
         id=str(uuid.uuid4()),
         posted_at=datetime.now(timezone.utc).isoformat(),
         juniper_message=juniper_message,
         **expense.model_dump(),
     )
 
-    _expenses.append(record.model_dump())
+    db.add(record)
+    db.commit()
+    db.refresh(record)
     return record
 
 # List Expenses
 @app.get("/expenses", response_model=list[Expense])
-def list_expenses(user_id: str = Depends(verify_token)):
+def list_expenses(
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
     """
-    Return all logged expenses with newest first.
+    Return all logged expenses for the current user, newest first.
     """
-    return list(reversed(_expenses))
+    return (
+        db.query(ExpenseRecord)
+        .filter(ExpenseRecord.user_id == user_id)
+        .order_by(ExpenseRecord.posted_at.desc())
+        .all()
+    )
 
 # Delete Expenses
 @app.delete("/expenses/{expense_id}")
 def delete_expense(
     expense_id: str,
     user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
 ):
     """
-    Delete an expense by ID
+    Delete an expense by ID.
+    Only the owning user can delete record.
     """
-    global _expenses
-    original_count = len(_expenses)
-    _expenses = [e for e in _expenses if e["id"] != expense_id]
+    record = (
+        db.query(ExpenseRecord)
+        .filter(
+            ExpenseRecord.id == expense_id,
+            ExpenseRecord.user_id == user_id,
+        )
+        .first()
+    )
 
-    if len(_expenses) == original_count:
+    if not record:
         raise HTTPException(status_code=404, detail="Expense not found.")
     
+    db.delete(record)
+    db.commit()
     return {"deleted": expense_id}
 
-# Existing Endpoints
+# Existing AI Endpoints
 @app.post("/predict")
 async def predict(
     entry: ExpenseEntry, 
     user_id: str = Depends(verify_token),
 ):
+    """
+    Run the spending prediction model on an expense entry.
+    """
     prediction = predictor.predict(entry.model_dump())
     return {"prediction": prediction}
 
@@ -160,11 +191,12 @@ def encourage(
     user_id: str = Depends(verify_token),
 ):
     """
-    Return encouragement + tips for a single expense row.
+    Return encouragement and tips for a single expense row.
     """
-    result = engine.suggest(expense.model_dump())
+    result = engine_juniper.suggest(expense.model_dump())
     return result
 
+# Auth
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """

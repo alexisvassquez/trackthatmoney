@@ -16,3 +16,7 @@ threadpoolctl
 
 # Security
 python-dotenv
+
+# Database
+sqlalchemy
+aiosqlite
