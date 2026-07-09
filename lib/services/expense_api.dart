@@ -99,4 +99,17 @@ class ExpenseApi {
       throw Exception('Failed to delete expense: ${response.statusCode}');
     }
   }
+
+  // Fetch expenses summary
+  static Future<Map<String, dynamic>> fetchSummary() async {
+    final response = await http.get(
+      Uri.parse('$_base/expenses/summary'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+    throw Exception('Failed to fetch summary: ${response.statusCode}');
+  }
 }

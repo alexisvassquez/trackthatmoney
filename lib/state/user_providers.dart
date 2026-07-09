@@ -4,14 +4,14 @@ import '../services/expense_api.dart';
 
 /// Track That Money
 /// lib/state/user_providers.dart
-/// Current user name (null if not set)
 
+// Current user name (null if not set)
 // User Name
 final userNameProvider = FutureProvider<String?>((ref) async {
   return UserPrefs.getUserName();
 });
 
-/// Invalidates the reader so UI updates
+// Invalidates the reader so UI updates
 final setUserNameProvider = Provider<Future<void> Function(String)>((ref) {
   return (String name) async {
     await UserPrefs.setUserName(name);
@@ -26,9 +26,14 @@ final expensesProvider = FutureProvider<List<Map<String, dynamic>>>((
   return ExpenseApi.fetchExpenses();
 });
 
-/// Calls after adding an expense to force a refresh
+// Calls after adding an expense to force a refresh
 final refreshExpenseProvider = Provider<Future<void> Function()>((ref) {
   return () async {
     ref.invalidate(expensesProvider);
   };
+});
+
+// Summary provider, fetches expenses summary
+final summaryProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  return ExpenseApi.fetchSummary();
 });

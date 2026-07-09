@@ -174,6 +174,33 @@ def delete_expense(
     db.commit()
     return {"deleted": expense_id}
 
+# Expenses Summary
+@app.get("/expenses/summary")
+def expenses_summary(
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Returns total spent this month for the current user.
+    """
+    from sqlalchemy import func
+
+    # Get first day of current month as a string for comparison
+    now = datetime.now(timezone.utc)
+    month_start = now.replace(day=1, hour=0, minute=0, second=0).isoformat()
+
+    total = db.query(func.sum(ExpenseRecord.amount))\
+        .filter(
+            ExpenseRecord.user_id == user_id,
+            ExpenseRecord.posted_at >= month_start,
+        )\
+        .scalar() or 0.0
+    
+    return {
+        "total_spent": round(total, 2),
+        "month": now.strftime("%B %Y"),
+    }
+
 # Existing AI Endpoints
 @app.post("/predict")
 async def predict(

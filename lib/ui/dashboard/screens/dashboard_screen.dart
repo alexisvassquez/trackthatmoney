@@ -19,7 +19,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _navIndex = 0;
 
   final String _affirmation = "✨ Awareness is progress. Tiny wins count.";
-  final double _spentThisMonth = 312.45;
   final double _budgetThisMonth = 650.00;
 
   void _openAddExpense() {
@@ -95,12 +94,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                _formatCurrency(_spentThisMonth),
-                                style: Theme.of(context)
+                              ref.watch(summaryProvider).when(
+                                loading: () => const Text(
+                                  "...",
+                                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
+                                ),
+                                error: (_, _) => const Text("\$0.00"),
+                                data: (summary) => Text(
+                                  _formatCurrency((summary['total_spent'] as num).toDouble()),
+                                  style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium
                                     ?.copyWith(fontWeight: FontWeight.w800),
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Padding(

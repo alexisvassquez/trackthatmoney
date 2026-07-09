@@ -79,6 +79,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
       });
 
       ref.invalidate(expensesProvider);
+      ref.invalidate(summaryProvider);
 
       await Future.delayed(const Duration(seconds: 3));
       if (mounted) Navigator.of(context).pop();
