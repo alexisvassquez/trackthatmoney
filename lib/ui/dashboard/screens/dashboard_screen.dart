@@ -437,6 +437,7 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+// Expense row fields
 class _ExpenseRow {
   final String label;
   final double amount;
