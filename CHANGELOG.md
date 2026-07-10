@@ -4,6 +4,74 @@
 
 ---
 
+### [0.7.0] - 2026-07-09
+
+### SQLite Persistence & Real Data Wiring
+
+#### Added
+
+- SQLite database via SQLAlchemy 2.0 — expenses now survive backend restarts
+- `database/database.py` — engine, session factory, `get_db()` FastAPI dependency
+- `database/models.py` — `ExpenseRecord` ORM model mapping to expenses table
+- `GET /expenses/summary` endpoint — returns real monthly spending total for current user
+- summaryProvider Riverpod provider in `user_providers.dart
+fetchSummary()` method in `expense_api.dart`
+- Real-time spending total on dashboard — invalidates on every new expense
+
+#### Changed
+
+- `api.py` — all three CRUD endpoints (`POST`, `GET`, `DELETE /expenses`) now read/write SQLite instead of in-memory list
+- `create_expense` stores Juniper's response alongside the expense record
+- `list_expenses` filters by `user_id` and returns newest first
+- `delete_expense` validates ownership before deleting
+- `EncouragementEngine` instance renamed from engine to `engine_juniper` to avoid naming conflict with SQLAlchemy `engine`
+- `Expense` Pydantic model — added `class Config: from_attributes = True` for SQLAlchemy row serialization
+- Dashboard `$312.45` hardcoded total replaced with live `summaryProvider` data
+
+#### Fixed
+
+- `summaryProvider` now invalidated alongside `expensesProvider` on expense add — total updates in real time without requiring a refresh
+
+---
+
+## [0.6.0] - 2026-07-07
+
+### Flutter ↔ FastAPI Wiring
+
+#### Added
+
+- `lib/services/expense_api.dart` — HTTP service with `fetchExpenses()`, `addExpense()`, `deleteExpense()`
+- `expensesProvider` and `refreshExpensesProvider` Riverpod providers
+- `lib/ui/dashboard/widgets/add_expense_sheet.dart` — bottom sheet with merchant, amount, category chips, mood chips, essential toggle
+- Juniper2.0 response displayed in add expense sheet after submission
+- Swipe-to-delete via `Dismissible` widget on expense tiles
+- `DELETE /expenses/{id}` backend endpoint
+- Floating action button (sage green) — always-accessible add expense entry point
+- `_iconForCategory()` helper — maps category strings to Material icons
+- Environment variable security — both Flutter and FastAPI read secrets from `.env`
+- `python-dotenv` on backend, `flutter_dotenv` on frontend
+- `.env.example` files committed for both sides
+- Full git history purge of compromised token via `git filter-repo`
+
+#### Changed
+
+- `DashboardScreen` converted from `StatefulWidget` to `ConsumerStatefulWidget`
+- Expense list replaced from hardcoded `List<_ExpenseRow>` to live `expensesProvider` data
+- `_EmptyExpensesCard` `onAdd` wired to real `AddExpenseSheet` bottom sheet
+- `api.py` — `HTTPException` import added (was missing, caused crash on bad login)
+- `api.py` — all `.dict()` calls replaced with `.model_dump()` (Pydantic v2)
+- `api.py` — `datetime.utcnow()` replaced with `datetime.now(timezone.utc)` throughout (deprecated)
+- `encourager.py` — same `utcnow()` deprecation fix
+- `encourager.py` —`_affirmation_fallback` signature updated to `mood: str | None = None`
+- Backend credentials moved from hardcode to `.env` — `TTM_DEV_USERNAME`, `TTM_DEV_PASSWORD`, `TTM_DEV_TOKEN`
+- `auth.py` — token verification reads from environment instead of hardcoded string
+
+#### Fixed
+
+- `['Expense']` list literal bug in expense tile label — corrected to `'Expense'` string
+
+---
+
 ## [0.6.0] - 2026-07-02
 
 ### Major Refactor & Project Revival
@@ -53,7 +121,7 @@ stabilizing the codebase, resolving accumulated technical debt, and re-centering
 
 ---
 
-## [0.5.0] - 2025-09-xx
+## [0.5.0] - 2025-09
 
 ### Dashboard & UI Architecture Sprint
 
@@ -95,7 +163,7 @@ stabilizing the codebase, resolving accumulated technical debt, and re-centering
 - `educational_resource.dart` model for parsing JSON entries
 - `resource_loader.dart` service for loading and decoding the educational content
 
-### Planned
+#### Planned
 
 - `learn_tab.dart` UI screen to browse educational cards
 - `resource_card.dart` widget for resource previews
@@ -115,11 +183,11 @@ stabilizing the codebase, resolving accumulated technical debt, and re-centering
   - Tracks % of budget spent on subscriptions
   - Detects "subscription fatigue" and assigns a `fatigue_rating` (celebrate / caution / alert)
 
-### Changed
+#### Changed
 
 - Updated training data structure in `predictor.py` to support `is_subscription` feature
 
-### Fixed
+#### Fixed
 
 - Normalized subscription category handling across JSON inputs, predictor, and insights engine
 
@@ -134,7 +202,7 @@ stabilizing the codebase, resolving accumulated technical debt, and re-centering
 - `journal_entry.dart` model updated to include UUID generation for each entry
 - `test/test_mood_savings_entry.dart` suite created to validate UUID length and journal field integrity
 
-### Changed
+#### Changed
 
 - Personalized piggy bank goal entries to reflect real-life savings targets:
   - Move to London
@@ -142,7 +210,7 @@ stabilizing the codebase, resolving accumulated technical debt, and re-centering
   - Emergency Fund
   - Charli XCX Tickets 🍏
 
-### Fixed
+#### Fixed
 
 - UI dependency errors in test suites by isolating model logic
 - Incomplete property declarations in test assertions (e.g., missing `currentAmount`)

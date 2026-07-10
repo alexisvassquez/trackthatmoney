@@ -276,29 +276,37 @@ Traditional finance apps use red to signal overdrafts, overspending, or "bad" be
 
 ## Status
 
-Actively in development. Paused and fully resumed + refactored mid-2026.
+Actively in development. Paused mid-2025, fully resumed and refactored July 2026.
 
 **Completed:**
 
 - FastAPI backend with `/encourage` and `/predict` endpoints (Juniper2.0 core)
-- Flutter app scaffold — dashboard, expense models, budget summary, theme system
-- Color palette and design system
+- SQLite persistence via SQLAlchemy — expenses survive backend restarts
+- Full expense CRUD — add, list, delete via REST API
+- Flutter dashboard — live expense list, real-time spending total, swipe to delete
+- Add expense bottom sheet — merchant, amount, category, mood tag, essential toggle
+- Juniper2.0 response displayed after every expense submission
+- Riverpod state management wired to backend
+- Environment variable security on both Flutter and FastAPI sides
+- Color palette and design system — "Warm & Hopeful" theme
+- "Encouraged, not guilty" UX philosophy applied throughout
 
 **In progress:**
 
-- UI refresh with updated warm palette
-- Expense CRUD endpoints
-- Connecting Flutter frontend to FastAPI backend
-- Juniper2.0 dashboard integration
+- Juniper2.0 dashboard greeting card — wired to real spending data
+- Mood tag display on expense tiles
+- Tip content tuning — more contextual Juniper responses
 
 **Planned:**
 
-- Piggy bank savings goals with animations
-- Mood-linked spending analytics
-- Journal screen
-- Educational resources screen
+- Journal screen — write entries, link to purchases, tag moods
+- Piggybank screen — savings goals with celebratory animations
+- Data/analytics tab — spending trends, mood vs spending patterns
+- Resources tab — educational financial literacy content
+- Persistent Juniper floating button — accessible from every screen
 - CSV/XLSX export
 - Plaid / OAuth2 bank linking
+- APK build for personal use / Play Store submission
 
 ---
 
