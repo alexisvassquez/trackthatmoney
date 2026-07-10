@@ -4,7 +4,7 @@
 
 ---
 
-### [0.7.0] - 2026-07-09
+## [0.7.0] - 2026-07-09
 
 ### SQLite Persistence & Real Data Wiring
 
