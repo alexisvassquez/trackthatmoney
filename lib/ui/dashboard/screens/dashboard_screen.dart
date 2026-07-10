@@ -146,6 +146,58 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: cs.onSurfaceVariant),
                           ),
+                          const SizedBox(height: 10),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(99),
+                            child: ref
+                                .watch(summaryProvider)
+                                .when(
+                                  loading: () => const SizedBox(height: 6),
+                                  error: (_, _) => const SizedBox(height: 6),
+                                  data: (summary) {
+                                    final spent =
+                                        (summary['total_spent'] as num)
+                                            .toDouble();
+                                    final pct = (_budgetThisMonth > 0
+                                        ? (spent / _budgetThisMonth).clamp(
+                                            0.0,
+                                            1.0,
+                                          )
+                                        : 0.0);
+                                    return LinearProgressIndicator(
+                                      value: pct,
+                                      minHeight: 6,
+                                      backgroundColor: AppColors.warmLinen,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        pct > 0.9
+                                            ? AppColors.amber
+                                            : AppColors.sage,
+                                      ),
+                                    );
+                                  },
+                                ),
+                          ),
+                          const SizedBox(height: 6),
+                          ref
+                              .watch(summaryProvider)
+                              .maybeWhen(
+                                data: (summary) {
+                                  final spent = (summary['total_spent'] as num)
+                                      .toDouble();
+                                  final pct = (_budgetThisMonth > 0
+                                      ? (spent / _budgetThisMonth * 100).clamp(
+                                          0,
+                                          100,
+                                        )
+                                      : 0);
+                                  return Text(
+                                    "${pct.toStringAsFixed(0)}% of budget used",
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(color: AppColors.inkMuted),
+                                  );
+                                },
+                                orElse: () => const SizedBox.shrink(),
+                              ),
                         ],
                       ),
                     ),
@@ -268,7 +320,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 }
 
 // ─── Widgets ────────────────────────────────────────────────────────────────
-
+// Dashboard header / greeting
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
 
@@ -314,26 +366,31 @@ class _DashboardHeader extends StatelessWidget {
   }
 }
 
+// Affirmation pill
 class _AffirmationPill extends StatelessWidget {
   final String text;
   const _AffirmationPill({required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.peachLight,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
-      ),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.w700,
-          color: AppColors.deepMoss,
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.peachLight,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
+          ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.deepMoss,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
