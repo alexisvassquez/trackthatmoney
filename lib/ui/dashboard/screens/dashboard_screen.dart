@@ -277,7 +277,7 @@ class _DashboardHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          "An expense tracking app to know why you're broke",
+          "Your money. No judgment.",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: cs.onSurfaceVariant,
             fontStyle: FontStyle.italic,
