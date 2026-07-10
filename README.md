@@ -1,6 +1,8 @@
 # 💸 Track That Money
 
-_An expense tracking app to know why you're broke_
+_An expense tracking app to know why you're broke._
+
+Your money. No judgement.
 
 **Track That Money** is a Flutter-based mobile app that combines emotion-tagged expense tracking, reflective journaling, and an AI companion (Juniper2.0) to help neurodivergent and financially overwhelmed individuals build a healthier relationship with money — one gentle nudge at a time.
 
