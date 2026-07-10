@@ -201,6 +201,15 @@ def expenses_summary(
         "month": now.strftime("%B %Y"),
     }
 
+# Affirmations
+@app.get("/affirmation")
+def get_affirmation(user_id: str = Depends(verify_token)):
+    """
+    Return a random affirmation from the encouragement engine
+    """
+    affirmation = engine_juniper._affirmation_fallback()
+    return {"affirmation": affirmation}
+
 # Existing AI Endpoints
 @app.post("/predict")
 async def predict(

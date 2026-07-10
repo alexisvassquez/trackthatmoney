@@ -18,7 +18,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _navIndex = 0;
 
-  final String _affirmation = "✨ Awareness is progress. Tiny wins count.";
   final double _budgetThisMonth = 650.00;
 
   void _openAddExpense() {
@@ -51,7 +50,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             const SizedBox(height: 12),
 
             // 2. Affirmation
-            _AffirmationPill(text: _affirmation),
+            ref.watch(affirmationProvider).when(
+              loading: () => const _AffirmationPill(
+                text: "✨ ...",
+              ),
+              error: (_, _) => const _AffirmationPill(
+                text: "✨ Awareness is progress. Tiny wins count.",
+              ),
+              data: (affirmation) => _AffirmationPill(
+                text: "✨ $affirmation",
+              ),
+            ),
             const SizedBox(height: 14),
 
             // 3. Monthly summary card

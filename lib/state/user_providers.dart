@@ -37,3 +37,8 @@ final refreshExpenseProvider = Provider<Future<void> Function()>((ref) {
 final summaryProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   return ExpenseApi.fetchSummary();
 });
+
+// Affirmations provider, shuffles affirmations
+final affirmationProvider = FutureProvider<String>((ref) async {
+  return ExpenseApi.fetchAffirmation();
+});

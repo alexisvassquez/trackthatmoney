@@ -112,4 +112,19 @@ class ExpenseApi {
     }
     throw Exception('Failed to fetch summary: ${response.statusCode}');
   }
+
+  // Affirmations pulled from encourager
+  static Future<String> fetchAffirmation() async {
+    final response = await http.get(
+      Uri.parse('$_base/affirmation'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['affirmation'] as String;
+    }
+    // fallback
+    return "Awareness is progress. Tiny wins count.";
+  }
 }
