@@ -172,6 +172,9 @@ source .venv/bin/activate        # Linux/macOS
 # Install dependencies
 pip install -r requirements.txt
 
+# For running tests (optional):
+pip install -r requirements-dev.txt
+
 # Start the API server
 uvicorn api:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -209,6 +212,19 @@ To build a debug APK:
 
 ```bash
 flutter build apk --debug
+```
+
+---
+
+## Testing
+
+The original unit test suite is being rewritten to match the current model architecture. Integration tests against the live API are planned.
+
+To run backend tests:
+
+```bash
+cd backend/juniper2_0
+pytest
 ```
 
 ---

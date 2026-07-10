@@ -1,0 +1,7 @@
+# Track That Money
+# Development-only requirements
+# Optional, not required to run
+
+pytest
+pytest-asyncio
+httpx
