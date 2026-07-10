@@ -279,6 +279,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 icon: _iconForCategory(
                                   e['category'] as String? ?? '',
                                 ),
+                                category: e['category'] as String? ?? '',
+                                moodTag: e['mood_tag'] as String?,
+                                isEssential: (e['is_essential'] as int? ?? 0) == 1,
+                                isSubscription: (e['is_subscription'] as int? ?? 0) == 1,
+                                note: e['note'] as String?,
+                                juniperMessage: e['juniper_message'] as String?,
                               ),
                             ),
                           ),
@@ -344,7 +350,7 @@ class _DashboardHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        // hardcoded name for now, will change to user name
+        // hardcoded name for now, will change to user name as consumer widget
         Text(
           'Alexis',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -435,14 +441,27 @@ class _ExpenseRow {
   final String label;
   final double amount;
   final IconData icon;
+  final String category;
+  final String? moodTag;
+  final bool isEssential;
+  final bool isSubscription;
+  final String? note;
+  final String? juniperMessage;
 
   const _ExpenseRow({
     required this.label,
     required this.amount,
     required this.icon,
+    required this.category,
+    this.moodTag,
+    this.isEssential = false,
+    this.isSubscription = false,
+    this.note,
+    this.juniperMessage,
   });
 }
 
+// Expense tiles
 class _ExpenseTile extends StatelessWidget {
   final _ExpenseRow expense;
   const _ExpenseTile({required this.expense});

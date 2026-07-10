@@ -52,6 +52,7 @@ class ExpenseCreate(BaseModel):
     category: str
     amount: float
     is_essential: int = 0
+    is_subscription: int = 0
     mood_score: Optional[float] = None
     mood_tag: Optional[str] = None
     goal_contribution: Optional[float] = 0.0

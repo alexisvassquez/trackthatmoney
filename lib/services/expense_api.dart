@@ -49,6 +49,7 @@ class ExpenseApi {
       'category': category,
       'amount': amount,
       'is_essential': isEssential,
+      'is_subscription': 0,    // wire to UI toggle (todo)
       'mood_tag': moodTag,
       'mood_score': moodScore,
       'note': note,
