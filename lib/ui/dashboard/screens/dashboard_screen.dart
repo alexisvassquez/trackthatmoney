@@ -50,17 +50,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             const SizedBox(height: 12),
 
             // 2. Affirmation
-            ref.watch(affirmationProvider).when(
-              loading: () => const _AffirmationPill(
-                text: "✨ ...",
-              ),
-              error: (_, _) => const _AffirmationPill(
-                text: "✨ Awareness is progress. Tiny wins count.",
-              ),
-              data: (affirmation) => _AffirmationPill(
-                text: "✨ $affirmation",
-              ),
-            ),
+            ref
+                .watch(affirmationProvider)
+                .when(
+                  loading: () => const _AffirmationPill(text: "✨ ..."),
+                  error: (_, _) => const _AffirmationPill(
+                    text: "✨ Awareness is progress. Tiny wins count.",
+                  ),
+                  data: (affirmation) =>
+                      _AffirmationPill(text: "✨ $affirmation"),
+                ),
             const SizedBox(height: 14),
 
             // 3. Monthly summary card
@@ -103,20 +102,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              ref.watch(summaryProvider).when(
-                                loading: () => const Text(
-                                  "...",
-                                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
-                                ),
-                                error: (_, _) => const Text("\$0.00"),
-                                data: (summary) => Text(
-                                  _formatCurrency((summary['total_spent'] as num).toDouble()),
-                                  style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w800),
-                                ),
-                              ),
+                              ref
+                                  .watch(summaryProvider)
+                                  .when(
+                                    loading: () => const Text(
+                                      "...",
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    error: (_, _) => const Text("\$0.00"),
+                                    data: (summary) => Text(
+                                      _formatCurrency(
+                                        (summary['total_spent'] as num)
+                                            .toDouble(),
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                  ),
                               const SizedBox(width: 8),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 6),
@@ -265,21 +274,38 @@ class _DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12
+        ? 'Good morning'
+        : hour < 17
+        ? 'Good afternoon'
+        : 'Good evening';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Track That Money 💸",
-          style: Theme.of(
-            context,
-          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+          greeting,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: AppColors.sageDark,
+            letterSpacing: 0.08,
+          ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
+        // hardcoded name for now, will change to user name
         Text(
-          "Your money. No judgment.",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: cs.onSurfaceVariant,
+          'Alexis',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: AppColors.deepMoss,
+            height: 1.15,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          'Your money. No judgment.',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: AppColors.inkMuted,
             fontStyle: FontStyle.italic,
           ),
         ),
