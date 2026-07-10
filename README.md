@@ -182,14 +182,16 @@ uvicorn api:app --reload --host 0.0.0.0 --port 8000
 The API will be available at `http://localhost:8000`.
 Interactive docs at `http://localhost:8000/docs`.
 
-**Dev note:** The `/token` endpoint uses hardcoded credentials for local development:
+**Dev note:**
+The `/token` endpoint uses credentials loaded from `.env`.
+
+Copy `.env.example` to `.env` and fill in your own values before running:
 
 ```bash
-username: test
-password: password
+cp .env.example .env
 ```
 
-This will be replaced with real auth before any public release.
+See `.env.example` for the required variables.
 
 ---
 
@@ -218,14 +220,17 @@ flutter build apk --debug
 
 ## Testing
 
-The original unit test suite is being rewritten to match the current model architecture. Integration tests against the live API are planned.
-
-To run backend tests:
+To run backend tests (12 tests passing):
 
 ```bash
 cd backend/juniper2_0
 pytest
 ```
+
+Covers Juniper2.0 encouragement engine and spending predictor.
+
+**Flutter — test suite being rewritten:**
+The original Flutter unit tests were written against early model constructors and have been removed. Integration and widget tests will be written in a later phase once the UI screens are stable.
 
 ---
 
