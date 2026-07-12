@@ -4,6 +4,7 @@
 # SQLAlchemy ORM model for the expenses table.
 # Each ExpenseRecord row represents one logged expense.
 # The schema mirrors the Pydantic Expense model in api.py
+# Journal entry model
 
 from sqlalchemy import Column, String, Float, Integer
 from .database import Base
@@ -51,3 +52,40 @@ class ExpenseRecord(Base):
     # Juniper2.0 response stored alongside the expense
     # to be resurfaced without re-calling the engine
     juniper_message = Column(String, nullable=True)
+
+class JournalEntry(Base):
+    """
+    Maps to the 'journal_entries' table in trackthatmoney.db
+    Each entry is an emotional annotation that is optionally linked
+    to an expense.
+    Created automatically on startup via Base.metadata.create_all()
+    """
+    __tablename__ = "journal_entries"
+
+    # Server-generated fields
+    # UUID
+    id = Column(String, primary_key=True, index=True)
+    # from auth token
+    user_id = Column(String, nullable=False)
+    # ISO timestamp
+    created_at = Column(String, nullable=False)
+
+    # Optional link to a specific expense
+    # Null means the entry is a standalone reflection
+    # Journal entry does not have to be linked to an expense
+    expense_id = Column(String, nullable=True, index=True)
+
+    # Core content
+    # the user's written reflection
+    content = Column(String, nullable=False)
+    # Mood tag, e.g. "stressed", "hopeful", etc.
+    mood_tag = Column(String, nullable=True)
+
+    # Juniper2.0 response to this entry
+    # Null if ceiling was triggered and redirected to resources
+    juniper_response = Column(String, nullable=True)
+
+    # Whether the ceiling was triggered
+    # Stores the category: "crisis_financial", "crisis_emotional",
+    # "advice_seeking"
+    ceiling_triggered = Column(String, nullable=True)
