@@ -17,7 +17,7 @@ from juniper2_core.predict.predictor import SpendingPredictor
 from juniper2_core.encourage.encourager import EncouragementEngine
 from auth.auth import verify_token
 from database.database import engine, get_db, Base
-from database.models import ExpenseRecord
+from database.models import ExpenseRecord, JournalEntry
 
 load_dotenv()
 
@@ -39,11 +39,66 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# Engines
+# Engine instantiations
 predictor = SpendingPredictor()    # Spending Predictor
 engine_juniper = EncouragementEngine()     # Encouragement
 
+# Juniper ceiling check
+# Trigger words for safety check
+# If safety checks are triggered, Juniper will gently redirect the
+# user to the in-app resources tab (in development)
+CEILING_TRIGGERS = {
+    "crisis_financial": [
+        "eviction", "bankruptcy", "debt collector", "garnished",
+        "foreclosure", "repossession", "can't pay", "cant pay",
+        "losing my home", "shut off notice",
+    ],
+    "crisis_emotional": [
+        "hopeless", "give up", "can't do this anymore", "cant do this",
+        "worthless", "what's the point", "whats the point",
+        "don't see a way out", "dont see a way out", "can't see a way out",
+        "cant see a way out",
+    ],
+    "advice_seeking": [
+        "should i invest", "best credit card", "what stocks",
+        "tax advice", "which fund", "should i buy", 
+        "is it worth buying", "financial advisor",
+    ],
+}
+
+CEILING_RESPONSES = {
+    "crisis_financial": (
+        "That sounds really stressful and I want to make sure you get "
+        "real support - not just from me. The Resources tab has some "
+        "solid starting points for exactly this kind of situation. "
+        "You don't have to figure this out alone."
+    ),
+    "crisis_emotional": (
+        "What you're feeling matters, and I want you to have real support. "
+        "Please consider reaching out to someone you trust. The Resources "
+        "tab has some helpful starting points - and it's always okay to "
+        "ask for help."
+    ),
+    "advice_seeking": (
+        "That's a great question but it's bigger than I can answer well. "
+        "The Resources tab has some beginner-friendly content that might "
+        "help point you in the right direction."
+    ),
+}
+
+def check_ceiling(text: str) -> Optional[str]:
+    """
+    Scan journal content for triggers that exceed Juniper's scope.
+    Returns the ceiling category if triggered, None otherwise.
+    """
+    text_lower = text.lower()
+    for category, keywords in CEILING_TRIGGERS.items():
+        if any(kw in text_lower for kw in keywords):
+            return category
+    return None
+
 # Pydantic Models
+# Expense Models
 class ExpenseCreate(BaseModel):
     """
     What Flutter sends when the user logs an expense.
@@ -98,6 +153,32 @@ class ExpenseIn(BaseModel):
     mood_score: Optional[float] = None
     goal_contribution: Optional[float] = None
 
+# Journal Models
+class JournalEntryCreate(BaseModel):
+    """
+    What Flutter sends when the user saves a journal entry.
+    """
+    content: str
+    mood_tag: Optional[str] = None
+    expense_id: Optional[str] = None
+
+class JournalEntryResponse(BaseModel):
+    """
+    Full journal entry returned to Flutter.
+    """
+    id: str
+    user_id: str
+    created_at: str
+    expense_id: Optional[str] = None
+    content: str
+    mood_tag: Optional[str] = None
+    juniper_response: Optional[str] = None
+    ceiling_triggered: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+# CRUD ENDPOINTS
 # Expense CRUD endpoints
 # Add Expenses
 @app.post("/expenses", response_model=Expense)
@@ -202,7 +283,111 @@ def expenses_summary(
         "month": now.strftime("%B %Y"),
     }
 
-# Affirmations
+# Journal CRUD Endpoints
+@app.post("/journal", response_model=JournalEntryResponse)
+def create_journal_entry(
+    entry: JournalEntryCreate,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Save a journal entry.
+    Checks Juniper's ceiling first - if triggered, redirects warmly
+    to the Resources tab (in development).
+    Otherwise runs the encouragement engine with the mood tag
+    as context.
+    """
+    # Check ceiling
+    ceiling = check_ceiling(entry.content)
+
+    if ceiling:
+        juniper_response = CEILING_RESPONSES[ceiling]
+    else:
+        # Build context for the encouragement engine
+        context = {
+            "category": "General",
+            "amount": 0.0,
+            "is_essential": 0,
+            "is_subscription": 0,
+            "mood_score": None,
+            "mood": entry.mood_tag,
+            "goal_contribution": 0.0,
+        }
+
+        # If linked to an expense, use its category for better context
+        if entry.expense_id:
+            expense = db.query(ExpenseRecord).filter(
+                ExpenseRecord.id == entry.expense_id,
+                ExpenseRecord.user_id == user_id,
+            ).first()
+            if expense:
+                context["category"] = expense.category
+                context["amount"] = expense.amount
+        
+        result = engine_juniper.suggest(context)
+        juniper_response = (
+            result.get("message", "") + " " +
+            result.get("suggestion", "")
+        ).strip()
+    
+    record = JournalEntry(
+        id=str(uuid.uuid4()),
+        user_id=user_id,
+        created_at=datetime.now(timezone.utc).isoformat(),
+        expense_id=entry.expense_id,
+        content=entry.content,
+        mood_tag=entry.mood_tag,
+        juniper_response=juniper_response,
+        ceiling_triggered=ceiling,
+    )
+
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return record
+
+@app.get("/journal", response_model=list[JournalEntryResponse])
+def list_journal_entries(
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Return all journal entries for the current user, newest first
+    """
+    return (
+        db.query(JournalEntry)
+        .filter(JournalEntry.user_id == user_id)
+        .order_by(JournalEntry.created_at.desc())
+        .all()
+    )
+
+@app.delete("/journal/{entry_id}")
+def delete_journal_entry(
+    entry_id: str,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Delete a journal entry by ID.
+    Only the owning user can delete it.
+    """
+    record = (
+        db.query(JournalEntry)
+        .filter(
+            JournalEntry.id == entry_id,
+            JournalEntry.user_id == user_id,
+        )
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Journal entry not found.")
+    
+    db.delete(record)
+    db.commit()
+    return {"deleted": entry_id}
+
+# Affirmations CRUD Endpoints
 @app.get("/affirmation")
 def get_affirmation(user_id: str = Depends(verify_token)):
     """
