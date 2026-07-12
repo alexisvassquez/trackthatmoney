@@ -23,6 +23,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
   String _category = 'Food';
   String? _moodTag;
   bool _isEssential = false;
+  bool _isSubscription = false;
   bool _isLoading = false;
   String? _juniperMessage;
 
@@ -70,6 +71,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
         category: _category,
         amount: amount,
         isEssential: _isEssential ? 1 : 0,
+        isSubscription: _isSubscription ? 1 : 0,
         moodTag: _moodTag,
       );
 
@@ -250,6 +252,22 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                 ],
               ),
               const SizedBox(height: 20),
+
+              // Subscription toggle
+              Row(
+                children: [
+                  Switch(
+                    value: _isSubscription,
+                    onChanged: (v) => setState(() => _isSubscription = v),
+                    activeThumbColor: AppColors.sage,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Recurring payment",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
 
               // Submit button
               SizedBox(

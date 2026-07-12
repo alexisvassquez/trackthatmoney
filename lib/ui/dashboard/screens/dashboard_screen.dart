@@ -281,8 +281,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                                 category: e['category'] as String? ?? '',
                                 moodTag: e['mood_tag'] as String?,
-                                isEssential: (e['is_essential'] as int? ?? 0) == 1,
-                                isSubscription: (e['is_subscription'] as int? ?? 0) == 1,
+                                isEssential:
+                                    (e['is_essential'] as int? ?? 0) == 1,
+                                isSubscription:
+                                    (e['is_subscription'] as int? ?? 0) == 1,
                                 note: e['note'] as String?,
                                 juniperMessage: e['juniper_message'] as String?,
                               ),
@@ -381,18 +383,20 @@ class _AffirmationPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            color: AppColors.peachLight,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
-          ),
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: AppColors.deepMoss,
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.peachLight,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
+            ),
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: AppColors.deepMoss,
+              ),
             ),
           ),
         ),
@@ -463,46 +467,221 @@ class _ExpenseRow {
 }
 
 // Expense tiles
-class _ExpenseTile extends StatelessWidget {
+class _ExpenseTile extends StatefulWidget {
   final _ExpenseRow expense;
   const _ExpenseTile({required this.expense});
 
   @override
+  State<_ExpenseTile> createState() => _ExpenseTileState();
+}
+
+class _ExpenseTileState extends State<_ExpenseTile> {
+  bool _expanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.sand,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.warmLinen),
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-              color: AppColors.sageMist,
-              borderRadius: BorderRadius.circular(12),
+    final e = widget.expense;
+
+    return GestureDetector(
+      onTap: () => setState(() => _expanded = !_expanded),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.sand,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.warmLinen),
+        ),
+        child: Column(
+          children: [
+            // Collapsed row
+            Row(
+              children: [
+                Container(
+                  height: 38,
+                  width: 38,
+                  decoration: BoxDecoration(
+                    color: AppColors.sageMist,
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Icon(e.icon, color: AppColors.sageDark, size: 18),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        e.label,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.deepMoss,
+                        ),
+                      ),
+                      Text(
+                        e.category,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.inkMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  _formatCurrency(e.amount),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.deepMoss,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                AnimatedRotation(
+                  turns: _expanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 20,
+                    color: AppColors.inkMuted,
+                  ),
+                ),
+              ],
             ),
-            child: Icon(expense.icon, color: AppColors.sageDark, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              expense.label,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+
+            // Expanded detail
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 200),
+              crossFadeState: _expanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              firstChild: const SizedBox.shrink(),
+              secondChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 12),
+                  Divider(color: AppColors.warmLinen, height: 1),
+                  const SizedBox(height: 12),
+
+                  // Mood tag + essential row
+                  Row(
+                    children: [
+                      if (e.moodTag != null) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.peachLight,
+                            borderRadius: BorderRadius.circular(99),
+                            border: Border.all(
+                              color: AppColors.peach.withValues(alpha: .4),
+                            ),
+                          ),
+                          child: Text(
+                            e.moodTag!,
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: AppColors.sageDark),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: e.isEssential
+                              ? AppColors.sageMist
+                              : AppColors.sand,
+                          borderRadius: BorderRadius.circular(99),
+                          border: Border.all(color: AppColors.warmLinen),
+                        ),
+                        child: Text(
+                          e.isEssential ? 'Essential' : 'Discretionary',
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: e.isEssential
+                                    ? AppColors.sageDark
+                                    : AppColors.inkMuted,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Subscription chip - recurring payments
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: e.isSubscription
+                          ? AppColors.sageMist
+                          : AppColors.sand,
+                      borderRadius: BorderRadius.circular(99),
+                      border: Border.all(color: AppColors.warmLinen),
+                    ),
+                    child: Text(
+                      e.isSubscription ? 'Recurring' : 'One-time',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: e.isSubscription
+                            ? AppColors.sageDark
+                            : AppColors.inkMuted,
+                      ),
+                    ),
+                  ),
+
+                  // Note
+                  if (e.note != null && e.note!.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      e.note!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.inkMuted,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+
+                  // Juniper message
+                  if (e.juniperMessage != null) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.peachLight,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.peach.withValues(alpha: .3),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.eco_rounded,
+                            size: 14,
+                            color: AppColors.sageDark,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              e.juniperMessage!,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: AppColors.deepMoss),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
-          Text(
-            _formatCurrency(expense.amount),
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

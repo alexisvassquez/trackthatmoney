@@ -40,6 +40,7 @@ class ExpenseApi {
     required String category,
     required double amount,
     int isEssential = 0,
+    int isSubscription = 0,
     String? moodTag,
     double? moodScore,
     String? note,
@@ -49,7 +50,7 @@ class ExpenseApi {
       'category': category,
       'amount': amount,
       'is_essential': isEssential,
-      'is_subscription': 0,    // wire to UI toggle (todo)
+      'is_subscription': isSubscription,
       'mood_tag': moodTag,
       'mood_score': moodScore,
       'note': note,
