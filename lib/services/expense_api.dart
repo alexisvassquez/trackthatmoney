@@ -102,6 +102,54 @@ class ExpenseApi {
     }
   }
 
+  // Journal
+  static Future<Map<String, dynamic>> addJournalEntry({
+    required String content,
+    String? moodTag,
+    String? expenseId,
+  }) async {
+    final body = jsonEncode({
+      'content': content,
+      'mood_tag': moodTag,
+      'expense_id': expenseId,
+    });
+
+    final response = await http.post(
+      Uri.parse('$_base/journal'),
+      headers: _headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+    throw Exception('Failed to save journal entry: ${response.statusCode}');
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchJournal() async {
+    final response = await http.get(
+      Uri.parse('$_base/journal'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    }
+    throw Exception('Failed to fetch journal: ${response.statusCode}');
+  }
+
+  static Future<void> deleteJournalEntry(String id) async {
+    final response = await http.delete(
+      Uri.parse('$_base/journal/$id'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete journal entry: ${response.statusCode}');
+    }
+  }
+
   // Fetch expenses summary
   static Future<Map<String, dynamic>> fetchSummary() async {
     final response = await http.get(

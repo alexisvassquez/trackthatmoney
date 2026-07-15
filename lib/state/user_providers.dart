@@ -27,10 +27,15 @@ final expensesProvider = FutureProvider<List<Map<String, dynamic>>>((
 });
 
 // Calls after adding an expense to force a refresh
-final refreshExpenseProvider = Provider<Future<void> Function()>((ref) {
+final refreshExpensesProvider = Provider<Future<void> Function()>((ref) {
   return () async {
     ref.invalidate(expensesProvider);
   };
+});
+
+// Journal provider
+final journalProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  return ExpenseApi.fetchJournal();
 });
 
 // Summary provider, fetches expenses summary

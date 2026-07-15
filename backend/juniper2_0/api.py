@@ -49,9 +49,11 @@ engine_juniper = EncouragementEngine()     # Encouragement
 # user to the in-app resources tab (in development)
 CEILING_TRIGGERS = {
     "crisis_financial": [
-        "eviction", "bankruptcy", "debt collector", "garnished",
+        "facing eviction", "filed for bankruptcy", 
+        "debt collector", "garnished",
         "foreclosure", "repossession", "can't pay", "cant pay",
-        "losing my home", "shut off notice",
+        "losing my home", "shut off notice", "getting evicted",
+        "debt collectors calling", "about to lose my home",
     ],
     "crisis_emotional": [
         "hopeless", "give up", "can't do this anymore", "cant do this",
