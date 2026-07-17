@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../state/user_providers.dart';
 import '../../../services/expense_api.dart';
 import '../widgets/add_expense_sheet.dart';
@@ -45,11 +46,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
           children: [
-            // 1. Header
+            // 1. Dashboard Header
             const _DashboardHeader(),
             const SizedBox(height: 12),
 
-            // 2. Affirmation
+            // 2. Affirmation (dynamic)
             ref
                 .watch(affirmationProvider)
                 .when(
@@ -141,6 +142,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ],
                           ),
                           const SizedBox(height: 6),
+
+                          // Budget Summary
                           Text(
                             "Budget: ${_formatCurrency(_budgetThisMonth)}",
                             style: Theme.of(context).textTheme.bodyMedium
@@ -190,6 +193,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           100,
                                         )
                                       : 0);
+                                  // Progress bar
                                   return Text(
                                     "${pct.toStringAsFixed(0)}% of budget used",
                                     style: Theme.of(context).textTheme.bodySmall
@@ -300,26 +304,58 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
 
       // Bottom nav
+      // Navigates to Journal Screen
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _navIndex,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() => _navIndex = index);
-          _toast(context, "TODO: route index=$index. In development.");
+          switch (index) {
+            case 0:
+              context.go('/');
+            case 1:
+              context.go('/journal');
+            default:
+              _toast(context, "TODO: route index=$index. In development.");
+          }
         },
         backgroundColor: cs.surface,
         selectedItemColor: cs.primary,
         unselectedItemColor: cs.onSurface.withValues(alpha: .60),
+        
+        // Bottom nav icons
+        // Shows outlined and filled when selected
+        // Currently, only Journal is functioning.
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Data"),
+          // Home screen
           BottomNavigationBarItem(
-            icon: Icon(Icons.savings),
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home), 
+            label: "Home",
+          ),
+          // Journal screen
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_outlined),
+            activeIcon: Icon(Icons.menu_book),
+            label: "Journal",
+          ),
+          // Data analytics screen (in dev)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_outlined), 
+            activeIcon: Icon(Icons.bar_chart),
+            label: "Data",
+          ),
+          // Piggy bank screen (in dev)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.savings_outlined),
+            activeIcon: Icon(Icons.savings),
             label: "Piggybank",
           ),
+          // User account screen (in dev)
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: "You",
           ),
         ],
       ),
@@ -327,7 +363,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 }
 
-// ─── Widgets ────────────────────────────────────────────────────────────────
+// Widgets
 // Dashboard header / greeting
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
@@ -722,8 +758,7 @@ class _EmptyExpensesCard extends StatelessWidget {
   }
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
+// Helpers
 String _formatCurrency(double value) => "\$${value.toStringAsFixed(2)}";
 
 IconData _iconForCategory(String category) {

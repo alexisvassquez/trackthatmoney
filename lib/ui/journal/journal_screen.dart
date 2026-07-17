@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../../state/user_providers.dart';
 import '../../services/expense_api.dart';
@@ -10,7 +11,7 @@ import 'journal_form.dart';
 /// Journal screen widget, connects to dashboard
 /// Fed data from journal_form.dart
 /// Includes header, write entry, labels, bottom sheet, entry tile
-/// mood tags, expanded
+/// mood tags, expanded tiles
 
 class JournalScreen extends ConsumerWidget {
   const JournalScreen({super.key});
@@ -19,10 +20,69 @@ class JournalScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.cream,
+      // Bottom nav
+      // Shared widget from dashboard
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,  // Journal is index 1
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppColors.cream,
+        selectedItemColor: AppColors.sageDark,
+        unselectedItemColor: AppColors.inkMuted,
+        onTap: (index) {
+          switch (index) {
+          case 0:
+            context.go('/');
+          case 1:
+            break;
+          default:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("TODO: route index=$index. In development."),
+              ),
+            );
+          }
+        },
+
+        // Bottom nav icons
+        // Shows outlined and filled when selected
+        // Currently, only Journal is functioning.
+        items: const [
+          // Home screen
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home), 
+            label: "Home",
+          ),
+          // Journal screen
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_outlined),
+            activeIcon: Icon(Icons.menu_book),
+            label: "Journal",
+          ),
+          // Data analytics screen (in dev)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_outlined), 
+            activeIcon: Icon(Icons.bar_chart),
+            label: "Data",
+          ),
+          // Piggy bank screen (in dev)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.savings_outlined),
+            activeIcon: Icon(Icons.savings),
+            label: "Piggybank",
+          ),
+          // User account screen (in dev)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: "You",
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
             // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -122,7 +182,7 @@ class JournalScreen extends ConsumerWidget {
                       );
                     },
                   ),
-            ),
+                ),
           ],
         ),
       ),
@@ -212,8 +272,8 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
       'Mar',
       'Apr',
       'May',
-      'Jun,'
-          'Jul',
+      'Jun',
+      'Jul',
       'Aug',
       'Sep',
       'Oct',
@@ -257,115 +317,174 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // Top row (date / mood / chevron)
               Row(
                 children: [
                   Text(
                     _formatDate(createdAt),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.inkMuted,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppColors.inkMuted),
                   ),
                   const SizedBox(width: 8),
                   if (moodTag != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.peachLight,
-                      borderRadius: BorderRadius.circular(99),
-                      border: Border.all(
-                        color: AppColors.peach.withValues(alpha: .4),
-                      ),
-                    ),
-                    child: Text(
-                      moodTag,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.sageDark,
-                      ),
-                    ),
-                  ),
-                const Spacer(),
-                AnimatedRotation(
-                  turns: _expanded ? 0.5 : 0, 
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 20,
-                    color: AppColors.inkMuted,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Content preview
-            Text(
-              _expanded ? content : (
-                content.length > 80 ? '${content.substring(0, 80)}...' 
-                : content
-              ),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.deepMoss,
-                height: 1.5,
-              ),
-            ),
-
-            // Expanded section
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 200),
-              crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-              firstChild: const SizedBox.shrink(), 
-              secondChild: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 12),
-                  Divider(color: AppColors.warmLinen, height: 1),
-                  const SizedBox(height: 12),
-
-                  // Juniper response
-                  if (juniperResponse != null)
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
-                        color: ceilingTriggered != null ? AppColors.peachLight : AppColors.sageMist,
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.peachLight,
+                        borderRadius: BorderRadius.circular(99),
                         border: Border.all(
-                          color: ceilingTriggered != null ? AppColors.peach.withValues(alpha: .4) : AppColors.sage.withValues(alpha: .3),
+                          color: AppColors.peach.withValues(alpha: .4),
                         ),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            ceilingTriggered != null ? Icons.favorite_outline : Icons.eco_rounded,
-                            size: 14,
-                            color: AppColors.sageDark,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              juniperResponse,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.deepMoss,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        moodTag,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppColors.sageDark,
+                        ),
                       ),
                     ),
+                  const Spacer(),
+                  AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 20,
+                      color: AppColors.inkMuted,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Content preview
+              Text(
+                _expanded
+                    ? content
+                    : (content.length > 80
+                          ? '${content.substring(0, 80)}...'
+                          : content),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.deepMoss,
+                  height: 1.5,
+                ),
+              ),
+
+              // Expanded section
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                crossFadeState: _expanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    Divider(color: AppColors.warmLinen, height: 1),
+                    const SizedBox(height: 12),
+
+                    // Juniper response
+                    if (juniperResponse != null)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: ceilingTriggered != null
+                              ? AppColors.peachLight
+                              : AppColors.sageMist,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: ceilingTriggered != null
+                                ? AppColors.peach.withValues(alpha: .4)
+                                : AppColors.sage.withValues(alpha: .3),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              ceilingTriggered != null
+                                  ? Icons.favorite_outline
+                                  : Icons.eco_rounded,
+                              size: 14,
+                              color: AppColors.sageDark,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                juniperResponse,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: AppColors.deepMoss,
+                                      height: 1.5,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                     // Resources redirect hint (todo)
-                ],
-              ), )
+                    if (ceilingTriggered != null) ...[
+                      const SizedBox(height: 10),
+                      Text(
+                        'Check the Resources tab for more support.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.sageDark,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ],
-          )
-        )
-      ))
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Empty state
+class _EmptyJournal extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.menu_book_outlined,
+              size: 48,
+              color: AppColors.warmLinen,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No entries yet',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: AppColors.deepMoss),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Your journal is a space to reflect on your spending without judgment.',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.inkMuted,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
