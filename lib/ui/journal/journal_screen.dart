@@ -11,7 +11,7 @@ import 'journal_form.dart';
 /// Journal screen widget, connects to dashboard
 /// Fed data from journal_form.dart
 /// Includes header, write entry, labels, bottom sheet, entry tile
-/// mood tags, expanded tiles
+/// mood tags, expanded tiles, filters for mood tags
 
 class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
