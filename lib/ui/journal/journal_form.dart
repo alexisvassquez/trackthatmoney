@@ -28,6 +28,7 @@ class _JournalFormState extends State<JournalForm> {
     'stressed',
     'grateful',
     'celebratory',
+    'tired',
   ];
 
   @override

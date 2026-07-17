@@ -13,32 +13,40 @@ import 'journal_form.dart';
 /// Includes header, write entry, labels, bottom sheet, entry tile
 /// mood tags, expanded tiles
 
-class JournalScreen extends ConsumerWidget {
+class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JournalScreen> createState() => _JournalScreenState();
+}
+
+class _JournalScreenState extends ConsumerState<JournalScreen> {
+  String? _moodFilter;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cream,
       // Bottom nav
       // Shared widget from dashboard
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,  // Journal is index 1
+        currentIndex: 1, // Journal is index 1
         type: BottomNavigationBarType.fixed,
         backgroundColor: AppColors.cream,
         selectedItemColor: AppColors.sageDark,
         unselectedItemColor: AppColors.inkMuted,
         onTap: (index) {
           switch (index) {
-          case 0:
-            context.go('/');
-          case 1:
-            break;
-          default:
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("TODO: route index=$index. In development."),
-              ),
-            );
+            case 0:
+              context.go('/');
+            case 1:
+              break;
+            default:
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("TODO: route index=$index. In development."),
+                ),
+              );
           }
         },
 
@@ -49,7 +57,7 @@ class JournalScreen extends ConsumerWidget {
           // Home screen
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home), 
+            activeIcon: Icon(Icons.home),
             label: "Home",
           ),
           // Journal screen
@@ -60,7 +68,7 @@ class JournalScreen extends ConsumerWidget {
           ),
           // Data analytics screen (in dev)
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined), 
+            icon: Icon(Icons.bar_chart_outlined),
             activeIcon: Icon(Icons.bar_chart),
             label: "Data",
           ),
@@ -82,13 +90,37 @@ class JournalScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             // Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF7ECF0),
+                border: Border(
+                  bottom: BorderSide(color: const Color(0XFFEEC9D2)),
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.eco_rounded,
+                        size: 16,
+                        color: AppColors.sageDark,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Your space',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: AppColors.sageDark,
+                          letterSpacing: 0.08,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
                   Text(
                     'Journal',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -116,14 +148,53 @@ class JournalScreen extends ConsumerWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => _openJournalForm(context, ref),
+                  onPressed: () => _openJournalForm(),
                   icon: const Icon(Icons.edit_outlined, size: 18),
                   label: const Text('Write today\'s entry'),
                 ),
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
+
+            // Mood filter chips
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  _FilterChip(
+                    label: 'All',
+                    selected: _moodFilter == null,
+                    onTap: () => setState(() => _moodFilter = null),
+                  ),
+                  const SizedBox(width: 6),
+                  ...[
+                    'anxious',
+                    'hopeful',
+                    'stressed',
+                    'calm',
+                    'proud',
+                    'tired',
+                    'grateful',
+                    'excited',
+                    'overwhelmed',
+                    'frustrated',
+                    'celebratory',
+                  ].map(
+                    (mood) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      child: _FilterChip(
+                        label: mood,
+                        selected: _moodFilter == mood,
+                        onTap: () =>
+                            setState(() => _moodFilter = _moodFilter == mood ? null : mood),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             // Divider
             Divider(color: AppColors.warmLinen, height: 1),
@@ -163,15 +234,22 @@ class JournalScreen extends ConsumerWidget {
                       ),
                     ),
                     data: (entries) {
-                      if (entries.isEmpty) {
-                        return _EmptyJournal();
+                      // apply mood filter
+                      final filtered = _moodFilter == null
+                          ? entries
+                          : entries
+                                .where((e) => e['mood_tag'] == _moodFilter)
+                                .toList();
+
+                      if (filtered.isEmpty) {
+                        return const _EmptyJournal();
                       }
                       return ListView.separated(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 96),
-                        itemCount: entries.length,
+                        itemCount: filtered.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 10),
                         itemBuilder: (context, i) => _JournalEntryTile(
-                          entry: entries[i],
+                          entry: filtered[i],
                           onDelete: () async {
                             await ExpenseApi.deleteJournalEntry(
                               entries[i]['id'] as String,
@@ -182,14 +260,14 @@ class JournalScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _openJournalForm(BuildContext context, WidgetRef ref) {
+  void _openJournalForm() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -451,8 +529,47 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
   }
 }
 
+// Filter mood chip
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.peachLight : AppColors.cream,
+          borderRadius: BorderRadius.circular(99),
+          border: Border.all(
+            color: selected ? AppColors.peach : AppColors.warmLinen,
+          ),
+        ),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: selected ? AppColors.deepMoss : AppColors.inkMuted,
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // Empty state
 class _EmptyJournal extends StatelessWidget {
+  const _EmptyJournal();
+
   @override
   Widget build(BuildContext context) {
     return Center(
