@@ -4,6 +4,93 @@
 
 ---
 
+## [0.8.0] - 2026-07-16
+
+### Journal Screen & Juniper2.0 Identity Sprint
+
+#### Added
+
+- `JournalEntry` SQLAlchemy model in `database/models.py` — `journal_entries` table
+- `POST /journal` — saves entry, runs Juniper ceiling check, stores response
+- `GET /journal` — returns all entries for user, newest first
+- `DELETE /journal/{id}` — ownership-validated delete
+
+- Juniper2.0 ceiling detection system:
+  - `check_ceiling()` — phrase-based scanner (not keyword) for crisis and out-of-scope content
+  - Three ceiling categories: `crisis_financial`, `crisis_emotional`, `advice_seeking`
+  - Warm redirect responses for each — points user to Resources tab (in development)
+  - `ceiling_triggered` field stored on every journal entry for future analytics
+
+- `JournalEntryCreate` and `JournalEntryResponse` Pydantic models in `api.py`
+- `CEILING_TRIGGERS` and `CEILING_RESPONSES` dicts in `api.py`
+
+- `lib/ui/journal/journal_screen.dart` — full journal screen:
+  - Blush header with "Your space" eyebrow and eco leaf icon
+  - "Write today's entry" button
+  - Horizontal scrolling mood filter chips — tap to filter entries by mood
+  - Expandable entry tiles — date, mood chip, content preview, Juniper response
+  - Swipe to delete
+  - Empty state
+  - Full bottom nav matching dashboard
+
+- `lib/ui/journal/journal_form.dart` — rewritten with TTM design:
+  - Warm prompt text
+  - Sand-colored text field
+  - Mood chip selector (9 moods)
+  - Loading state on submit
+
+- `addJournalEntry()`, `fetchJournal()`, `deleteJournalEntry()` in `expense_api.dart`
+- `journalProvider` in `user_providers.dart`
+- Journal screen wired to `/journal` route in `app.dart`
+- `is_subscription` field added to `ExpenseRecord` — SQLite migration applied
+- `is_subscription` toggle added to `AddExpenseSheet`
+- `is_subscription` parameter added to `ExpenseApi.addExpense()`
+
+#### Changed
+
+- Bottom nav updated across dashboard and journal screens:
+  - Home, Journal, Data, Piggybank, You
+  - `activeIcon` (filled) vs outlined for selected state
+
+- `dashboard_screen.dart` `onTap` wired to `context.go('/journal')` for Journal tab
+- Juniper ceiling check uses phrase matching instead of single keywords — reduces false positives
+
+#### Documented
+
+- Juniper2.0 identity defined: rules-based insight engine with a warm voice, not an LLM
+- Ceiling philosophy documented: Juniper knows her limits and redirects warmly
+- Decision to keep journal entries linked to expenses (not standalone) — keeps TTM at the fintech-wellness intersection
+
+---
+
+## [0.7.1] - 2026-07-10
+
+### Dashboard UI Polish Sprint
+
+#### Added
+
+- Expandable expense tiles — tap to reveal mood tag, essential, recurring, note, Juniper message
+- `is_subscription` field on expense tiles (Recurring / One-time chip)
+- Progress bar under monthly spending total — turns amber at 90% of budget
+- `_FilterChip` widget for mood filtering
+- Personal greeting header — "Good morning/afternoon/evening / Alexis / Your money. No judgment." User names will be added at later date.
+- Time-based greeting using `DateTime.now().hour`
+- Rotating affirmations from Juniper engine via `GET /affirmation` endpoint
+- `affirmationProvider` in `user_providers.dart`
+- `fetchAffirmation()` in `expense_api.dart`
+- Affirmation pill redesigned — card shape (`borderRadius: 16`) instead of capsule, auto-width
+
+#### Changed
+
+- Dashboard tagline updated to "Your money. No judgment."
+- `_AffirmationPill` now pulls live content from backend instead of hardcoded string
+- `summaryProvider` now invalidated alongside `expensesProvider` on expense add
+- `_ExpenseTile` converted from `StatelessWidget` to `StatefulWidget` for expand/collapse
+- `_ExpenseRow` expanded to include `category`, `moodTag`, `isEssential`, `isSubscription`, `note`, `juniperMessage`
+- Wallet frame removed entirely — design direction changed
+
+---
+
 ## [0.7.0] - 2026-07-09
 
 ### SQLite Persistence & Real Data Wiring

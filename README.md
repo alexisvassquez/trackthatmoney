@@ -303,11 +303,15 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 
 **Completed:**
 
-- FastAPI backend with `/encourage` and `/predict` endpoints (Juniper2.0 core)
+- FastAPI backend with `/encourage`, `/predict`, `/affirmation` endpoints (Juniper2.0 core)
 - SQLite persistence via SQLAlchemy — expenses survive backend restarts
 - Full expense CRUD — add, list, delete via REST API
-- Flutter dashboard — live expense list, real-time spending total, swipe to delete
+- Full journal CRUD — write entries, mood tag, Juniper responds, ceiling detection
+- Juniper2.0 ceiling system — detects crisis and out-of-scope content, redirects warmly to Resources (in development)
+- Flutter dashboard — personal greeting, rotating affirmations, live spending total, progress bar, expandable expense tiles, live expense list, real-time spending total, swipe to delete
+- Flutter journal screen — blush header, mood filter chips, write entries, expandable entries with Juniper responses
 - Add expense bottom sheet — merchant, amount, category, mood tag, essential toggle
+- Bottom nav — icons for Home, Journal, Data, Piggybank, You. GoRoute paths to dashboard and Journal are functioning
 - Juniper2.0 response displayed after every expense submission
 - Riverpod state management wired to backend
 - Environment variable security on both Flutter and FastAPI sides
@@ -319,6 +323,9 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - Juniper2.0 dashboard greeting card — wired to real spending data
 - Mood tag display on expense tiles
 - Tip content tuning — more contextual Juniper responses
+- Juniper2.0 pattern detection — mood trends over time
+- CBT reframe questions and emotional frame responses (new JSON content)
+- Link journal entries to specific expenses
 
 **Planned:**
 
@@ -326,10 +333,33 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - Piggybank screen — savings goals with celebratory animations
 - Data/analytics tab — spending trends, mood vs spending patterns
 - Resources tab — educational financial literacy content
+- User profile / settings screen (name, budget amount)
 - Persistent Juniper floating button — accessible from every screen
 - CSV/XLSX export
 - Plaid / OAuth2 bank linking
 - APK build for personal use / Play Store submission
+
+---
+
+## Juniper2.0
+
+Juniper is a rules-based insight engine — not an LLM. She responds to spending and journal entries using CBT-informed content weighted by mood and category.
+
+**What Juniper does:**
+
+- Responds to expense entries with encouragement and category-specific tips
+- Responds to journal entries with mood-aware reflections
+- Detects patterns over time and surfaces them warmly
+- Knows her ceiling — redirects to Resources when content exceeds her scope
+
+**What Juniper doesn't do:**
+
+- Open-ended conversation
+- Specific financial or legal advice
+- Mental health diagnosis or therapy
+- Anything an LLM would do
+
+> Juniper2.0 is an encouragement engine, not a financial advisor or therapist. For serious financial or mental health concerns, please seek professional support.
 
 ---
 
