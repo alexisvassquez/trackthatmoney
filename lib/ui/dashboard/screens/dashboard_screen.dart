@@ -319,10 +319,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _toast(context, "TODO: route index=$index. In development.");
           }
         },
-        backgroundColor: cs.surface,
-        selectedItemColor: cs.primary,
-        unselectedItemColor: cs.onSurface.withValues(alpha: .60),
-        
+        backgroundColor: AppColors.cream,
+        selectedItemColor: AppColors.sageDark,
+        unselectedItemColor: AppColors.inkMuted,
+
         // Bottom nav icons
         // Shows outlined and filled when selected
         // Currently, only Journal is functioning.
