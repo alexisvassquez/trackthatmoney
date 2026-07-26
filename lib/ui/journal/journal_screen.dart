@@ -41,6 +41,8 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
               context.go('/');
             case 1:
               break;
+            case 3:
+              context.go('/piggybank');
             default:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -183,12 +185,16 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                     'celebratory',
                   ].map(
                     (mood) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       child: _FilterChip(
                         label: mood,
                         selected: _moodFilter == mood,
-                        onTap: () =>
-                            setState(() => _moodFilter = _moodFilter == mood ? null : mood),
+                        onTap: () => setState(
+                          () => _moodFilter = _moodFilter == mood ? null : mood,
+                        ),
                       ),
                     ),
                   ),

@@ -315,6 +315,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               context.go('/');
             case 1:
               context.go('/journal');
+            case 3:
+              context.go('/piggybank');
             default:
               _toast(context, "TODO: route index=$index. In development.");
           }
@@ -330,7 +332,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           // Home screen
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home), 
+            activeIcon: Icon(Icons.home),
             label: "Home",
           ),
           // Journal screen
@@ -341,7 +343,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           // Data analytics screen (in dev)
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined), 
+            icon: Icon(Icons.bar_chart_outlined),
             activeIcon: Icon(Icons.bar_chart),
             label: "Data",
           ),

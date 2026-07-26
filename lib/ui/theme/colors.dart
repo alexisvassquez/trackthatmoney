@@ -30,6 +30,8 @@ class AppColors {
   static const sageMist = Color(0xFFEBF4EC); // very light surface tint
   static const peachLight = Color(0xFFFADDD3); // soft peach backgrounds
   static const amber = Color(0xFFE8A020); // caution — warm, not punitive
+  static const goldLight = Color(0xFFF5E9C8); // piggybank progress bar
+  static const card = Color(0xFFEDE4CC); // progress tiles
 
   // ----- Text -----
   static const inkWarm = Color(
