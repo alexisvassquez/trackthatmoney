@@ -29,6 +29,9 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
   // Currently selected goal index
   int _selectedGoal = 0;
 
+  // First contribution animation
+  final Set<int> _firstContributionDone = {};
+
   // Hardcoded goals for now
   // will wire to backend in next phase (todo)
   final List<Map<String, dynamic>> _goals = [
@@ -89,19 +92,33 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
     _showAddSavingsSheet();
   }
 
-  void _triggerCelebration() {
-    // Play piggy animation once
+  void _triggerCelebration(double pct, int goalIndex) {
+    // Always bounce the piggy
     _piggyController.forward(from: 0);
 
-    // Check if milestone hit
-    final pct = _progress * 100;
-    if (pct >= 25 && pct < 30 ||
-        pct >= 50 && pct < 55 ||
-        pct >= 75 && pct < 80 ||
-        pct >= 100) {
-      // Fire confetti on milestone
+    final isFirst = !_firstContributionDone.contains(goalIndex);
+
+    // confetti bursts at first contribution and grows bigger w/ longer
+    // duration as user reaches thresholds
+    if (isFirst) {
+      _firstContributionDone.add(goalIndex);
+      _confettiController.duration = const Duration(seconds: 1);
+      _confettiController.forward(from: 0);
+    } else if (pct >= 100) {
+      _confettiController.duration = const Duration(seconds: 4);
+      _confettiController.forward(from: 0);
+    } else if (pct >= 75) {
+      _confettiController.duration = const Duration(seconds: 2);
+      _confettiController.forward(from: 0);
+    } else if (pct >= 50) {
+      _confettiController.duration = const Duration(seconds: 2);
+      _confettiController.forward(from: 0);
+    } else if (pct >= 25) {
+      _confettiController.duration = const Duration(seconds: 2);
       _confettiController.forward(from: 0);
     }
+    // between 0-25% after first contribution: piggy bounces, no confetti
+    // surprise effect
   }
 
   void _showAddSavingsSheet() {
@@ -116,7 +133,12 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
             _goals[_selectedGoal]['saved'] =
                 (_currentGoal['saved'] as double) + amount;
           });
-          _triggerCelebration();
+          final newPct =
+              ((_goals[_selectedGoal]['saved'] as double) /
+                      (_goals[_selectedGoal]['target'] as double) *
+                      100)
+                  .clamp(0.0, 100.0);
+          _triggerCelebration(newPct, _selectedGoal);
         },
       ),
     );
@@ -247,14 +269,17 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                       alignment: Alignment.center,
                       children: [
                         // Confetti - plays on milestone
-                        Lottie.asset(
-                          'assets/animations/confetti.json',
-                          controller: _confettiController,
-                          width: 300,
-                          height: 300,
-                          onLoaded: (comp) {
-                            _confettiController.duration = comp.duration;
-                          },
+                        Transform.scale(
+                          scale: _confettiScale(pct),
+                          child: Lottie.asset(
+                            'assets/animations/confetti.json',
+                            controller: _confettiController,
+                            width: 300,
+                            height: 300,
+                            onLoaded: (comp) {
+                              _confettiController.duration = comp.duration;
+                            },
+                          ),
                         ),
 
                         // Piggybank
@@ -543,6 +568,14 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
         ),
       ),
     );
+  }
+
+  double _confettiScale(double pct) {
+    if (pct >= 100) return 2.0;
+    if (pct >= 75) return 1.5;
+    if (pct >= 50) return 1.2;
+    if (pct >= 25) return 1.1;
+    return 0.8; // first contribution - small welcome burst
   }
 
   String _encouragement(double pct) {
