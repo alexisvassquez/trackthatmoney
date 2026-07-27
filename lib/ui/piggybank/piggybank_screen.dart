@@ -578,6 +578,7 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
     return 0.8; // first contribution - small welcome burst
   }
 
+  // Milestone encouragement messages
   String _encouragement(double pct) {
     if (pct >= 100) return "You did it! Goal complete!";
     if (pct >= 75) return "So close - you've got this!";
