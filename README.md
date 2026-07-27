@@ -317,11 +317,11 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - Environment variable security on both Flutter and FastAPI sides
 - Color palette and design system — "Warm & Hopeful" theme
 - "Encouraged, not guilty" UX philosophy applied throughout
+- Mood tag display on expense tiles
+- Juniper2.0 dashboard greeting card — wired to real spending data
 
 **In progress:**
 
-- Juniper2.0 dashboard greeting card — wired to real spending data
-- Mood tag display on expense tiles
 - Tip content tuning — more contextual Juniper responses
 - Juniper2.0 pattern detection — mood trends over time
 - CBT reframe questions and emotional frame responses (new JSON content)
