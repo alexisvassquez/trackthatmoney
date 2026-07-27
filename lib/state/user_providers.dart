@@ -4,6 +4,8 @@ import '../services/expense_api.dart';
 
 /// Track That Money
 /// lib/state/user_providers.dart
+/// Serves as the centralized state provider for the application.
+/// It acts as a single source of truth, decoupled from individual UI components.
 
 // Current user name (null if not set)
 // User Name
@@ -46,4 +48,9 @@ final summaryProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 // Affirmations provider, shuffles affirmations
 final affirmationProvider = FutureProvider<String>((ref) async {
   return ExpenseApi.fetchAffirmation();
+});
+
+// Savings goals provider
+final goalsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  return ExpenseApi.fetchGoals();
 });
