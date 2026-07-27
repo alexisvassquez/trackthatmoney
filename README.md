@@ -319,6 +319,7 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - "Encouraged, not guilty" UX philosophy applied throughout
 - Mood tag display on expense tiles
 - Juniper2.0 dashboard greeting card — wired to real spending data
+- Piggybank screen — savings goals with celebratory animations (animations are from [Lordicon](https://lordicon.com) and [LottieFiles](https://lottiefiles.com))
 
 **In progress:**
 
@@ -327,7 +328,6 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - CBT reframe questions and emotional frame responses (new JSON content)
 - Link journal entries to specific expenses
 - Journal screen — write entries, link to purchases, tag moods
-- Piggybank screen — savings goals with celebratory animations (animations are from [Lordicon](https://lordicon.com) and [LottieFiles](https://lottiefiles.com))
 
 **Planned:**
 
