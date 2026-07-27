@@ -1,10 +1,15 @@
 # Track That Money
 # backend/juniper2_0/database/models.py
 #
-# SQLAlchemy ORM model for the expenses table.
-# Each ExpenseRecord row represents one logged expense.
-# The schema mirrors the Pydantic Expense model in api.py
-# Journal entry model
+# SQLAlchemy ORM models
+# The schema mirrors the Pydantic models in api.py
+# Each class maps to their respective table in trackthatmoney.db
+# They are created automatically on startup via Base.metadata.create_all()
+#
+# ORM models include (in order):
+#   - Expense records
+#   - Journal entries
+#   - Savings goals (seen in piggybank screen)
 
 from sqlalchemy import Column, String, Float, Integer
 from .database import Base
@@ -12,7 +17,8 @@ from .database import Base
 class ExpenseRecord(Base):
     """
     Maps to the 'expenses' table in trackthatmoney.db
-    Created automatically on startup via Base.metadata.create_all()
+    Saves/logs user expense records with timestamp, merchant, category,
+    amount, mood tag, essential/subscription, and AI message
     """
     __tablename__ = "expenses"
 
@@ -55,10 +61,9 @@ class ExpenseRecord(Base):
 
 class JournalEntry(Base):
     """
-    Maps to the 'journal_entries' table in trackthatmoney.db
     Each entry is an emotional annotation that is optionally linked
-    to an expense.
-    Created automatically on startup via Base.metadata.create_all()
+    to an expense with AI response.
+    Includes ceiling trigger for safety.
     """
     __tablename__ = "journal_entries"
 
@@ -89,3 +94,30 @@ class JournalEntry(Base):
     # Stores the category: "crisis_financial", "crisis_emotional",
     # "advice_seeking"
     ceiling_triggered = Column(String, nullable=True)
+
+class SavingsGoal(Base):
+    """
+    Each row represents one savings goal for a user.
+    Includes timestamp, saved amount, target amount, icon
+    """
+    __tablename__ = "savings_goals"
+
+    # Server-generated fields
+    # UUID
+    id = Column(String, primary_key=True, index=True)
+    # From auth token
+    user_id = Column(String, nullable=False, index=True)
+    # ISO timestamp
+    created_at = Column(String, nullable=False)
+
+    # Goal details
+    # Name of goal (e.g., "Move to abc" or "Purchase new xyz")
+    name = Column(String, nullable=False)
+    # Target amount in dollars ($)
+    target = Column(Float, nullable=False)
+    # Amount saved so far towards goal
+    saved = Column(Float, default=0.0)
+    # Icon name (e.g., "flight_takeoff")
+    icon = Column(String, nullable=True)
+    # 1 = featured goal on screen
+    is_primary = Column(Integer, default=0)
