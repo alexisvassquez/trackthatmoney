@@ -570,6 +570,8 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
     );
   }
 
+  // Confetti burst scales upwards as the user reaches more milestones
+  // and gets closer to the goal
   double _confettiScale(double pct) {
     if (pct >= 100) return 2.0;
     if (pct >= 75) return 1.5;
