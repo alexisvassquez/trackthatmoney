@@ -1,5 +1,6 @@
 # Track That Money
 # backend/juniper2_0/api.py
+# FastAPI endpoints, mirrors models.py
 
 import os
 from fastapi import FastAPI, Depends, HTTPException
@@ -16,8 +17,9 @@ from sqlalchemy.orm import Session
 from juniper2_core.predict.predictor import SpendingPredictor
 from juniper2_core.encourage.encourager import EncouragementEngine
 from auth.auth import verify_token
+
 from database.database import engine, get_db, Base
-from database.models import ExpenseRecord, JournalEntry
+from database.models import ExpenseRecord, JournalEntry, SavingsGoal
 
 load_dotenv()
 
@@ -39,11 +41,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# Engine instantiations
+# ENGINE INSTANTIATIONS
 predictor = SpendingPredictor()    # Spending Predictor
 engine_juniper = EncouragementEngine()     # Encouragement
 
-# Juniper ceiling check
+# JUNIPER CEILING CHECK
 # Trigger words for safety check
 # If safety checks are triggered, Juniper will gently redirect the
 # user to the in-app resources tab (in development)
@@ -99,7 +101,8 @@ def check_ceiling(text: str) -> Optional[str]:
             return category
     return None
 
-# Pydantic Models
+# PYDANTIC MODELS
+# ----------------
 # Expense Models
 class ExpenseCreate(BaseModel):
     """
@@ -180,9 +183,42 @@ class JournalEntryResponse(BaseModel):
     class Config:
         from_attributes = True
 
+# Savings Goal Models
+class GoalCreate(BaseModel):
+    """
+    What Flutter sends when creating a new savings goal.
+    """
+    name: str
+    target: float
+    icon: Optional[str] = None
+    is_primary: int = 0
+
+class GoalUpdate(BaseModel):
+    """
+    Sent by Flutter when adding to savings.
+    """
+    amount: float
+
+class GoalResponse(BaseModel):
+    """
+    Full goal returned to Flutter
+    """
+    id: str
+    user_id: str
+    created_at: str
+    name: str
+    target: float
+    saved: float
+    icon: Optional[str] = None
+    is_primary: int
+
+    class Config:
+        from_attributes = True 
+
 # CRUD ENDPOINTS
-# Expense CRUD endpoints
-# Add Expenses
+# ----------------
+# EXPENSES
+# Add expenses
 @app.post("/expenses", response_model=Expense)
 def create_expense(
     expense: ExpenseCreate,
@@ -215,14 +251,15 @@ def create_expense(
     db.refresh(record)
     return record
 
-# List Expenses
+# List expenses
 @app.get("/expenses", response_model=list[Expense])
 def list_expenses(
     user_id: str = Depends(verify_token),
     db: Session = Depends(get_db),
 ):
     """
-    Return all logged expenses for the current user, newest first.
+    Return all logged expenses for the current user.
+    Filters by newest records first.
     """
     return (
         db.query(ExpenseRecord)
@@ -231,7 +268,7 @@ def list_expenses(
         .all()
     )
 
-# Delete Expenses
+# Delete expenses
 @app.delete("/expenses/{expense_id}")
 def delete_expense(
     expense_id: str,
@@ -258,7 +295,7 @@ def delete_expense(
     db.commit()
     return {"deleted": expense_id}
 
-# Expenses Summary
+# Expenses summary
 @app.get("/expenses/summary")
 def expenses_summary(
     user_id: str = Depends(verify_token),
@@ -285,7 +322,8 @@ def expenses_summary(
         "month": now.strftime("%B %Y"),
     }
 
-# Journal CRUD Endpoints
+# JOURNAL
+# Add journal entries
 @app.post("/journal", response_model=JournalEntryResponse)
 def create_journal_entry(
     entry: JournalEntryCreate,
@@ -348,13 +386,15 @@ def create_journal_entry(
     db.refresh(record)
     return record
 
+# List journal entries
 @app.get("/journal", response_model=list[JournalEntryResponse])
 def list_journal_entries(
     user_id: str = Depends(verify_token),
     db: Session = Depends(get_db),
 ):
     """
-    Return all journal entries for the current user, newest first
+    Return all journal entries for the current user.
+    Filters entries by newest first.
     """
     return (
         db.query(JournalEntry)
@@ -363,6 +403,7 @@ def list_journal_entries(
         .all()
     )
 
+# Delete journal entries
 @app.delete("/journal/{entry_id}")
 def delete_journal_entry(
     entry_id: str,
@@ -389,7 +430,145 @@ def delete_journal_entry(
     db.commit()
     return {"deleted": entry_id}
 
-# Affirmations CRUD Endpoints
+# SAVINGS GOALS
+# Create goals
+@app.post("/goals", response_model=GoalResponse)
+def create_goal(
+    goal: GoalCreate,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Create a new savings goal in piggybank screen.
+    Includes timestamp, name of goal, target goal, how much saved,
+    if it is a primary goal, and icon.
+    """
+    record = SavingsGoal(
+        id=str(uuid.uuid4()),
+        user_id=user_id,
+        created_at=datetime.now(timezone.utc).isoformat(),
+        name=goal.name,
+        target=goal.target,
+        saved=0.0,
+        icon=goal.icon,
+        is_primary=goal.is_primary,
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return record
+
+# List savings goals
+@app.get("/goals", response_model=list[GoalResponse])
+def list_goals(
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Return all savings goals for the current user.
+    Filters by newest first, unless starred as primary (below).
+    """
+    return (
+        db.query(SavingsGoal)
+        .filter(SavingsGoal.user_id == user_id)
+        .order_by(SavingsGoal.created_at.asc())
+        .all()
+    )
+
+# Update goals
+@app.patch("/goals/{goal_id}", response_model=GoalResponse)
+def update_goal_savings(
+    goal_id: str,
+    update: GoalUpdate,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Add an amount to a goal's saved total.
+    Uses PATCH as we are only updating the saved field.
+    """
+    record = (
+        db.query(SavingsGoal)
+        .filter(
+            SavingsGoal.id == goal_id,
+            SavingsGoal.user_id == user_id,
+        )
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Goal not found.")
+
+    current_saved = getattr(record, 'saved', 0.0)
+    setattr(record, 'saved', round(float(current_saved) + update.amount, 2))
+    db.commit()
+    db.refresh(record)
+    return record
+
+# Set primary goal
+@app.patch("/goals/{goal_id}/primary")
+def set_primary_goal(
+    goal_id: str,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Set a goal as the primary/featured goal.
+    Clears primary status from all othre goals first so only
+    one can be primary at a time.
+    """
+    # Clear primary from all user's goals
+    db.query(SavingsGoal).filter(
+        SavingsGoal.user_id == user_id,
+    ).update({"is_primary": 0})
+
+    # Set one selected goal as primary
+    record = (
+        db.query(SavingsGoal)
+        .filter(
+            SavingsGoal.id == goal_id,
+            SavingsGoal.user_id == user_id,
+        )
+        .first()
+    )
+
+    if not record:
+        db.rollback()
+        raise HTTPException(status_code=404, detail="Goal not found.")
+
+    setattr(record, 'is_primary', 1)
+    db.commit()
+    db.refresh(record)
+    return {"primary": goal_id}
+
+# Delete goal
+@app.delete("/goals/{goal_id}")
+def delete_goal(
+    goal_id: str,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Delete a logged savings goal from the list.
+    """
+    record = (
+        db.query(SavingsGoal)
+        .filter(
+            SavingsGoal.id == goal_id,
+            SavingsGoal.user_id == user_id,
+        )
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Goal not found.")
+
+    db.delete(record)
+    db.commit()
+    return {"deleted": goal_id}
+
+# AFFIRMATIONS
+# Dynamic affirmations from encouragement engine
 @app.get("/affirmation")
 def get_affirmation(user_id: str = Depends(verify_token)):
     """
@@ -398,7 +577,9 @@ def get_affirmation(user_id: str = Depends(verify_token)):
     affirmation = engine_juniper._affirmation_fallback()
     return {"affirmation": affirmation}
 
-# Existing AI Endpoints
+# AI ENDPOINTS
+# -------------
+# Spending predictor model
 @app.post("/predict")
 async def predict(
     entry: ExpenseEntry, 
@@ -410,6 +591,7 @@ async def predict(
     prediction = predictor.predict(entry.model_dump())
     return {"prediction": prediction}
 
+# Encouragement model
 @app.post("/encourage")
 def encourage(
     expense: ExpenseIn, 
@@ -421,7 +603,7 @@ def encourage(
     result = engine_juniper.suggest(expense.model_dump())
     return result
 
-# Auth
+# AUTH
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
