@@ -326,11 +326,11 @@ Actively in development. Paused mid-2025, fully resumed and refactored July 2026
 - Juniper2.0 pattern detection — mood trends over time
 - CBT reframe questions and emotional frame responses (new JSON content)
 - Link journal entries to specific expenses
+- Journal screen — write entries, link to purchases, tag moods
+- Piggybank screen — savings goals with celebratory animations (animations are from [Lordicon](https://lordicon.com) and [LottieFiles](https://lottiefiles.com))
 
 **Planned:**
 
-- Journal screen — write entries, link to purchases, tag moods
-- Piggybank screen — savings goals with celebratory animations
 - Data/analytics tab — spending trends, mood vs spending patterns
 - Resources tab — educational financial literacy content
 - User profile / settings screen (name, budget amount)
