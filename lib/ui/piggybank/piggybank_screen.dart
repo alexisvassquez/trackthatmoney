@@ -188,11 +188,7 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
       backgroundColor: Colors.transparent,
       builder: (_) => _NewGoalSheet(
         onSave: (name, target, icon) async {
-          await ExpenseApi.createGoal(
-            name: name, 
-            target: target,
-            icon: icon,
-          );
+          await ExpenseApi.createGoal(name: name, target: target, icon: icon);
           ref.invalidate(goalsProvider);
         },
       ),
@@ -610,6 +606,7 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                                 return Dismissible(
                                   key: Key(gId),
                                   direction: DismissDirection.endToStart,
+                                  resizeDuration: null,
                                   background: Container(
                                     alignment: Alignment.centerRight,
                                     padding: const EdgeInsets.only(right: 20),
@@ -624,8 +621,26 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                                     ),
                                   ),
                                   onDismissed: (_) async {
-                                    await ExpenseApi.deleteGoal(gId);
-                                    ref.invalidate(goalsProvider);
+                                    try {
+                                      await ExpenseApi.deleteGoal(gId);
+                                      ref.invalidate(goalsProvider);
+                                      // if deleted goal was selected, reset selection
+                                      if (_selectedGoal == gId) {
+                                        setState(() => _selectedGoal = null);
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Could not delete goal.',
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
                                   },
                                   child: GestureDetector(
                                     onTap: () =>
