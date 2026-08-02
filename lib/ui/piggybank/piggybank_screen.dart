@@ -70,7 +70,9 @@ String _inferIcon(String goalName) {
       name.contains('engagement')) {
     return 'favorite';
   }
-  if (name.contains('baby') || name.contains('child') || name.contains('kid')) {
+  if (name.contains('baby') || 
+      name.contains('child') || 
+      name.contains('kid')) {
     return 'child_care';
   }
   if (name.contains('gym') ||
