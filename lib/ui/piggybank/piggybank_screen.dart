@@ -13,6 +13,80 @@ import '../theme/colors.dart';
 /// animation at a certain threshold.
 /// Piggybank / confetti animation
 
+// Infer icon based on user input
+String _inferIcon(String goalName) {
+  final name = goalName.toLowerCase();
+  if (name.contains('london') ||
+      name.contains('travel') ||
+      name.contains('trip') ||
+      name.contains('flight') ||
+      name.contains('vacation') ||
+      name.contains('holiday')) {
+    return 'flight_takeoff';
+  }
+  if (name.contains('car') ||
+      name.contains('vehicle') ||
+      name.contains('truck') ||
+      name.contains('auto')) {
+    return 'directions_car';
+  }
+  if (name.contains('vet') ||
+      name.contains('pet') ||
+      name.contains('dog') ||
+      name.contains('cat') ||
+      name.contains('animal')) {
+    return 'pets';
+  }
+  if (name.contains('emergency') ||
+      name.contains('fund') ||
+      name.contains('safety') ||
+      name.contains('backup')) {
+    return 'shield';
+  }
+  if (name.contains('home') ||
+      name.contains('house') ||
+      name.contains('apartment') ||
+      name.contains('rent') ||
+      name.contains('mortgage')) {
+    return 'home';
+  }
+  if (name.contains('music') ||
+      name.contains('concert') ||
+      name.contains('ticket') ||
+      name.contains('show') ||
+      name.contains('festival')) {
+    return 'music_note';
+  }
+  if (name.contains('computer') ||
+      name.contains('laptop') ||
+      name.contains('raspberry') ||
+      name.contains('tech') ||
+      name.contains('phone') ||
+      name.contains('gadget')) {
+    return 'memory';
+  }
+  if (name.contains('wedding') ||
+      name.contains('ring') ||
+      name.contains('engagement')) {
+    return 'favorite';
+  }
+  if (name.contains('baby') || name.contains('child') || name.contains('kid')) {
+    return 'child_care';
+  }
+  if (name.contains('gym') ||
+      name.contains('fitness') ||
+      name.contains('health') ||
+      name.contains('medical')) {
+    return 'favorite_outline';
+  }
+  if (name.contains('book') ||
+      name.contains('course') ||
+      name.contains('class')) {
+    return 'school';
+  }
+  return 'savings'; // default
+}
+
 class PiggyBankScreen extends ConsumerStatefulWidget {
   const PiggyBankScreen({super.key});
 
@@ -113,8 +187,12 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => _NewGoalSheet(
-        onSave: (name, target) async {
-          await ExpenseApi.createGoal(name: name, target: target);
+        onSave: (name, target, icon) async {
+          await ExpenseApi.createGoal(
+            name: name, 
+            target: target,
+            icon: icon,
+          );
           ref.invalidate(goalsProvider);
         },
       ),
@@ -539,60 +617,142 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                                     decoration: BoxDecoration(
                                       color: AppColors.sageLight,
                                       borderRadius: BorderRadius.circular(14),
-                                    ), 
-                                    child: const Icon(Icons.delete_outline, color: Colors.white),
+                                    ),
+                                    child: const Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   onDismissed: (_) async {
                                     await ExpenseApi.deleteGoal(gId);
                                     ref.invalidate(goalsProvider);
                                   },
                                   child: GestureDetector(
-                                  onTap: () =>
-                                      setState(() => _selectedGoal = gId),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 8),
-                                    padding: const EdgeInsets.all(14),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? AppColors.goldLight
-                                          : AppColors.sand,
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
+                                    onTap: () =>
+                                        setState(() => _selectedGoal = gId),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(14),
+                                      decoration: BoxDecoration(
                                         color: isSelected
-                                            ? const Color(0xFFE8D4A0)
-                                            : AppColors.warmLinen,
-                                        width: isSelected ? 1.5 : 1,
+                                            ? AppColors.goldLight
+                                            : AppColors.sand,
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? const Color(0xFFE8D4A0)
+                                              : AppColors.warmLinen,
+                                          width: isSelected ? 1.5 : 1,
+                                        ),
                                       ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 34,
-                                              height: 34,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.goldLight,
-                                                borderRadius:
-                                                    BorderRadius.circular(9),
-                                                border: Border.all(
-                                                  color: const Color(
-                                                    0xFFE8D4A0,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 34,
+                                                height: 34,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.goldLight,
+                                                  borderRadius:
+                                                      BorderRadius.circular(9),
+                                                  border: Border.all(
+                                                    color: const Color(
+                                                      0xFFE8D4A0,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              child: Icon(
-                                                _iconForGoal(
-                                                  g['icon'] as String?,
+                                                child: Icon(
+                                                  _iconForGoal(
+                                                    g['icon'] as String?,
+                                                  ),
+                                                  size: 16,
+                                                  color: AppColors.honeyGold,
                                                 ),
-                                                size: 16,
-                                                color: AppColors.honeyGold,
                                               ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(
-                                                g['name'] as String,
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  g['name'] as String,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.deepMoss,
+                                                      ),
+                                                ),
+                                              ),
+
+                                              // Star for primary
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await ExpenseApi.setPrimaryGoal(
+                                                    gId,
+                                                  );
+                                                  ref.invalidate(goalsProvider);
+                                                },
+                                                child: Icon(
+                                                  (g['is_primary'] as int? ??
+                                                              0) ==
+                                                          1
+                                                      ? Icons.star_rounded
+                                                      : Icons
+                                                            .star_outline_rounded,
+                                                  size: 18,
+                                                  color:
+                                                      (g['is_primary']
+                                                                  as int? ??
+                                                              0) ==
+                                                          1
+                                                      ? AppColors.honeyGold
+                                                      : AppColors.inkMuted,
+                                                ),
+                                              ),
+
+                                              // Completion state for goals that have reached 100%
+                                              if (gPct >= 100)
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                    right: 6,
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.sageMist,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          99,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: AppColors.sage
+                                                          .withValues(
+                                                            alpha: .4,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Completed! 🎉',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelSmall
+                                                        ?.copyWith(
+                                                          color: AppColors
+                                                              .sageDark,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                  ),
+                                                ),
+                                              const SizedBox(width: 8),
+
+                                              Text(
+                                                '\$${gSaved.toStringAsFixed(0)}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium
@@ -602,117 +762,56 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                                                       color: AppColors.deepMoss,
                                                     ),
                                               ),
-                                            ),
-
-                                            // Star for primary
-                                            GestureDetector(
-                                              onTap: () async {
-                                                await ExpenseApi.setPrimaryGoal(
-                                                  gId,
-                                                );
-                                                ref.invalidate(goalsProvider);
-                                              },
-                                              child: Icon(
-                                                (g['is_primary'] as int? ??
-                                                            0) ==
-                                                        1
-                                                    ? Icons.star_rounded
-                                                    : Icons
-                                                          .star_outline_rounded,
-                                                size: 18,
-                                                color:
-                                                    (g['is_primary'] as int? ??
-                                                            0) ==
-                                                        1
-                                                    ? AppColors.honeyGold
-                                                    : AppColors.inkMuted,
-                                              ),
-                                            ),
-
-                                            // Completion state for goals that have reached 100%
-                                            if (gPct >= 100) Container(
-                                              margin: const EdgeInsets.only(right: 6),
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: 6,
-                                                vertical: 2,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.sageMist,
-                                                borderRadius: BorderRadius.circular(99),
-                                                border: Border.all(
-                                                  color: AppColors.sage.withValues(alpha: .4),
-                                                ),
-                                              ),
-                                              child: Text(
-                                                'Completed! 🎉',
-                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                  color: AppColors.sageDark,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-
-                                            Text(
-                                              '\$${gSaved.toStringAsFixed(0)}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.deepMoss,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            99,
+                                            ],
                                           ),
-                                          child: LinearProgressIndicator(
-                                            value: gSaved / gTarget,
-                                            minHeight: 5,
-                                            backgroundColor:
-                                                AppColors.warmLinen,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  AppColors.honeyGold,
-                                                ),
+                                          const SizedBox(height: 8),
+
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              99,
+                                            ),
+                                            child: LinearProgressIndicator(
+                                              value: gSaved / gTarget,
+                                              minHeight: 5,
+                                              backgroundColor:
+                                                  AppColors.warmLinen,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    AppColors.honeyGold,
+                                                  ),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              '${gPct.toStringAsFixed(0)}%',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(
-                                                    color: AppColors.inkMuted,
-                                                  ),
-                                            ),
-                                            Text(
-                                              'of \$${gTarget.toStringAsFixed(0)}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(
-                                                    color: AppColors.inkMuted,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${gPct.toStringAsFixed(0)}%',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: AppColors.inkMuted,
+                                                    ),
+                                              ),
+                                              Text(
+                                                'of \$${gTarget.toStringAsFixed(0)}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: AppColors.inkMuted,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
 
                               // New goal dashed button
                               GestureDetector(
@@ -905,7 +1004,7 @@ class _AddSavingsSheetState extends State<_AddSavingsSheet> {
 
 // New Goal Sheet
 class _NewGoalSheet extends StatefulWidget {
-  final Function(String name, double target) onSave;
+  final Function(String name, double target, String icon) onSave;
   const _NewGoalSheet({required this.onSave});
 
   @override
@@ -927,7 +1026,7 @@ class _NewGoalSheetState extends State<_NewGoalSheet> {
     final name = _nameController.text.trim();
     final target = double.tryParse(_targetController.text.trim());
     if (name.isEmpty || target == null || target <= 0) return;
-    widget.onSave(name, target);
+    widget.onSave(name, target, _inferIcon(name));
     Navigator.of(context).pop();
   }
 
