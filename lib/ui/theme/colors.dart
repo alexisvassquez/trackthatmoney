@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 /// "Warm & Hopeful" — NO RED ANYWHERE :)
 /// No red for a fintech app is a design choice by the
 /// developer.
+/// Warm, non-punitive tones
 
 class AppColors {
   AppColors._(); // non-instantiable
@@ -49,6 +50,76 @@ class AppColors {
   // ----- Utility -----
   /// Apply alpha to any color. e.g. o(sage, 80)
   static Color o(Color c, int a) => c.withAlpha(a);
+
+  // ---- Mood accent colors ----
+  // Each mood has a light background tint & border/text color
+  static const calmTint = Color(0xFFF0F8F2);
+  static const calmAccent = Color(0xFF7AAE82); // sage
+
+  static const stressedTint = Color(0xFFFDF6EC);
+  static const stressedAccent = Color(0xFFE8A020); // amber
+
+  static const hopefulTint = Color(0xFFEEF7F5);
+  static const hopefulAccent = Color(0xFF7EB5A6); // seafoam
+
+  static const frustratedTint = Color(0xFFF7F0EC);
+  static const frustratedAccent = Color(0xFFC4846A); // terracotta
+
+  static const proudTint = Color(0xFFF5F0FA);
+  static const proudAccent = Color(0xFF9B8EC4); // lavender
+
+  static const anxiousTint = Color(0xFFEDF0F7);
+  static const anxiousAccent = Color(0xFF7B8EC4); // muted periwinkle
+
+  static const tiredTint = Color(0xFFFDF6EC);
+  static const tiredAccent = Color(0xFFE8A020); // amber
+
+  static const gratefulTint = Color(0xFFEEF7F5);
+  static const gratefulAccent = Color(0xFF7EB5A6); // seafoam
+
+  static const excitedTint = Color(0xFFFAF0F5);
+  static const excitedAccent = Color(0xFFF2A98A); // peach
+
+  static const overwhelmedTint = Color(0xFFF7F0EC);
+  static const overwhelmedAccent = Color(0xFFC4846A); // terracotta
+
+  static const celebratoryTint = Color(0xFFF5E9C8);
+  static const celebratoryAccent = Color(0xFFD4A843); // gold
+
+  // Returns [tint, accent] for a given mood tag.
+  // Tint = background color, accent = border/icon color
+  static List<Color> moodColors(String? mood) {
+    switch (mood?.toLowerCase()) {
+      case 'calm':
+        return [calmTint, calmAccent];
+      case 'stressed':
+        return [stressedTint, stressedAccent];
+      case 'hopeful':
+        return [hopefulTint, hopefulAccent];
+      case 'frustrated':
+        return [frustratedTint, frustratedAccent];
+      case 'proud':
+        return [proudTint, proudAccent];
+      case 'anxious':
+        return [anxiousTint, anxiousAccent];
+      case 'tired':
+        return [tiredTint, tiredAccent];
+      case 'grateful':
+        return [gratefulTint, gratefulAccent];
+      case 'excited':
+        return [excitedTint, excitedAccent];
+      case 'overwhelmed':
+        return [overwhelmedTint, overwhelmedAccent];
+      case 'celebratory':
+        return [celebratoryTint, celebratoryAccent];
+      case 'planned':
+        return [calmTint, calmAccent];
+      case 'joy':
+        return [excitedTint, excitedAccent];
+      default:
+        return [sand, warmLinen];
+    }
+  }
 
   // ----- ColorScheme -----
   static final ColorScheme lightScheme =
