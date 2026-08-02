@@ -376,6 +376,10 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
     final content = e['content'] as String? ?? '';
     final createdAt = e['created_at'] as String? ?? '';
 
+    final colors = AppColors.moodColors(moodTag);
+    final tint = colors[0];
+    final accent = colors[1];
+
     return Dismissible(
       key: Key(e['id'] as String),
       direction: DismissDirection.endToStart,
@@ -394,144 +398,164 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.sand,
+            color: moodTag != null ? tint : AppColors.sand,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.warmLinen),
+            border: Border.all(
+              color: moodTag != null ? accent.withValues(alpha: .3) : AppColors.warmLinen,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top row (date / mood / chevron)
-              Row(
-                children: [
-                  Text(
-                    _formatDate(createdAt),
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: AppColors.inkMuted),
-                  ),
-                  const SizedBox(width: 8),
-                  if (moodTag != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.peachLight,
-                        borderRadius: BorderRadius.circular(99),
-                        border: Border.all(
-                          color: AppColors.peach.withValues(alpha: .4),
-                        ),
-                      ),
-                      child: Text(
-                        moodTag,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.sageDark,
-                        ),
-                      ),
-                    ),
-                  const Spacer(),
-                  AnimatedRotation(
-                    turns: _expanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 20,
-                      color: AppColors.inkMuted,
-                    ),
-                  ),
-                ],
-              ),
 
-              const SizedBox(height: 8),
-
-              // Content preview
-              Text(
-                _expanded
-                    ? content
-                    : (content.length > 80
-                          ? '${content.substring(0, 80)}...'
-                          : content),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.deepMoss,
-                  height: 1.5,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (moodTag != null) Container(
+                  width: 3,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: accent,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
                 ),
-              ),
-
-              // Expanded section
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 200),
-                crossFadeState: _expanded
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                firstChild: const SizedBox.shrink(),
-                secondChild: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    Divider(color: AppColors.warmLinen, height: 1),
-                    const SizedBox(height: 12),
-
-                    // Juniper response
-                    if (juniperResponse != null)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: ceilingTriggered != null
-                              ? AppColors.peachLight
-                              : AppColors.sageMist,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: ceilingTriggered != null
-                                ? AppColors.peach.withValues(alpha: .4)
-                                : AppColors.sage.withValues(alpha: .3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Top row (date / mood / chevron)
+                      Row(
+                        children: [
+                          Text(
+                            _formatDate(createdAt),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: AppColors.inkMuted),
+                          ),
+                          const SizedBox(width: 8),
+                          if (moodTag != null) Container(
+                            padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: tint,
+                            borderRadius: BorderRadius.circular(99),
+                            border: Border.all(
+                              color: accent.withValues(alpha: .4),
+                            ),
+                          ),
+                          child: Text(
+                            moodTag,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: accent,
+                            ),
                           ),
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              ceilingTriggered != null
+                        const Spacer(),
+
+                        AnimatedRotation(
+                          turns: _expanded ? 0.5 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                            color: AppColors.inkMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Content preview
+                    Text(
+                      _expanded
+                      ? content
+                      : (content.length > 80
+                        ? '${content.substring(0, 80)}...'
+                        : content),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.deepMoss,
+                        height: 1.5,
+                      ),
+                    ),
+
+                // Expanded section
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 200),
+                  crossFadeState: _expanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                  firstChild: const SizedBox.shrink(),
+                  secondChild: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
+                      Divider(color: AppColors.warmLinen, height: 1),
+                      const SizedBox(height: 12),
+
+                      // Juniper response
+                      if (juniperResponse != null)
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: ceilingTriggered != null
+                              ? AppColors.peachLight
+                              : tint,
+                            border: Border.all(
+                              color: ceilingTriggered != null
+                                ? AppColors.peach.withValues(alpha: .4)
+                                : accent.withValues(alpha: .3),
+                            ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                ceilingTriggered != null
                                   ? Icons.favorite_outline
                                   : Icons.eco_rounded,
-                              size: 14,
-                              color: AppColors.sageDark,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                juniperResponse,
-                                style: Theme.of(context).textTheme.bodySmall
+                                size: 14,
+                                color: AppColors.sageDark,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  juniperResponse,
+                                  style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: AppColors.deepMoss,
                                       height: 1.5,
                                     ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
 
-                    // Resources redirect hint (todo)
-                    if (ceilingTriggered != null) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        'Check the Resources tab for more support.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.sageDark,
-                          fontWeight: FontWeight.w500,
+                      // Resources redirect hint (todo)
+                      if (ceilingTriggered != null) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          'Check the Resources tab for more support.',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.sageDark,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                      ],
+                    ],   // closes secondChild Column children
+                  ),         // closes secondChild Column
+                ),           // closes AnimatedCrossFade
+                    ],       // closes main Column children
+                  ),         // closes main Column
+                ),           // closes Expanded
+              ],             // closes Row children
+            ),               // closes Row
+          ),                 // closes IntrinsicHeight
+        ),                   // closes Container
+      ),                     // closes GestureDetector
+    );                       // closes Dismissible
   }
 }
 

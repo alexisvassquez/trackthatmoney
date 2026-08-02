@@ -77,8 +77,8 @@ class AppColors {
   static const gratefulTint = Color(0xFFEEF7F5);
   static const gratefulAccent = Color(0xFF7EB5A6); // seafoam
 
-  static const excitedTint = Color(0xFFFAF0F5);
-  static const excitedAccent = Color(0xFFF2A98A); // peach
+  static const excitedTint = Color(0xFFF0EBF8);
+  static const excitedAccent = Color(0xFF7B4DB8); // deep purple
 
   static const overwhelmedTint = Color(0xFFF7F0EC);
   static const overwhelmedAccent = Color(0xFFC4846A); // terracotta
