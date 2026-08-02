@@ -171,7 +171,7 @@ class ExpenseApi {
     throw Exception('Failed to fetch goals: ${response.statusCode}');
   }
 
-  // Create a goal
+  // Create a savings goal
   // Goal name, target amount, icon, primary tag
   static Future<Map<String, dynamic>> createGoal({
     required String name,
