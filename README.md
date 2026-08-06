@@ -286,7 +286,7 @@ Full interactive documentation available at `http://localhost:8000/docs` when th
 | ✨ Accent 2 | Honey gold | `#D4A843` | Achievement · celebration |
 | 🌊 Highlight | Seafoam | `#7EB5A6` | Reflection · calm · flow |
 | ☁️ Background | Cream | `#FAF6F0` | Comfort · breathing room |
-| 🪨 Surface | Sand | `#F2EAD8` | Card backgrounds |
+| 🪨 Surface | Sand | `#E8D9BC` | Card backgrounds |
 | 🖊️ Text | Deep moss | `#2C3828` | Legibility · warmth |
 
 **Why no red?**
