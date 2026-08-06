@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'colors.dart';
+import 'spacing.dart';
 
 /// Track That Money
 /// lib/ui/theme/theme.dart
@@ -46,7 +47,7 @@ ThemeData buildAppTheme() {
       elevation: 0,
       color: AppColors.sand,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         side: BorderSide(color: AppColors.warmLinen, width: 1),
       ),
       surfaceTintColor: Colors.transparent,
@@ -83,10 +84,7 @@ ThemeData buildAppTheme() {
             fontSize: 12,
           );
         }
-        return TextStyle(
-          color: AppColors.inkMuted, 
-          fontSize: 12,
-        );
+        return TextStyle(color: AppColors.inkMuted, fontSize: 12);
       }),
     ),
 
@@ -107,15 +105,15 @@ ThemeData buildAppTheme() {
       filled: true,
       fillColor: AppColors.sand,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         borderSide: BorderSide(color: AppColors.warmLinen),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         borderSide: BorderSide(color: AppColors.warmLinen),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         borderSide: BorderSide(color: AppColors.sage, width: 2),
       ),
       labelStyle: TextStyle(color: AppColors.inkMuted),
@@ -128,14 +126,14 @@ ThemeData buildAppTheme() {
         backgroundColor: AppColors.sage,
         foregroundColor: Colors.white,
         elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, 
+          vertical: AppSpacing.md,
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
-        ),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
       ),
     ),
 
@@ -143,16 +141,11 @@ ThemeData buildAppTheme() {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: AppColors.sage,
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
       ),
     ),
 
     // Dividers
-    dividerTheme: DividerThemeData(
-      color: AppColors.warmLinen,
-      thickness: 1,
-    ),
+    dividerTheme: DividerThemeData(color: AppColors.warmLinen, thickness: 1),
   );
 }
