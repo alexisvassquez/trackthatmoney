@@ -387,7 +387,7 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Every bit counts. Event \$1 saved is a win.',
+                        'Every bit counts. Even \$1 saved is a win.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.inkMuted,
                           fontStyle: FontStyle.italic,
