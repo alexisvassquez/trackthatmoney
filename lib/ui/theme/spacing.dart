@@ -12,7 +12,7 @@ class AppSpacing {
   static const lg = 24.0; // between distinct sections
   static const xl = 32.0; // major section breaks, screen top/bottom
 
-  // ----- Radius (currently scattered as raw values: 4, 10, 11, 14, 16, 20, 99) -----
+  // Radius
   static const radiusSm = 10.0; // small chips, icon containers
   static const radiusMd = 16.0; // tiles, standard cards
   static const radiusLg = 20.0; // hero/summary cards

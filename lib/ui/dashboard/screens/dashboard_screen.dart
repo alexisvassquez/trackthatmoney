@@ -5,6 +5,7 @@ import '../../../state/user_providers.dart';
 import '../../../services/expense_api.dart';
 import '../widgets/add_expense_sheet.dart';
 import '../../theme/colors.dart';
+import '../../theme/spacing.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/screens/dashboard_screen.dart
@@ -19,7 +20,11 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _navIndex = 0;
 
+  // change to user-provided budget instead of hardcoded
+  // value (todo)
   final double _budgetThisMonth = 650.00;
+
+  final Set<String> _deletingIds = {};
 
   void _openAddExpense() {
     showModalBottomSheet(
@@ -44,11 +49,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.sm,
+            AppSpacing.md,
+            96, // bottom gap to clear FAB one-off, not scale value
+          ),
           children: [
             // 1. Dashboard Header
             const _DashboardHeader(),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
 
             // 2. Affirmation (dynamic)
             ref
@@ -61,15 +71,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   data: (affirmation) =>
                       _AffirmationPill(text: "✨ $affirmation"),
                 ),
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSpacing.md),
 
             // 3. Monthly summary card
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               decoration: BoxDecoration(
-                color: const Color(0xFFEDE4CC),
-                borderRadius: BorderRadius.circular(20),
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 border: Border.all(color: AppColors.warmLinen),
                 boxShadow: [
                   BoxShadow(
@@ -85,7 +95,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     Container(
                       width: 4,
-                      margin: const EdgeInsets.only(right: 16),
+                      margin: const EdgeInsets.only(right: AppSpacing.md),
                       decoration: BoxDecoration(
                         color: AppColors.sage,
                         borderRadius: BorderRadius.circular(4),
@@ -99,7 +109,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             "This month",
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: AppSpacing.sm),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -127,8 +137,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           ),
                                     ),
                                   ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: AppSpacing.sm),
                               Padding(
+                                // baseline nudge (intentional one-off)
                                 padding: const EdgeInsets.only(bottom: 6),
                                 child: Text(
                                   "spent",
@@ -141,7 +152,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSpacing.sm),
 
                           // Budget Summary
                           Text(
@@ -149,9 +160,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: cs.onSurfaceVariant),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: AppSpacing.sm),
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(99),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusPill,
+                            ),
                             child: ref
                                 .watch(summaryProvider)
                                 .when(
@@ -180,7 +193,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   },
                                 ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSpacing.sm),
                           ref
                               .watch(summaryProvider)
                               .maybeWhen(
@@ -210,7 +223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
 
             // 4. Top expenses
             _SectionHeader(
@@ -221,7 +234,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 "TODO: Navigate to full expenses list. In development.",
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.sm),
 
             // ExpensesTile wrapped in dismissible
             ref
@@ -236,25 +249,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ),
                   data: (expenses) {
-                    if (expenses.isEmpty) {
+                    final visible = expenses
+                        .where((e) => !_deletingIds.contains(e['id'] as String))
+                        .toList();
+
+                    if (visible.isEmpty) {
                       return _EmptyExpensesCard(
                         message: "No expenses yet — future you says thanks. 🙂",
                         onAdd: _openAddExpense,
                       );
                     }
                     return Column(
-                      children: expenses.take(5).map((e) {
+                      children: visible.take(5).map((e) {
                         final id = e['id'] as String;
                         return Dismissible(
                           key: Key(id),
                           direction: DismissDirection.endToStart,
                           background: Container(
                             alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20),
-                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(
+                              right: AppSpacing.lg,
+                            ),
+                            margin: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.amber,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd,
+                              ),
                             ),
                             child: const Icon(
                               Icons.delete_outline,
@@ -262,17 +285,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ),
                           onDismissed: (_) async {
+                            // hide immediately
+                            setState(() => _deletingIds.add(id));
                             try {
                               await ExpenseApi.deleteExpense(id);
                               ref.invalidate(expensesProvider);
+                              ref.invalidate(summaryProvider);
                             } catch (err) {
+                              // on failure, un-hide it (the delete didn't happen)
                               if (context.mounted) {
+                                setState(() => _deletingIds.remove(id));
                                 _toast(context, 'Could not delete expense.');
                               }
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
                             child: _ExpenseTile(
                               expense: _ExpenseRow(
                                 label:
@@ -304,7 +334,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
 
       // Bottom nav
-      // Navigates to Journal Screen
+      // Navigates to Journal + Piggybank screens
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _navIndex,
         type: BottomNavigationBarType.fixed,
@@ -327,7 +357,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
         // Bottom nav icons
         // Shows outlined and filled when selected
-        // Currently, only Journal is functioning.
+        // Currently, both Journal + Piggybank are functioning.
         items: const [
           // Home screen
           BottomNavigationBarItem(
@@ -335,24 +365,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             activeIcon: Icon(Icons.home),
             label: "Home",
           ),
-          // Journal screen
+
+          // Journal screen (functioning)
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book_outlined),
             activeIcon: Icon(Icons.menu_book),
             label: "Journal",
           ),
+
           // Data analytics screen (in dev)
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart_outlined),
             activeIcon: Icon(Icons.bar_chart),
             label: "Data",
           ),
-          // Piggy bank screen (in dev)
+
+          // Piggy bank screen (functioning)
           BottomNavigationBarItem(
             icon: Icon(Icons.savings_outlined),
             activeIcon: Icon(Icons.savings),
             label: "Piggybank",
           ),
+
           // User account screen (in dev)
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
@@ -399,7 +433,7 @@ class _DashboardHeader extends StatelessWidget {
             height: 1.15,
           ),
         ),
-        const SizedBox(height: 3),
+        const SizedBox(height: 2),
         Text(
           'Your money. No judgment.',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -423,10 +457,13 @@ class _AffirmationPill extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm + 2,
+            ),
             decoration: BoxDecoration(
               color: AppColors.peachLight,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               border: Border.all(color: AppColors.peach.withValues(alpha: .5)),
             ),
             child: Text(
@@ -523,10 +560,13 @@ class _ExpenseTileState extends State<_ExpenseTile> {
     return GestureDetector(
       onTap: () => setState(() => _expanded = !_expanded),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm + 4,
+        ),
         decoration: BoxDecoration(
           color: AppColors.sand,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           border: Border.all(color: AppColors.warmLinen),
         ),
         child: Column(
@@ -535,15 +575,16 @@ class _ExpenseTileState extends State<_ExpenseTile> {
             Row(
               children: [
                 Container(
-                  height: 38,
-                  width: 38,
+                  // 44px min touch target
+                  height: 44,
+                  width: 44,
                   decoration: BoxDecoration(
                     color: AppColors.sageMist,
-                    borderRadius: BorderRadius.circular(11),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
-                  child: Icon(e.icon, color: AppColors.sageDark, size: 18),
+                  child: Icon(e.icon, color: AppColors.sageDark, size: 20),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.sm + 4),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,7 +612,7 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                     color: AppColors.deepMoss,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 AnimatedRotation(
                   turns: _expanded ? 0.5 : 0,
                   duration: const Duration(milliseconds: 200),
@@ -594,9 +635,9 @@ class _ExpenseTileState extends State<_ExpenseTile> {
               secondChild: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.sm + 4),
                   Divider(color: AppColors.warmLinen, height: 1),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.sm + 4),
 
                   // Mood tag + essential row
                   Row(
@@ -604,12 +645,14 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                       if (e.moodTag != null) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.xs + 2,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.peachLight,
-                            borderRadius: BorderRadius.circular(99),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusPill,
+                            ),
                             border: Border.all(
                               color: AppColors.peach.withValues(alpha: .4),
                             ),
@@ -620,18 +663,20 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                                 ?.copyWith(color: AppColors.sageDark),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.sm),
                       ],
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xs + 2,
                         ),
                         decoration: BoxDecoration(
                           color: e.isEssential
                               ? AppColors.sageMist
                               : AppColors.sand,
-                          borderRadius: BorderRadius.circular(99),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusPill,
+                          ),
                           border: Border.all(color: AppColors.warmLinen),
                         ),
                         child: Text(
@@ -648,17 +693,19 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                   ),
 
                   // Subscription chip - recurring payments
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs + 2,
                     ),
                     decoration: BoxDecoration(
                       color: e.isSubscription
                           ? AppColors.sageMist
                           : AppColors.sand,
-                      borderRadius: BorderRadius.circular(99),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusPill,
+                      ),
                       border: Border.all(color: AppColors.warmLinen),
                     ),
                     child: Text(
@@ -673,7 +720,7 @@ class _ExpenseTileState extends State<_ExpenseTile> {
 
                   // Note
                   if (e.note != null && e.note!.isNotEmpty) ...[
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.sm + 2),
                     Text(
                       e.note!,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -685,12 +732,14 @@ class _ExpenseTileState extends State<_ExpenseTile> {
 
                   // Juniper message
                   if (e.juniperMessage != null) ...[
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.sm + 2),
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(AppSpacing.sm + 2),
                       decoration: BoxDecoration(
                         color: AppColors.peachLight,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                         border: Border.all(
                           color: AppColors.peach.withValues(alpha: .3),
                         ),
@@ -703,7 +752,7 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                             size: 14,
                             color: AppColors.sageDark,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: Text(
                               e.juniperMessage!,
@@ -735,10 +784,10 @@ class _EmptyExpensesCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: cs.surfaceContainerHighest.withValues(alpha: .45),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(color: cs.outlineVariant.withValues(alpha: .55)),
       ),
       child: Row(
@@ -752,7 +801,7 @@ class _EmptyExpensesCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm + 4),
           ElevatedButton(onPressed: onAdd, child: const Text("Add")),
         ],
       ),
