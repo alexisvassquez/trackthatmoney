@@ -403,6 +403,13 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
             border: Border.all(
               color: moodTag != null ? accent.withValues(alpha: .3) : AppColors.warmLinen,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: moodTag != null ? accent.withValues(alpha: .08) : AppColors.deepMoss.withValues(alpha: .04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
 
           child: IntrinsicHeight(
