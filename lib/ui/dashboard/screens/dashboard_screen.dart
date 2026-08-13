@@ -556,6 +556,9 @@ class _ExpenseTileState extends State<_ExpenseTile> {
   @override
   Widget build(BuildContext context) {
     final e = widget.expense;
+    final colors = AppColors.moodColors(e.moodTag);
+    final tint = colors[0];
+    final accent = colors[1];
 
     return GestureDetector(
       onTap: () => setState(() => _expanded = !_expanded),
@@ -565,64 +568,90 @@ class _ExpenseTileState extends State<_ExpenseTile> {
           vertical: AppSpacing.sm + 4,
         ),
         decoration: BoxDecoration(
-          color: AppColors.sand,
+          color: e.moodTag != null ? tint : AppColors.sand,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          border: Border.all(color: AppColors.warmLinen),
+          border: Border.all(
+            color: e.moodTag != null
+                ? accent.withValues(alpha: .3)
+                : AppColors.warmLinen,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: e.moodTag != null
+                  ? accent.withValues(alpha: .08)
+                  : AppColors.deepMoss.withValues(alpha: .04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Collapsed row
-            Row(
-              children: [
-                Container(
-                  // 44px min touch target
-                  height: 44,
-                  width: 44,
-                  decoration: BoxDecoration(
-                    color: AppColors.sageMist,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                  ),
-                  child: Icon(e.icon, color: AppColors.sageDark, size: 20),
-                ),
-                const SizedBox(width: AppSpacing.sm + 4),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        e.label,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.deepMoss,
-                        ),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (e.moodTag != null)
+                    Container(
+                      width: 3,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        color: accent,
+                        borderRadius: BorderRadius.circular(99),
                       ),
-                      Text(
-                        e.category,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.inkMuted,
+                    ),
+                  Container(
+                    // 44px min touch target
+                    height: 44,
+                    width: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.sageMist,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Icon(e.icon, color: AppColors.sageDark, size: 20),
+                  ),
+                  const SizedBox(width: AppSpacing.sm + 4),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          e.label,
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.deepMoss,
+                              ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          e.category,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppColors.inkMuted),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Text(
-                  _formatCurrency(e.amount),
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.deepMoss,
+                  Text(
+                    _formatCurrency(e.amount),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.deepMoss,
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                AnimatedRotation(
-                  turns: _expanded ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 20,
-                    color: AppColors.inkMuted,
+                  const SizedBox(width: AppSpacing.sm),
+                  AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 20,
+                      color: AppColors.inkMuted,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             // Expanded detail
@@ -763,14 +792,14 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                         ],
                       ),
                     ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                  ], // closes juniperMessage spread
+                ], // closes secondChild Column children
+              ), // closes secondChild Column
+            ), // closes AnimatedCrossFade
+          ], // closes wrapping Column children
+        ), // closes wrapping Column
+      ), // closes Container
+    ); // closes GestureDetector return
   }
 }
 
