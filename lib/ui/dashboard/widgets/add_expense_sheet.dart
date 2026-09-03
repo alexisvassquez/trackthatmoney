@@ -35,6 +35,8 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
     'Subscriptions',
     'Clothing',
     'Health',
+    'Housing',
+    'Utilities',
     'Other',
   ];
 
