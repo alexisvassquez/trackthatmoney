@@ -295,6 +295,50 @@ def delete_expense(
     db.commit()
     return {"deleted": expense_id}
 
+# Edit expenses
+class ExpenseUpdate(BaseModel):
+    """
+    What Flutter sends when editing an expense.
+    """
+    merchant: Optional[str] = None
+    category: Optional[str] = None
+    amount: Optional[float] = None
+    is_essential: Optional[int] = None
+    is_subscription: Optional[int] = None
+    mood_tag: Optional[str] = None
+    note: Optional[str] = None
+
+@app.patch("/expenses/{expense_id}", response_model=Expense)
+def update_expense(
+    expense_id: str,
+    update: ExpenseUpdate,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Update an existing expense.
+    Only provided fields are changed.
+    """
+    record = (
+        db.query(ExpenseRecord)
+        .filter(
+            ExpenseRecord.id == expense_id,
+            ExpenseRecord.user_id == user_id,
+        )
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Expense not found.")
+
+    # Only update fields that were actually provided
+    for field, value in update.model_dump(exclude_none=True).items():
+        setattr(record, field, value)
+
+    db.commit()
+    db.refresh(record)
+    return record
+
 # Expenses summary
 @app.get("/expenses/summary")
 def expenses_summary(
