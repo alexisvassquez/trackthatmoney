@@ -322,6 +322,26 @@
         "text": "You made a budget and actually *used it*. That's self-trust in action.",
         "mood": "tired",
         "weight": 4
+      },
+      {
+        "text": "Logging this expense is an act of self-awareness. That matters more than you know.",
+        "mood": "tired",
+        "weight": 3
+      },
+      {
+        "text": "You showed up for your finances today. That's the whole game.",
+        "mood": "calm",
+        "weight": 4
+      },
+      {
+        "text": "Every entry you log is data that works for you, not against you.",
+        "mood": "motivated",
+        "weight": 3
+      },
+      {
+        "text": "Awareness is the first step. You're already doing it.",
+        "mood": "discouraged",
+        "weight": 4
       }
     ],
     "caution": [
@@ -344,18 +364,48 @@
         "text": "Tempted to throw the whole budget out the window? Pause. A reset is okay, but do not spiral.",
         "mood": "motivated",
         "weight": 3
+      },
+      {
+        "text": "Take a breath. What need was this expense meeting?",
+        "mood": "stressed",
+        "weight": 3
+      },
+      {
+        "text": "No judgement here - just a check-in. Is this expense aligned with what matters to you right now?",
+        "mood": "calm",
+        "weight": 3
+      },
+      {
+        "text": "One thing at a time. What's the most important expense to protect this week?",
+        "mood": "overwhelmed",
+        "weight": 4
       }
     ],
     "alert": [
       {
-        "text": "Do not be afraid of your credit score! It can always be repaired.",
-        "mood": "calm",
-        "weight": 2
+        "text": "If things feel tight right now, that's real - and it's okay to say so. Essentials first, always.",
+        "mood": "stressed",
+        "weight": 4
       },
       {
-        "text": "Carrying a credit card balance means you're paying more for everything - try to pay in full if you can.",
+        "text": "When the budget is under pressure: needs first, wants second, guilt never.",
+        "mood": "discouraged",
+        "weight": 4
+      },
+      {
+        "text": "Breathe. You logged this instead of ignoring it. That's already the right move.",
+        "mood": "overwhelmed",
+        "weight": 4
+      },
+      {
+        "text": "Being over budget doesn't mean you failed. It means you're paying attention. Let's make a small plan.",
         "mood": "tired",
-        "weight": 1
+        "weight": 3
+      },
+      {
+        "text": "If money feels scary right now, start small: what's one thing you can adjust this week?",
+        "mood": "anxious",
+        "weight": 3
       },
       {
         "text": "If you're feeling overwhelmed, pause and prioritize: essentials first, then progress.",
@@ -556,6 +606,21 @@
         "text": "If rent is more than 50% of your income, you're not alone. Let's make a gameplan while staying gentle with yourself.",
         "mood": "discouraged",
         "weight": 2
+      },
+      {
+        "text": "Housing costs feeling heavy? Check if your area has any rental assistance programs - many go underused.",
+        "mood": "stressed",
+        "weight": 3
+      },
+      {
+        "text": "If you're choosing between rent and other bills, essentials come first. No shame in that math.",
+        "mood": "overwhelmed",
+        "weight": 4
+      },
+      {
+        "text": "A stable home is the foundation everything else is built on. Protecting that first is the right call.",
+        "mood": "tired",
+        "weight": 3
       }
     ]
   },
