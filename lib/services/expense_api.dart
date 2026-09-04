@@ -19,6 +19,7 @@ class ExpenseApi {
     'Authorization': 'Bearer $_token',
   };
 
+  // EXPENSES
   // Fetch all expenses, newest first
   static Future<List<Map<String, dynamic>>> fetchExpenses() async {
     final response = await http.get(
@@ -105,7 +106,40 @@ class ExpenseApi {
     }
   }
 
-  // Journal
+  // Update expenses
+  static Future<Map<String, dynamic>> updateExpense({
+    required String id,
+    String? merchant,
+    String? category,
+    double? amount,
+    int? isEssential,
+    int? isSubscription,
+    String? moodTag,
+    String? note,
+  }) async {
+    final body = jsonEncode({
+      'merchant': merchant,
+      'category': category,
+      'amount': amount,
+      'is_essential': isEssential,
+      'is_subscription': isSubscription,
+      'mood_tag': moodTag,
+      'note': note,
+    }..removeWhere((_, v) => v == null));
+
+    final response = await http.patch(
+      Uri.parse('$_base/expenses/$id'),
+      headers: _headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+    throw Exception('Failed to update expense: ${response.statusCode}');
+  }
+
+  // JOURNAL
   // Add journal entries
   // Includes content, mood tags, links to expenses
   static Future<Map<String, dynamic>> addJournalEntry({
@@ -157,7 +191,7 @@ class ExpenseApi {
     }
   }
 
-  // Savings goals
+  // SAVINGS GOALS
   // Fetch list of goals
   static Future<List<Map<String, dynamic>>> fetchGoals() async {
     final response = await http.get(
@@ -235,6 +269,7 @@ class ExpenseApi {
     }
   }
 
+  // SUMMARY
   // Fetch expenses summary
   static Future<Map<String, dynamic>> fetchSummary() async {
     final response = await http.get(
