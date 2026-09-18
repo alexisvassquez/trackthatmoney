@@ -6,6 +6,7 @@ import '../../../services/expense_api.dart';
 import '../widgets/add_expense_sheet.dart';
 import '../../theme/colors.dart';
 import '../../theme/spacing.dart';
+import '../widgets/edit_expense_sheet.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/screens/dashboard_screen.dart
@@ -304,6 +305,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               bottom: AppSpacing.sm,
                             ),
                             child: _ExpenseTile(
+                              rawExpense: e,
                               expense: _ExpenseRow(
                                 label:
                                     e['merchant'] as String? ??
@@ -544,7 +546,8 @@ class _ExpenseRow {
 // Expense tiles
 class _ExpenseTile extends StatefulWidget {
   final _ExpenseRow expense;
-  const _ExpenseTile({required this.expense});
+  final Map<String, dynamic> rawExpense;
+  const _ExpenseTile({required this.expense, required this.rawExpense});
 
   @override
   State<_ExpenseTile> createState() => _ExpenseTileState();
@@ -667,6 +670,28 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                   const SizedBox(height: AppSpacing.sm + 4),
                   Divider(color: AppColors.warmLinen, height: 1),
                   const SizedBox(height: AppSpacing.sm + 4),
+
+                  // Edit button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent, 
+                        builder: (_) => EditExpenseSheet(
+                          expense: widget.rawExpense
+                        ),
+                      ),
+                      icon: const Icon(Icons.edit_outlined, size: 16), 
+                      label: const Text('Edit'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.sageDark,
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
 
                   // Mood tag + essential row
                   Row(
