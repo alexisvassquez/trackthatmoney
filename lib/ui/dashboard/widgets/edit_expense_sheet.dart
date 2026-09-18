@@ -102,6 +102,7 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
         note: note.isEmpty ? null : note,
       );
 
+      // Refresh both the expense list and spending total
       ref.invalidate(expensesProvider);
       ref.invalidate(summaryProvider);
 
