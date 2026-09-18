@@ -5,6 +5,7 @@
 fastapi
 pydantic
 uvicorn
+python-multipart
 
 # Data / ML
 joblib
