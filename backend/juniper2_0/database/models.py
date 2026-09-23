@@ -4,19 +4,19 @@
 # SQLAlchemy ORM models
 # The schema mirrors the Pydantic models in api.py
 # Each class maps to their respective table in trackthatmoney.db
-# They are created automatically on startup via Base.metadata.create_all()
+# They are created automatically on startup via Alembic
 #
 # ORM models include (in order):
 #   - Expense records
 #   - Journal entries
 #   - Savings goals (seen in piggybank screen)
 
-from sqlalchemy import Column, String, Float, Integer
+from sqlalchemy import Column, String, Float, Integer, Index, DateTime, Numeric
 from .database import Base
 
 class ExpenseRecord(Base):
     """
-    Maps to the 'expenses' table in trackthatmoney.db
+    Maps to the 'expenses' table in ttm.db
     Saves/logs user expense records with timestamp, merchant, category,
     amount, mood tag, essential/subscription, and AI message
     """
@@ -28,13 +28,13 @@ class ExpenseRecord(Base):
     # from auth token
     user_id = Column(String, nullable=False)
     # ISO timestamp
-    posted_at = Column(String, nullable=False)
+    posted_at = Column(DateTime(timezone=True), nullable=False)
 
     # Core expense fields
     # Required on every submission
     merchant = Column(String, nullable=False)
     category = Column(String, nullable=False)
-    amount = Column(String, nullable=False)
+    amount = Column(Numeric(12, 2), nullable=False)
 
     # Optional fields
     # Enrich Juniper's (AI) response quality
@@ -59,6 +59,8 @@ class ExpenseRecord(Base):
     # to be resurfaced without re-calling the engine
     juniper_message = Column(String, nullable=True)
 
+    __table_args__ = (Index("ix_expenses_user_created", "user_id", "posted_at"),)
+
 class JournalEntry(Base):
     """
     Each entry is an emotional annotation that is optionally linked
@@ -73,7 +75,7 @@ class JournalEntry(Base):
     # from auth token
     user_id = Column(String, nullable=False)
     # ISO timestamp
-    created_at = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=False)
 
     # Optional link to a specific expense
     # Null means the entry is a standalone reflection
@@ -95,6 +97,8 @@ class JournalEntry(Base):
     # "advice_seeking"
     ceiling_triggered = Column(String, nullable=True)
 
+    __table_args__ = (Index("ix_journal_user_created", "user_id", "created_at"),)
+
 class SavingsGoal(Base):
     """
     Each row represents one savings goal for a user.
@@ -108,16 +112,18 @@ class SavingsGoal(Base):
     # From auth token
     user_id = Column(String, nullable=False, index=True)
     # ISO timestamp
-    created_at = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=False)
 
     # Goal details
     # Name of goal (e.g., "Move to abc" or "Purchase new xyz")
     name = Column(String, nullable=False)
     # Target amount in dollars ($)
-    target = Column(Float, nullable=False)
+    target = Column(Numeric(12, 2), nullable=False)
     # Amount saved so far towards goal
-    saved = Column(Float, default=0.0)
+    saved = Column(Numeric(12, 2), default=0.0)
     # Icon name (e.g., "flight_takeoff")
     icon = Column(String, nullable=True)
     # 1 = featured goal on screen
     is_primary = Column(Integer, default=0)
+
+    __table_args__ = (Index("ix_savings_user_created", "user_id", "created_at"),)

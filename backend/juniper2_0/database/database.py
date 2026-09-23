@@ -2,21 +2,30 @@
 # backend/juniper2_0/database/database.py
 #
 # Database connection and session setup.
-# Uses SQLite via SQLAlchemy 2.0
-# TODO: Swap DATABASE_URL for PostgreSQL / MySQL in prod
 
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-# SQLite file will be created at backend/juniper2_0/trackthatmoney.db
-# on first run
-DATABASE_URL = "sqlite:///./trackthatmoney.db"
+load_dotenv()
+
+# Connect to Postgres
+# Migrating from SQLite
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ttm.db")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
 # Requests can be handled across multiple threads
-# Required for SQLite when used with FastAPI
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False},
+    connect_args=connect_args,
+    pool_pre_ping=True,
 )
 
 # SessionLocal is a factory
