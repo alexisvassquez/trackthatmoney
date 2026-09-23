@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field
 from typing import Optional
+from decimal import Decimal
 from datetime import datetime, timezone
 import uuid
 import uvicorn
@@ -18,7 +19,7 @@ from juniper2_core.predict.predictor import SpendingPredictor
 from juniper2_core.encourage.encourager import EncouragementEngine
 from auth.auth import verify_token
 
-from database.database import engine, get_db, Base
+from database.database import get_db
 from database.models import ExpenseRecord, JournalEntry, SavingsGoal
 
 load_dotenv()
@@ -26,9 +27,6 @@ load_dotenv()
 DEV_USERNAME = os.getenv("TTM_DEV_USERNAME")
 DEV_PASSWORD = os.getenv("TTM_DEV_PASSWORD")
 DEV_TOKEN = os.getenv("TTM_DEV_TOKEN")
-
-# Create all tables on startup if they don't exist yet
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Track That Money API")
 
@@ -126,7 +124,7 @@ class Expense(ExpenseCreate):
     Includes server-generated fields returned to Flutter
     """
     id: str
-    posted_at: str
+    posted_at: datetime
     juniper_message: Optional[str] = None
 
     # allows building from SQLAlchemy model
@@ -173,7 +171,7 @@ class JournalEntryResponse(BaseModel):
     """
     id: str
     user_id: str
-    created_at: str
+    created_at: datetime
     expense_id: Optional[str] = None
     content: str
     mood_tag: Optional[str] = None
@@ -205,7 +203,7 @@ class GoalResponse(BaseModel):
     """
     id: str
     user_id: str
-    created_at: str
+    created_at: datetime
     name: str
     target: float
     saved: float
@@ -227,7 +225,7 @@ def create_expense(
 ):
     """
     Log a new expense.
-    Runs the encouragement engine and stores the result in SQLite.
+    Runs the encouragement engine and stores the result in database.
     Returns Juniper's response alongside the saved record.
     """
     # Get Juniper's take on this expense
@@ -241,7 +239,7 @@ def create_expense(
     record = ExpenseRecord(
         id=str(uuid.uuid4()),
         user_id=user_id or "dev_user",    # fallback for safety
-        posted_at=datetime.now(timezone.utc).isoformat(),
+        posted_at=datetime.now(timezone.utc),
         juniper_message=juniper_message,
         **expense.model_dump(),
     )
@@ -352,7 +350,7 @@ def expenses_summary(
 
     # Get first day of current month as a string for comparison
     now = datetime.now(timezone.utc)
-    month_start = now.replace(day=1, hour=0, minute=0, second=0).isoformat()
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
     total = db.query(func.sum(ExpenseRecord.amount))\
         .filter(
@@ -362,7 +360,7 @@ def expenses_summary(
         .scalar() or 0.0
     
     return {
-        "total_spent": round(total, 2),
+        "total_spent": round(float(total), 2),
         "month": now.strftime("%B %Y"),
     }
 
@@ -406,7 +404,7 @@ def create_journal_entry(
             ).first()
             if expense:
                 context["category"] = expense.category
-                context["amount"] = expense.amount
+                context["amount"] = float(getattr(expense, 'amount', 0))
         
         result = engine_juniper.suggest(context)
         juniper_response = (
@@ -417,7 +415,7 @@ def create_journal_entry(
     record = JournalEntry(
         id=str(uuid.uuid4()),
         user_id=user_id,
-        created_at=datetime.now(timezone.utc).isoformat(),
+        created_at=datetime.now(timezone.utc),
         expense_id=entry.expense_id,
         content=entry.content,
         mood_tag=entry.mood_tag,
@@ -490,7 +488,7 @@ def create_goal(
     record = SavingsGoal(
         id=str(uuid.uuid4()),
         user_id=user_id,
-        created_at=datetime.now(timezone.utc).isoformat(),
+        created_at=datetime.now(timezone.utc),
         name=goal.name,
         target=goal.target,
         saved=0.0,
@@ -543,8 +541,8 @@ def update_goal_savings(
     if not record:
         raise HTTPException(status_code=404, detail="Goal not found.")
 
-    current_saved = getattr(record, 'saved', 0.0)
-    setattr(record, 'saved', round(float(current_saved) + update.amount, 2))
+    current_saved = getattr(record, 'saved', None) or Decimal("0")
+    setattr(record, 'saved', current_saved + Decimal(str(update.amount)))
     db.commit()
     db.refresh(record)
     return record
