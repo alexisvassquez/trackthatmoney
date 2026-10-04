@@ -52,6 +52,73 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _submit() async {
     final email = _emailController.text.trim();
-    
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _error = 'Add your email and password to continue.';
+        _notice = null;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+      _notice = null;
+    });
+
+    try {
+      if (_isSignIn) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } else {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      }
+      // Lets password managers offer to save the credentials
+      TextInput.finishAutofillContext();
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Auth error: ${e.code}');
+      if (mounted) setState(() => _error = _messageFor(e.code));
+    } catch (e) {
+      debugPrint('Auth error: $e');
+      if (mounted) {
+        setState(() => _error = "That didn't go through. Want to try again?");
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
+
+  // Firebase error codes
+  // Plain, non-judgmental tone, guidance
+  String _messageFor(String code) {
+    switch (code) {
+      case 'invalid-email':
+        return "That email doesn't look quite right. Try checking it again.";
+      case 'invalid-credential':
+      case 'wrong-password':
+      case 'user-not-found':
+        return "The email and password does not match. Try again, or reset "
+            'your password below.';
+      case 'email-already-in-use':
+        return "There is already an account with that email. Try signing in "
+            'instead.';
+      case 'weak-password':
+        return "That password is a little short. Use at least 6 characters.";
+      case 'too-many-requests':
+        return "Lots of attempts in a row. Please try again in a few minutes.";
+      case 'network-request-failed':
+        return "Couldn't connect. Check your internet and try again.";
+      default:
+        return "That didn't go through. Want to try again?";
+    }
+  }
+
+  // build(todo)
 }
