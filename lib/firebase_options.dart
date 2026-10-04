@@ -51,13 +51,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAjiLvqhJdxPfcvZhqIT9BNI9V7wwd87YQ',
-    appId: '1:650909675035:android:617845d6bab63030a592be',
+    apiKey: 'AIzaSyC2UMi-PPujBKtVSBXCkUNU5KxArQHM4jU',
+    appId: '1:650909675035:android:78ea5b5c12acd6a2a592be',
     messagingSenderId: '650909675035',
     projectId: 'track-that-money-7301b',
     storageBucket: 'track-that-money-7301b.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDJAcA55cR3_VJH9RxOcmhxQhRpLRI5-j4',
     appId: '1:650909675035:ios:7a1d0257400528cda592be',
@@ -66,7 +65,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'track-that-money-7301b.firebasestorage.app',
     iosBundleId: 'com.example.trackThatMoney',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDJAcA55cR3_VJH9RxOcmhxQhRpLRI5-j4',
     appId: '1:650909675035:ios:7a1d0257400528cda592be',
