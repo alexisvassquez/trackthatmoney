@@ -13,6 +13,5 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: '.env');
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: TrackThatMoneyApp()));
 }
