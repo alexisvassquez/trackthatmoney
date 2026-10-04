@@ -1,30 +1,32 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Track That Money
 /// lib/services/expense_api.dart
 /// Flutter service layer
 /// HTTP services for CRUD endpoints + Juniper2.0 responses.
-/// Token read from .env variables
+/// Firebase auth
 
 class ExpenseApi {
   // Android emulator -> localhost
   static String get _base =>
       dotenv.env['TTM_API_BASE'] ?? 'http://10.0.2.2:8000';
-  static String get _token => dotenv.env['TTM_API_TOKEN'] ?? '';
-
-  static Map<String, String> get _headers => {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $_token',
-  };
+  static Future<Map<String, String>> _headers() async {
+    final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    return {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
 
   // EXPENSES
   // Fetch all expenses, newest first
   static Future<List<Map<String, dynamic>>> fetchExpenses() async {
     final response = await http.get(
       Uri.parse('$_base/expenses'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode == 200) {
@@ -63,7 +65,7 @@ class ExpenseApi {
 
     final response = await http.post(
       Uri.parse('$_base/expenses'),
-      headers: _headers,
+      headers: await _headers(),
       body: body,
     );
 
@@ -98,7 +100,7 @@ class ExpenseApi {
   static Future<void> deleteExpense(String id) async {
     final response = await http.delete(
       Uri.parse('$_base/expenses/$id'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode != 200) {
@@ -117,19 +119,21 @@ class ExpenseApi {
     String? moodTag,
     String? note,
   }) async {
-    final body = jsonEncode({
-      'merchant': merchant,
-      'category': category,
-      'amount': amount,
-      'is_essential': isEssential,
-      'is_subscription': isSubscription,
-      'mood_tag': moodTag,
-      'note': note,
-    }..removeWhere((_, v) => v == null));
+    final body = jsonEncode(
+      {
+        'merchant': merchant,
+        'category': category,
+        'amount': amount,
+        'is_essential': isEssential,
+        'is_subscription': isSubscription,
+        'mood_tag': moodTag,
+        'note': note,
+      }..removeWhere((_, v) => v == null),
+    );
 
     final response = await http.patch(
       Uri.parse('$_base/expenses/$id'),
-      headers: _headers,
+      headers: await _headers(),
       body: body,
     );
 
@@ -155,7 +159,7 @@ class ExpenseApi {
 
     final response = await http.post(
       Uri.parse('$_base/journal'),
-      headers: _headers,
+      headers: await _headers(),
       body: body,
     );
 
@@ -169,7 +173,7 @@ class ExpenseApi {
   static Future<List<Map<String, dynamic>>> fetchJournal() async {
     final response = await http.get(
       Uri.parse('$_base/journal'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode == 200) {
@@ -183,7 +187,7 @@ class ExpenseApi {
   static Future<void> deleteJournalEntry(String id) async {
     final response = await http.delete(
       Uri.parse('$_base/journal/$id'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode != 200) {
@@ -196,7 +200,7 @@ class ExpenseApi {
   static Future<List<Map<String, dynamic>>> fetchGoals() async {
     final response = await http.get(
       Uri.parse('$_base/goals'),
-      headers: _headers,
+      headers: await _headers(),
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -221,7 +225,7 @@ class ExpenseApi {
     });
     final response = await http.post(
       Uri.parse('$_base/goals'),
-      headers: _headers,
+      headers: await _headers(),
       body: body,
     );
     if (response.statusCode == 200) {
@@ -238,7 +242,7 @@ class ExpenseApi {
     final body = jsonEncode({'amount': amount});
     final response = await http.patch(
       Uri.parse('$_base/goals/$goalId'),
-      headers: _headers,
+      headers: await _headers(),
       body: body,
     );
     if (response.statusCode == 200) {
@@ -251,7 +255,7 @@ class ExpenseApi {
   static Future<void> setPrimaryGoal(String goalId) async {
     final response = await http.patch(
       Uri.parse('$_base/goals/$goalId/primary'),
-      headers: _headers,
+      headers: await _headers(),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to set primaru goal: ${response.statusCode}');
@@ -262,7 +266,7 @@ class ExpenseApi {
   static Future<void> deleteGoal(String goalId) async {
     final response = await http.delete(
       Uri.parse('$_base/goals/$goalId'),
-      headers: _headers,
+      headers: await _headers(),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to delete goal: ${response.statusCode}');
@@ -274,7 +278,7 @@ class ExpenseApi {
   static Future<Map<String, dynamic>> fetchSummary() async {
     final response = await http.get(
       Uri.parse('$_base/expenses/summary'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode == 200) {
@@ -287,7 +291,7 @@ class ExpenseApi {
   static Future<String> fetchAffirmation() async {
     final response = await http.get(
       Uri.parse('$_base/affirmation'),
-      headers: _headers,
+      headers: await _headers(),
     );
 
     if (response.statusCode == 200) {
