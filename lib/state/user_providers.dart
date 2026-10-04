@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../services/user_prefs.dart';
 import '../services/expense_api.dart';
 
@@ -7,8 +8,20 @@ import '../services/expense_api.dart';
 /// Serves as the centralized state provider for the application.
 /// It acts as a single source of truth, decoupled from individual UI components.
 
-// Current user name (null if not set)
-// User Name
+// Auth state
+// emits whenever the user signs in/out
+final authStateProvider = StreamProvider<User?>((ref) {
+  return FirebaseAuth.instance.authStateChanges();
+});
+
+// Current user's ID
+// null when signed out
+final currentUuidProvider = Provider<String?>((ref) {
+  return ref.watch(authStateProvider).value?.uid;
+});
+
+// Current user name
+// user name is null if not set
 final userNameProvider = FutureProvider<String?>((ref) async {
   return UserPrefs.getUserName();
 });
@@ -25,6 +38,7 @@ final setUserNameProvider = Provider<Future<void> Function(String)>((ref) {
 final expensesProvider = FutureProvider<List<Map<String, dynamic>>>((
   ref,
 ) async {
+  ref.watch(currentUuidProvider);
   return ExpenseApi.fetchExpenses();
 });
 
