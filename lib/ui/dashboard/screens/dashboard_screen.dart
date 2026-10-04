@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../state/user_providers.dart';
 import '../../../services/expense_api.dart';
 import '../widgets/add_expense_sheet.dart';
@@ -350,6 +351,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               context.go('/journal');
             case 3:
               context.go('/piggybank');
+            case 4:
+              FirebaseAuth.instance.signOut();
             default:
               _toast(context, "TODO: route index=$index. In development.");
           }
@@ -679,12 +682,11 @@ class _ExpenseTileState extends State<_ExpenseTile> {
                       onPressed: () => showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        backgroundColor: Colors.transparent, 
-                        builder: (_) => EditExpenseSheet(
-                          expense: widget.rawExpense
-                        ),
+                        backgroundColor: Colors.transparent,
+                        builder: (_) =>
+                            EditExpenseSheet(expense: widget.rawExpense),
                       ),
-                      icon: const Icon(Icons.edit_outlined, size: 16), 
+                      icon: const Icon(Icons.edit_outlined, size: 16),
                       label: const Text('Edit'),
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.sageDark,
