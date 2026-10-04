@@ -25,139 +25,146 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.cream,
-      // Bottom nav
-      // Shared widget from dashboard
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // Journal is index 1
-        type: BottomNavigationBarType.fixed,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) context.go('/');
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.cream,
-        selectedItemColor: AppColors.sageDark,
-        unselectedItemColor: AppColors.inkMuted,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              context.go('/');
-            case 1:
-              break;
-            case 3:
-              context.go('/piggybank');
-            default:
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("TODO: route index=$index. In development."),
-                ),
-              );
-          }
-        },
 
-        // Bottom nav icons
-        // Shows outlined and filled when selected
-        // Currently, only Journal is functioning.
-        items: const [
-          // Home screen
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: "Home",
-          ),
-          // Journal screen
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_outlined),
-            activeIcon: Icon(Icons.menu_book),
-            label: "Journal",
-          ),
-          // Data analytics screen (in dev)
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: "Data",
-          ),
-          // Piggy bank screen (in dev)
-          BottomNavigationBarItem(
-            icon: Icon(Icons.savings_outlined),
-            activeIcon: Icon(Icons.savings),
-            label: "Piggybank",
-          ),
-          // User account screen (in dev)
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: "You",
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF7ECF0),
-                border: Border(
-                  bottom: BorderSide(color: const Color(0XFFEEC9D2)),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.eco_rounded,
-                        size: 16,
-                        color: AppColors.sageDark,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Your space',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.sageDark,
-                          letterSpacing: 0.08,
-                        ),
-                      ),
-                    ],
+        // Bottom nav
+        // Shared widget from dashboard
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 1, // Journal is index 1
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppColors.cream,
+          selectedItemColor: AppColors.sageDark,
+          unselectedItemColor: AppColors.inkMuted,
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                context.go('/');
+              case 1:
+                break;
+              case 3:
+                context.go('/piggybank');
+              default:
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("TODO: route index=$index. In development."),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Journal',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.deepMoss,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Your money. Your feelings. No judgment.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.inkMuted,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
+                );
+            }
+          },
+          // Bottom nav icons
+          // Shows outlined and filled when selected
+          // Currently, only Journal is functioning.
+          items: const [
+            // Home screen
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: "Home",
             ),
+            // Journal screen
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book_outlined),
+              activeIcon: Icon(Icons.menu_book),
+              label: "Journal",
+            ),
+            // Data analytics screen (in dev)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_outlined),
+              activeIcon: Icon(Icons.bar_chart),
+              label: "Data",
+            ),
+            // Piggy bank screen (in dev)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.savings_outlined),
+              activeIcon: Icon(Icons.savings),
+              label: "Piggybank",
+            ),
+            // User account screen (in dev)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: "You",
+            ),
+          ],
+        ),
 
-            const SizedBox(height: 20),
-
-            // Write entry button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Container(
                 width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _openJournalForm(),
-                  icon: const Icon(Icons.edit_outlined, size: 18),
-                  label: const Text('Write today\'s entry'),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7ECF0),
+                  border: Border(
+                    bottom: BorderSide(color: const Color(0XFFEEC9D2)),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.eco_rounded,
+                          size: 16,
+                          color: AppColors.sageDark,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Your space',
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: AppColors.sageDark,
+                            letterSpacing: 0.08,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Journal',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.deepMoss,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Your money. Your feelings. No judgment.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.inkMuted,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
 
-            const SizedBox(height: 14),
+              const SizedBox(height: 20),
+
+              // Write entry button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _openJournalForm(),
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('Write today\'s entry'),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 14),
 
             // Mood filter chips
             SingleChildScrollView(
@@ -266,10 +273,11 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                       );
                     },
                   ),
+                ),
+             ],
             ),
-          ],
+          ),
         ),
-      ),
     );
   }
 
@@ -302,32 +310,47 @@ class _JournalBottomSheet extends StatelessWidget {
           border: Border(top: BorderSide(color: AppColors.warmLinen)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle
-            Center(
-              child: Container(
-                width: 20,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.warmLinen,
-                  borderRadius: BorderRadius.circular(99),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Center(
+                child: Container(
+                  width: 20,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.warmLinen,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
                 ),
               ),
-            ),
-            JournalForm(
-              onSubmit: (content, moodTag) async {
-                await ExpenseApi.addJournalEntry(
-                  content: content,
-                  moodTag: moodTag,
-                );
-                onSaved();
-                if (context.mounted) Navigator.of(context).pop();
-              },
-            ),
-          ],
+              JournalForm(
+                onSubmit: (content, moodTag) async {
+                  try {
+                    await ExpenseApi.addJournalEntry(
+                      content: content,
+                      moodTag: moodTag,
+                    );
+                    onSaved();
+                    if (context.mounted) Navigator.of(context).pop();
+                  } catch (e) {
+                    debugPrint('Journal save failed: $e');
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Couldn't save your entry just now. Want to try again?",
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -401,11 +424,15 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
             color: moodTag != null ? tint : AppColors.sand,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: moodTag != null ? accent.withValues(alpha: .3) : AppColors.warmLinen,
+              color: moodTag != null
+                  ? accent.withValues(alpha: .3)
+                  : AppColors.warmLinen,
             ),
             boxShadow: [
               BoxShadow(
-                color: moodTag != null ? accent.withValues(alpha: .08) : AppColors.deepMoss.withValues(alpha: .04),
+                color: moodTag != null
+                    ? accent.withValues(alpha: .08)
+                    : AppColors.deepMoss.withValues(alpha: .04),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -416,14 +443,15 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (moodTag != null) Container(
-                  width: 3,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    color: accent,
-                    borderRadius: BorderRadius.circular(99),
+                if (moodTag != null)
+                  Container(
+                    width: 3,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: accent,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
                   ),
-                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -434,135 +462,138 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
                         children: [
                           Text(
                             _formatDate(createdAt),
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(color: AppColors.inkMuted),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppColors.inkMuted),
                           ),
                           const SizedBox(width: 8),
-                          if (moodTag != null) Container(
-                            padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: tint,
-                            borderRadius: BorderRadius.circular(99),
-                            border: Border.all(
-                              color: accent.withValues(alpha: .4),
-                            ),
-                          ),
-                          child: Text(
-                            moodTag,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: accent,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-
-                        AnimatedRotation(
-                          turns: _expanded ? 0.5 : 0,
-                          duration: const Duration(milliseconds: 200),
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 20,
-                            color: AppColors.inkMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // Content preview
-                    Text(
-                      _expanded
-                      ? content
-                      : (content.length > 80
-                        ? '${content.substring(0, 80)}...'
-                        : content),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.deepMoss,
-                        height: 1.5,
-                      ),
-                    ),
-
-                // Expanded section
-                AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 200),
-                  crossFadeState: _expanded
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                  firstChild: const SizedBox.shrink(),
-                  secondChild: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 12),
-                      Divider(color: AppColors.warmLinen, height: 1),
-                      const SizedBox(height: 12),
-
-                      // Juniper response
-                      if (juniperResponse != null)
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: ceilingTriggered != null
-                              ? AppColors.peachLight
-                              : tint,
-                            border: Border.all(
-                              color: ceilingTriggered != null
-                                ? AppColors.peach.withValues(alpha: .4)
-                                : accent.withValues(alpha: .3),
-                            ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(
-                                ceilingTriggered != null
-                                  ? Icons.favorite_outline
-                                  : Icons.eco_rounded,
-                                size: 14,
-                                color: AppColors.sageDark,
+                          if (moodTag != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  juniperResponse,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: AppColors.deepMoss,
-                                      height: 1.5,
-                                    ),
+                              decoration: BoxDecoration(
+                                color: tint,
+                                borderRadius: BorderRadius.circular(99),
+                                border: Border.all(
+                                  color: accent.withValues(alpha: .4),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                              child: Text(
+                                moodTag,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelSmall?.copyWith(color: accent),
+                              ),
+                            ),
+                          const Spacer(),
 
-                      // Resources redirect hint (todo)
-                      if (ceilingTriggered != null) ...[
-                        const SizedBox(height: 10),
-                        Text(
-                          'Check the Resources tab for more support.',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.sageDark,
-                            fontWeight: FontWeight.w500,
+                          AnimatedRotation(
+                            turns: _expanded ? 0.5 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 20,
+                              color: AppColors.inkMuted,
+                            ),
                           ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Content preview
+                      Text(
+                        _expanded
+                            ? content
+                            : (content.length > 80
+                                  ? '${content.substring(0, 80)}...'
+                                  : content),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.deepMoss,
+                          height: 1.5,
                         ),
-                      ],
-                    ],   // closes secondChild Column children
-                  ),         // closes secondChild Column
-                ),           // closes AnimatedCrossFade
-                    ],       // closes main Column children
-                  ),         // closes main Column
-                ),           // closes Expanded
-              ],             // closes Row children
-            ),               // closes Row
-          ),                 // closes IntrinsicHeight
-        ),                   // closes Container
-      ),                     // closes GestureDetector
-    );                       // closes Dismissible
+                      ),
+
+                      // Expanded section
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 200),
+                        crossFadeState: _expanded
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        firstChild: const SizedBox.shrink(),
+                        secondChild: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            Divider(color: AppColors.warmLinen, height: 1),
+                            const SizedBox(height: 12),
+
+                            // Juniper response
+                            if (juniperResponse != null)
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: ceilingTriggered != null
+                                      ? AppColors.peachLight
+                                      : tint,
+                                  border: Border.all(
+                                    color: ceilingTriggered != null
+                                        ? AppColors.peach.withValues(alpha: .4)
+                                        : accent.withValues(alpha: .3),
+                                  ),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      ceilingTriggered != null
+                                          ? Icons.favorite_outline
+                                          : Icons.eco_rounded,
+                                      size: 14,
+                                      color: AppColors.sageDark,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        juniperResponse,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: AppColors.deepMoss,
+                                              height: 1.5,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            // Resources redirect hint (todo)
+                            if (ceilingTriggered != null) ...[
+                              const SizedBox(height: 10),
+                              Text(
+                                'Check the Resources tab for more support.',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: AppColors.sageDark,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ],
+                          ], // closes secondChild Column children
+                        ), // closes secondChild Column
+                      ), // closes AnimatedCrossFade
+                    ], // closes main Column children
+                  ), // closes main Column
+                ), // closes Expanded
+              ], // closes Row children
+            ), // closes Row
+          ), // closes IntrinsicHeight
+        ), // closes Container
+      ), // closes GestureDetector
+    ); // closes Dismissible
   }
 }
 

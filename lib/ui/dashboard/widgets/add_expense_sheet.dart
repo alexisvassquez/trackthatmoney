@@ -92,7 +92,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Could not save expense: $e')));
+        ).showSnackBar(SnackBar(content: Text('Couldn\'t save that one. Want to try again?')));
       }
     }
   }
@@ -110,116 +110,117 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
           border: Border(top: BorderSide(color: AppColors.warmLinen)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Drag handle
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.warmLinen,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-              ),
-            ),
-
-            // Juniper response — shown after submit
-            if (_juniperMessage != null) ...[
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.peachLight,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: AppColors.peach.withValues(alpha: .4),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Drag handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.warmLinen,
+                    borderRadius: BorderRadius.circular(99),
                   ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.eco_rounded, color: AppColors.sageDark),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        _juniperMessage!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.deepMoss,
+              ),
+
+              // Juniper response — shown after submit
+              if (_juniperMessage != null) ...[
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.peachLight,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: AppColors.peach.withValues(alpha: .4),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.eco_rounded, color: AppColors.sageDark),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _juniperMessage!,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.deepMoss,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
 
-            // Form — hidden after submit
-            if (_juniperMessage == null) ...[
-              Text(
-                "Add expense",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 20),
-
-              // Merchant
-              TextField(
-                controller: _merchantController,
-                decoration: const InputDecoration(
-                  labelText: 'Merchant or description',
+              // Form — hidden after submit
+              if (_juniperMessage == null) ...[
+                Text(
+                  "Add expense",
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                textCapitalization: TextCapitalization.sentences,
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-              // Amount
-              TextField(
-                controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: 'Amount',
-                  prefixText: '\$ ',
+                // Merchant
+                TextField(
+                  controller: _merchantController,
+                  decoration: const InputDecoration(
+                    labelText: 'Merchant or description',
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
                 ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
-              // Category chips
-              Text("Category", style: Theme.of(context).textTheme.labelLarge),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _categories
-                    .map(
-                      (c) => ChoiceChip(
-                        label: Text(c),
-                        selected: _category == c,
-                        onSelected: (_) => setState(() => _category = c),
-                        selectedColor: AppColors.sageMist,
-                        side: BorderSide(
-                          color: _category == c
+                // Amount
+                TextField(
+                  controller: _amountController,
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                    prefixText: '\$ ',
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Category chips
+                Text("Category", style: Theme.of(context).textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _categories
+                      .map(
+                        (c) => ChoiceChip(
+                          label: Text(c),
+                          selected: _category == c,
+                          onSelected: (_) => setState(() => _category = c),
+                          selectedColor: AppColors.sageMist,
+                          side: BorderSide(
+                            color: _category == c
                               ? AppColors.sage
                               : AppColors.warmLinen,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 16),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
 
-              // Mood chips
-              Text(
-                "How are you feeling about this purchase?",
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _moods
+                // Mood chips
+                Text(
+                  "How are you feeling about this purchase?",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _moods
                     .map(
                       (m) => ChoiceChip(
                         label: Text(m),
@@ -235,48 +236,49 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                       ),
                     )
                     .toList(),
-              ),
-              const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
 
-              // Essential toggle
-              Row(
-                children: [
-                  Switch(
-                    value: _isEssential,
-                    onChanged: (v) => setState(() => _isEssential = v),
-                    activeThumbColor: AppColors.sage,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Essential expense",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
+                // Essential toggle
+                Row(
+                  children: [
+                    Switch(
+                      value: _isEssential,
+                      onChanged: (v) => setState(() => _isEssential = v),
+                      activeThumbColor: AppColors.sage,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Essential expense",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
-              // Subscription toggle
-              Row(
-                children: [
-                  Switch(
-                    value: _isSubscription,
-                    onChanged: (v) => setState(() => _isSubscription = v),
-                    activeThumbColor: AppColors.sage,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Recurring payment",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
+                // Subscription toggle
+                Row(
+                  children: [
+                    Switch(
+                      value: _isSubscription,
+                      onChanged: (v) => setState(() => _isSubscription = v),
+                      activeThumbColor: AppColors.sage,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Recurring payment",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
-              // Submit button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
+                // Submit button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submit,
+                    child: _isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
@@ -286,10 +288,11 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                           ),
                         )
                       : const Text("Save expense"),
+                  ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

@@ -41,6 +41,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: cs.surface,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.sage,
