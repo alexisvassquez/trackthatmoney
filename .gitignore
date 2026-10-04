@@ -99,3 +99,4 @@ Thumbs.db
 ################################################################################
 .env
 *_key.dartbackend/juniper2_0/.env
+lib/firebase_options.dart
