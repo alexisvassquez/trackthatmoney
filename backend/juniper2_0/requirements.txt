@@ -17,6 +17,8 @@ threadpoolctl
 
 # Security
 python-dotenv
+google-auth
+requests
 
 # Database
 sqlalchemy

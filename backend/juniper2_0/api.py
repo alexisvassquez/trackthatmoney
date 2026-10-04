@@ -238,7 +238,6 @@ def create_expense(
     # Build the database record
     record = ExpenseRecord(
         id=str(uuid.uuid4()),
-        user_id=user_id or "dev_user",    # fallback for safety
         posted_at=datetime.now(timezone.utc),
         juniper_message=juniper_message,
         **expense.model_dump(),
@@ -644,17 +643,6 @@ def encourage(
     """
     result = engine_juniper.suggest(expense.model_dump())
     return result
-
-# AUTH
-@app.post("/token")
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    """
-    Dev-only token exchange. 
-    Will be replaced with Firebase/Auth0 before public release.
-    """
-    if form_data.username == DEV_USERNAME and form_data.password == DEV_PASSWORD:
-        return {"access_token": DEV_TOKEN, "token_type": "bearer"}
-    raise HTTPException(status_code=400, detail="Invalid credentials")
 
 if __name__ == "__main__":
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

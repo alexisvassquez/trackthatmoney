@@ -2,29 +2,27 @@
 # backend/juniper2_0/auth/auth.py
 
 import os
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from typing import Optional
 from dotenv import load_dotenv
-
-# Endpoint where clients exchange username/password for token
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
 
 load_dotenv()
 
-DEV_TOKEN = os.getenv("TTM_DEV_TOKEN")
+FIREBASE_PROJECT_ID = os.environ["FIREBASE_PROJECT_ID"]
+_request = google_requests.Request()
+bearer = HTTPBearer()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
-
-def verify_token(token: str = Depends(oauth2_scheme)) -> Optional[str]:
-    """
-    Simple token check for now during beta stage. 
-    Replace with real token validation later.
-    """
-    if token != DEV_TOKEN:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing authentication token.",
-            headers={"WWW-Authenticate": "Bearer"},
+def verify_token(creds: HTTPAuthorizationCredentials = Depends(bearer)) -> str:
+    try:
+        claims = id_token.verify_firebase_token(
+            creds.credentials, _request, audience=FIREBASE_PROJECT_ID
         )
-    return "test_user_id"
+    except ValueError:
+        claims = None
+
+    if not claims or claims.get("iss") != f"https://securetoken.google.com/{FIREBASE_PROJECT_ID}":
+        raise HTTPException(status_code=401, detail="Please sign in again.")
+
+    return claims["sub"]
