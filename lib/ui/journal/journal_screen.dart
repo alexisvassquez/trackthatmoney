@@ -265,7 +265,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                           entry: filtered[i],
                           onDelete: () async {
                             await ExpenseApi.deleteJournalEntry(
-                              entries[i]['id'] as String,
+                              filtered[i]['id'] as String,
                             );
                             ref.invalidate(journalProvider);
                           },
