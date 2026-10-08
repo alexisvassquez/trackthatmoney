@@ -131,6 +131,27 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  // Anonymous account - no email or password needed.
+  // Gets a real user ID, so data saves normally.
+  // An email can be linked later to keep the same account (and its data),
+  // that way a user can use TTM before committing to an account.
+  Future<void> _continueWithoutAccount() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+      _notice = null;
+    });
+
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Anonymous sign-in error: ${e.code}');
+      if (mounted) setState(() => _error = _messageFor(e.code));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   // Firebase error codes
   // Plain, non-judgmental tone, guidance
   String _messageFor(String code) {
@@ -299,6 +320,28 @@ class _SignInScreenState extends State<SignInScreen> {
                             ? 'New here? Create an account'
                             : 'Already have an account? Sign in',
                       ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // No-account option
+                    OutlinedButton(
+                      onPressed: _isLoading ? null : _continueWithoutAccount,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.sageDark,
+                        side: const BorderSide(color: AppColors.warmLinen),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ) ,
+                      child: const Text('Start without an account'),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'You can add an email later to keep your entries safe '
+                      'if you switch phones.',
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodySmall?.copyWith(color: AppColors.inkMuted),
                     ),
                   ],
                 ),
