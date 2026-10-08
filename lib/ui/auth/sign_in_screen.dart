@@ -95,6 +95,42 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      setState(() {
+        _error = 'Add your email above and a reset link will go there.';
+        _notice = null;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+      _notice = null;
+    });
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      if (mounted) {
+        // same message whether or not the account exists,
+        // so the screen never reveals which emails are registered
+        setState(
+          () => _notice =
+              "If there's an account for that email, a reset link is on "
+              'its way. Check your inbox.',
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Reset error: ${e.code}');
+      if (mounted) setState(() => _error = _messageFor(e.code));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   // Firebase error codes
   // Plain, non-judgmental tone, guidance
   String _messageFor(String code) {
@@ -120,5 +156,204 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  // build(todo)
+  // build
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      backgroundColor: AppColors.cream,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: AutofillGroup(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Brand mark
+                    Center(
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: const BoxDecoration(
+                          color: AppColors.sageMist,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.eco_rounded,
+                          color: AppColors.sageDark,
+                          size: 28,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Track That Money',
+                      textAlign: TextAlign.center,
+                      style: textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Your money. No judgement.',
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Mode title
+                    Text(
+                      _isSignIn ? 'Welcome back' : 'Create your account',
+                      style: textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Email
+                    TextField(
+                      controller: _emailController,
+                      enabled: !_isLoading,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      autocorrect: false,
+                      autofillHints: const [AutofillHints.email],
+                      decoration: const InputDecoration(labelText: 'Email'),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Password
+                    TextField(
+                      controller: _passwordController,
+                      enabled: !_isLoading,
+                      obscureText: _obscurePassword,
+                      textInputAction: TextInputAction.done,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      autofillHints: [
+                        _isSignIn
+                            ? AutofillHints.password
+                            : AutofillHints.newPassword,
+                      ],
+                      onSubmitted: (_) => _submit(),
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        helperText: _isSignIn ? null : 'At least 6 characters',
+                        suffixIcon: IconButton(
+                          tooltip: _obscurePassword
+                              ? 'Show password'
+                              : 'Hide password',
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Messages
+                    if (_error != null) ...[
+                      const SizedBox(height: 16),
+                      _MessageBox(message: _error!, isCaution: true),
+                    ],
+                    if (_notice != null) ...[
+                      const SizedBox(height: 16),
+                      _MessageBox(message: _notice!, isCaution: false),
+                    ],
+                    const SizedBox(height: 20),
+
+                    // Primary action
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _submit,
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.sageDark,
+                              ),
+                            )
+                          : Text(_isSignIn ? 'Sign in' : 'Create account'),
+                    ),
+
+                    // Password reset (sign-in mode only)
+                    if (_isSignIn) ...[
+                      const SizedBox(height: 4),
+                      TextButton(
+                        onPressed: _isLoading ? null : _resetPassword,
+                        child: const Text('Forgot your password?'),
+                      ),
+                    ],
+                    const SizedBox(height: 8),
+
+                    // Switch between sign in and create account
+                    TextButton(
+                      onPressed: _isLoading ? null : _toggleMode,
+                      child: Text(
+                        _isSignIn
+                            ? 'New here? Create an account'
+                            : 'Already have an account? Sign in',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Inline message box
+// liveRegion lets TalkBack announce the message when it appears.
+class _MessageBox extends StatelessWidget {
+  final String message;
+  final bool isCaution;
+
+  const _MessageBox({required this.message, required this.isCaution});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = isCaution ? AppColors.amber : AppColors.sage;
+
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isCaution
+              ? AppColors.amber.withValues(alpha: .1)
+              : AppColors.sageMist,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: accent.withValues(alpha: .5)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              isCaution ? Icons.info_outline : Icons.mark_email_read_outlined,
+              color: isCaution ? AppColors.amber : AppColors.sageDark,
+              size: 20,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                message,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: AppColors.deepMoss),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
