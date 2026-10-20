@@ -13,6 +13,12 @@ class ExpenseApi {
   // Android emulator -> localhost
   static String get _base =>
       dotenv.env['TTM_API_BASE'] ?? 'http://10.0.2.2:8000';
+
+  // Give up on a request after 15 sec so screens show their
+  // friendly error state instead of spinning forever
+  // Most common example would be in case of a backend outage
+  static const _timeout = Duration(seconds: 15);
+
   static Future<Map<String, String>> _headers() async {
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
     return {
@@ -27,7 +33,7 @@ class ExpenseApi {
     final response = await http.get(
       Uri.parse('$_base/expenses'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -67,7 +73,7 @@ class ExpenseApi {
       Uri.parse('$_base/expenses'),
       headers: await _headers(),
       body: body,
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -101,7 +107,7 @@ class ExpenseApi {
     final response = await http.delete(
       Uri.parse('$_base/expenses/$id'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete expense: ${response.statusCode}');
@@ -135,7 +141,7 @@ class ExpenseApi {
       Uri.parse('$_base/expenses/$id'),
       headers: await _headers(),
       body: body,
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -161,7 +167,7 @@ class ExpenseApi {
       Uri.parse('$_base/journal'),
       headers: await _headers(),
       body: body,
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -174,7 +180,7 @@ class ExpenseApi {
     final response = await http.get(
       Uri.parse('$_base/journal'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -188,7 +194,7 @@ class ExpenseApi {
     final response = await http.delete(
       Uri.parse('$_base/journal/$id'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete journal entry: ${response.statusCode}');
@@ -201,7 +207,7 @@ class ExpenseApi {
     final response = await http.get(
       Uri.parse('$_base/goals'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.cast<Map<String, dynamic>>();
@@ -227,7 +233,7 @@ class ExpenseApi {
       Uri.parse('$_base/goals'),
       headers: await _headers(),
       body: body,
-    );
+    ).timeout(_timeout);
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     }
@@ -244,7 +250,7 @@ class ExpenseApi {
       Uri.parse('$_base/goals/$goalId'),
       headers: await _headers(),
       body: body,
-    );
+    ).timeout(_timeout);
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     }
@@ -256,7 +262,7 @@ class ExpenseApi {
     final response = await http.patch(
       Uri.parse('$_base/goals/$goalId/primary'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
     if (response.statusCode != 200) {
       throw Exception('Failed to set primaru goal: ${response.statusCode}');
     }
@@ -267,7 +273,7 @@ class ExpenseApi {
     final response = await http.delete(
       Uri.parse('$_base/goals/$goalId'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
     if (response.statusCode != 200) {
       throw Exception('Failed to delete goal: ${response.statusCode}');
     }
@@ -279,7 +285,7 @@ class ExpenseApi {
     final response = await http.get(
       Uri.parse('$_base/expenses/summary'),
       headers: await _headers(),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -289,15 +295,20 @@ class ExpenseApi {
 
   // Dynamic affirmations pulled from JSON library in encouragement engine
   static Future<String> fetchAffirmation() async {
-    final response = await http.get(
-      Uri.parse('$_base/affirmation'),
-      headers: await _headers(),
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$_base/affirmation'),
+        headers: await _headers(),
+      ).timeout(_timeout);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['affirmation'] as String;
-    }
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['affirmation'] as String;
+      }
+    } catch (_) {
+      // offline, timed out, or unexpected response
+      // use fallback
+    }  
     // fallback
     return "Awareness is progress. Tiny wins count.";
   }
