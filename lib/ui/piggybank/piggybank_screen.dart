@@ -168,7 +168,21 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
         goalName: currentGoal['name'] as String,
         onSave: (amount) async {
           final goalId = currentGoal['id'] as String;
-          await ExpenseApi.addToSavings(goalId: goalId, amount: amount);
+          try {
+            await ExpenseApi.addToSavings(goalId: goalId, amount: amount);
+          } catch (e) {
+            debugPrint('Add to savings failed: $e');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "That didn't save just now. Want to try again?",
+                  ),
+                ),
+              );
+            }
+            return;
+          }
           ref.invalidate(goalsProvider);
           final newPct =
               (((currentGoal['saved'] as num).toDouble() + amount) /
@@ -188,8 +202,21 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
       backgroundColor: Colors.transparent,
       builder: (_) => _NewGoalSheet(
         onSave: (name, target, icon) async {
-          await ExpenseApi.createGoal(name: name, target: target, icon: icon);
-          ref.invalidate(goalsProvider);
+          try {
+            await ExpenseApi.createGoal(name: name, target: target, icon: icon);
+            ref.invalidate(goalsProvider);
+          } catch (e) {
+            debugPrint('Create goal failed: $e');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Couldn't create that goal just now. Want to try again?",
+                  ),
+                ),
+              );
+            }
+          }
         },
       ),
     );
@@ -306,9 +333,8 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
 
         body: goalsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(
-            child: Text("Couldn't load goals. Try again later."),
-          ),
+          error: (e, _) =>
+              Center(child: Text("Couldn't load goals. Try again later.")),
           data: (goals) {
             // if no goal selected yet, default to primary / first
             if (_selectedGoal == null && goals.isNotEmpty) {

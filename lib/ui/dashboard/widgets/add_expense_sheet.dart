@@ -88,11 +88,16 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
       await Future.delayed(const Duration(seconds: 3));
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      setState(() => _isLoading = false);
+      debugPrint('Add expense failed: $e');
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Couldn\'t save that one. Want to try again?')));
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Couldn't save that one. Want to try again?"
+            ),
+          ),
+        );
       }
     }
   }
@@ -146,9 +151,8 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                       Expanded(
                         child: Text(
                           _juniperMessage!,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.deepMoss,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.deepMoss),
                         ),
                       ),
                     ],
@@ -202,8 +206,8 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                           selectedColor: AppColors.sageMist,
                           side: BorderSide(
                             color: _category == c
-                              ? AppColors.sage
-                              : AppColors.warmLinen,
+                                ? AppColors.sage
+                                : AppColors.warmLinen,
                           ),
                         ),
                       )
@@ -221,21 +225,22 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                   spacing: 8,
                   runSpacing: 8,
                   children: _moods
-                    .map(
-                      (m) => ChoiceChip(
-                        label: Text(m),
-                        selected: _moodTag == m,
-                        onSelected: (_) =>
-                            setState(() => _moodTag = _moodTag == m ? null : m),
-                        selectedColor: AppColors.peachLight,
-                        side: BorderSide(
-                          color: _moodTag == m
-                              ? AppColors.peach
-                              : AppColors.warmLinen,
+                      .map(
+                        (m) => ChoiceChip(
+                          label: Text(m),
+                          selected: _moodTag == m,
+                          onSelected: (_) => setState(
+                            () => _moodTag = _moodTag == m ? null : m,
+                          ),
+                          selectedColor: AppColors.peachLight,
+                          side: BorderSide(
+                            color: _moodTag == m
+                                ? AppColors.peach
+                                : AppColors.warmLinen,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
                 ),
                 const SizedBox(height: 16),
 
@@ -279,15 +284,15 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _submit,
                     child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text("Save expense"),
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text("Save expense"),
                   ),
                 ),
               ],
