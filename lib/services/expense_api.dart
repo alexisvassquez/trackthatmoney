@@ -264,7 +264,7 @@ class ExpenseApi {
       headers: await _headers(),
     ).timeout(_timeout);
     if (response.statusCode != 200) {
-      throw Exception('Failed to set primaru goal: ${response.statusCode}');
+      throw Exception('Failed to set primary goal: ${response.statusCode}');
     }
   }
 
