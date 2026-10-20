@@ -16,7 +16,7 @@ final authStateProvider = StreamProvider<User?>((ref) {
 
 // Current user's ID
 // null when signed out
-final currentUuidProvider = Provider<String?>((ref) {
+final currentUidProvider = Provider<String?>((ref) {
   return ref.watch(authStateProvider).value?.uid;
 });
 
@@ -38,7 +38,7 @@ final setUserNameProvider = Provider<Future<void> Function(String)>((ref) {
 final expensesProvider = FutureProvider<List<Map<String, dynamic>>>((
   ref,
 ) async {
-  ref.watch(currentUuidProvider);
+  ref.watch(currentUidProvider);
   return ExpenseApi.fetchExpenses();
 });
 
@@ -51,20 +51,24 @@ final refreshExpensesProvider = Provider<Future<void> Function()>((ref) {
 
 // Journal provider
 final journalProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  ref.watch(currentUidProvider);
   return ExpenseApi.fetchJournal();
 });
 
 // Summary provider, fetches expenses summary
 final summaryProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  ref.watch(currentUidProvider);
   return ExpenseApi.fetchSummary();
 });
 
 // Affirmations provider, shuffles affirmations
 final affirmationProvider = FutureProvider<String>((ref) async {
+  ref.watch(currentUidProvider);
   return ExpenseApi.fetchAffirmation();
 });
 
 // Savings goals provider
 final goalsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  ref.watch(currentUidProvider);
   return ExpenseApi.fetchGoals();
 });
