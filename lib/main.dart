@@ -14,5 +14,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: '.env');
   debugPrint('API base: ${dotenv.env['TTM_API_BASE']}');
-  runApp(const ProviderScope(child: TrackThatMoneyApp()));
+  runApp(
+    ProviderScope(
+      retry: (retryCount, error) => null,
+      child: TrackThatMoneyApp()
+    ),
+  );
 }
