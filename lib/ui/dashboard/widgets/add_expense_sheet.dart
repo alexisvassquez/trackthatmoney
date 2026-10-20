@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/expense_api.dart';
 import '../../../state/user_providers.dart';
 import '../../theme/colors.dart';
+import '../../widgets/inline_message.dart';
 
 /// Track That Money
 /// lib/ui/dashboard/widgets/add_expense_sheet.dart
@@ -26,6 +27,8 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
   bool _isSubscription = false;
   bool _isLoading = false;
   String? _juniperMessage;
+  // shown inside the sheet when a save fails
+  String? _error;
 
   static const _categories = [
     'Food',
@@ -65,7 +68,10 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
     final amount = double.tryParse(amountText);
     if (amount == null) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
     try {
       final result = await ExpenseApi.addExpense(
@@ -93,9 +99,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              "Couldn't save that one. Want to try again?"
-            ),
+            content: Text("Couldn't save that one. Want to try again?"),
           ),
         );
       }
@@ -277,6 +281,12 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                // Save failure message
+                if (_error != null) ...[
+                  InlineMessage(message: _error!),
+                  const SizedBox(height: 16),
+                ],
 
                 // Submit button
                 SizedBox(
