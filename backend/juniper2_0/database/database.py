@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 load_dotenv()
 
 # Connect to Postgres
-DATABASE_URL = os.environ["DATABASEURL"]
+DATABASE_URL = os.environ["DATABASE_URL"]
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
