@@ -3,16 +3,20 @@
 # FastAPI endpoints, mirrors models.py
 
 import os
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field
 from typing import Optional
 from decimal import Decimal
 from datetime import datetime, timezone
 import uuid
-import uvicorn
+
 from dotenv import load_dotenv
+load_dotenv()
+
+import uvicorn
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel, Field, ConfigDict
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from juniper2_core.predict.predictor import SpendingPredictor
@@ -22,19 +26,14 @@ from auth.auth import verify_token
 from database.database import get_db
 from database.models import ExpenseRecord, JournalEntry, SavingsGoal
 
-load_dotenv()
-
-DEV_USERNAME = os.getenv("TTM_DEV_USERNAME")
-DEV_PASSWORD = os.getenv("TTM_DEV_PASSWORD")
-DEV_TOKEN = os.getenv("TTM_DEV_TOKEN")
-
 app = FastAPI(title="Track That Money API")
 
 # CORS middleware
+# Mobile clients send bearer tokens, not cookies, so creds are off.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # restrict in production
-    allow_credentials=True,
+    allow_origins=["*"], # restrict once web client exists
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
 )
@@ -99,6 +98,13 @@ def check_ceiling(text: str) -> Optional[str]:
             return category
     return None
 
+def juniper_text(result: dict) -> str:
+    """
+    Join Juniper's message and suggestions into one string.
+    """
+    return (result.get("message", "") + " " + result.get("suggestion", "")).strip()
+
+
 # PYDANTIC MODELS
 # ----------------
 # Expense Models
@@ -120,20 +126,31 @@ class ExpenseCreate(BaseModel):
 
 class Expense(ExpenseCreate):
     """
-    Stored full expense
-    Includes server-generated fields returned to Flutter
+    Stored full expense.
+    Includes server-generated fields returned to Flutter.
     """
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     posted_at: datetime
     juniper_message: Optional[str] = None
 
-    # allows building from SQLAlchemy model
-    class Config:
-        from_attributes = True
+# Edit expenses
+class ExpenseUpdate(BaseModel):
+    """
+    What Flutter sends when editing an expense.
+    """
+    merchant: Optional[str] = None
+    category: Optional[str] = None
+    amount: Optional[float] = None
+    is_essential: Optional[int] = None
+    is_subscription: Optional[int] = None
+    mood_tag: Optional[str] = None
+    note: Optional[str] = None
 
 class ExpenseEntry(BaseModel):
     """
-    Prediction engine input
+    Prediction engine input.
     Kept for backwards compat.
     """
     amount: float
@@ -145,8 +162,8 @@ class ExpenseEntry(BaseModel):
 
 class ExpenseIn(BaseModel):
     """
-    Encouragement engine input
-    Kept for backwards compat
+    Encouragement engine input.
+    Kept for backwards compat.
     """
     category: str
     amount: float
@@ -155,6 +172,7 @@ class ExpenseIn(BaseModel):
     entry_time: Optional[str] = None
     mood_score: Optional[float] = None
     goal_contribution: Optional[float] = None
+
 
 # Journal Models
 class JournalEntryCreate(BaseModel):
@@ -169,6 +187,8 @@ class JournalEntryResponse(BaseModel):
     """
     Full journal entry returned to Flutter.
     """
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     user_id: str
     created_at: datetime
@@ -178,8 +198,6 @@ class JournalEntryResponse(BaseModel):
     juniper_response: Optional[str] = None
     ceiling_triggered: Optional[str] = None
 
-    class Config:
-        from_attributes = True
 
 # Savings Goal Models
 class GoalCreate(BaseModel):
@@ -199,8 +217,10 @@ class GoalUpdate(BaseModel):
 
 class GoalResponse(BaseModel):
     """
-    Full goal returned to Flutter
+    Full goal returned to Flutter.
     """
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     user_id: str
     created_at: datetime
@@ -210,11 +230,10 @@ class GoalResponse(BaseModel):
     icon: Optional[str] = None
     is_primary: int
 
-    class Config:
-        from_attributes = True 
 
 # CRUD ENDPOINTS
 # ----------------
+
 # EXPENSES
 # Add expenses
 @app.post("/expenses", response_model=Expense)
@@ -229,15 +248,12 @@ def create_expense(
     Returns Juniper's response alongside the saved record.
     """
     # Get Juniper's take on this expense
-    juniper_result = engine_juniper.suggest(expense.model_dump())
-    juniper_message = (
-        juniper_result.get("message", "") + " " +
-        juniper_result.get("suggestion", "")
-    ).strip()
+    juniper_message = juniper_text(engine_juniper.suggest(expense.model_dump()))
 
     # Build the database record
     record = ExpenseRecord(
         id=str(uuid.uuid4()),
+        user_id=user_id,
         posted_at=datetime.now(timezone.utc),
         juniper_message=juniper_message,
         **expense.model_dump(),
@@ -265,46 +281,34 @@ def list_expenses(
         .all()
     )
 
-# Delete expenses
-@app.delete("/expenses/{expense_id}")
-def delete_expense(
-    expense_id: str,
+# Expenses summary
+@app.get("/expenses/summary")
+def expenses_summary(
     user_id: str = Depends(verify_token),
     db: Session = Depends(get_db),
 ):
     """
-    Delete an expense by ID.
-    Only the owning user can delete record.
+    Returns total spent this month for the current user.
     """
-    record = (
-        db.query(ExpenseRecord)
-        .filter(
-            ExpenseRecord.id == expense_id,
-            ExpenseRecord.user_id == user_id,
-        )
-        .first()
-    )
+    # Get first day of current month as a string for comparison
+    now = datetime.now(timezone.utc)
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
-    if not record:
-        raise HTTPException(status_code=404, detail="Expense not found.")
+    total = (
+        db.query(func.sum(ExpenseRecord.amount))
+        .filter(
+            ExpenseRecord.user_id == user_id,
+            ExpenseRecord.posted_at >= month_start,
+        )
+        .scalar() or 0.0
+    )
     
-    db.delete(record)
-    db.commit()
-    return {"deleted": expense_id}
+    return {
+        "total_spent": round(float(total), 2),
+        "month": now.strftime("%B %Y"),
+    }
 
 # Edit expenses
-class ExpenseUpdate(BaseModel):
-    """
-    What Flutter sends when editing an expense.
-    """
-    merchant: Optional[str] = None
-    category: Optional[str] = None
-    amount: Optional[float] = None
-    is_essential: Optional[int] = None
-    is_subscription: Optional[int] = None
-    mood_tag: Optional[str] = None
-    note: Optional[str] = None
-
 @app.patch("/expenses/{expense_id}", response_model=Expense)
 def update_expense(
     expense_id: str,
@@ -336,32 +340,33 @@ def update_expense(
     db.refresh(record)
     return record
 
-# Expenses summary
-@app.get("/expenses/summary")
-def expenses_summary(
+# Delete expenses
+@app.delete("/expenses/{expense_id}")
+def delete_expense(
+    expense_id: str,
     user_id: str = Depends(verify_token),
     db: Session = Depends(get_db),
 ):
     """
-    Returns total spent this month for the current user.
+    Delete an expense by ID.
+    Only the owning user can delete record.
     """
-    from sqlalchemy import func
-
-    # Get first day of current month as a string for comparison
-    now = datetime.now(timezone.utc)
-    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    total = db.query(func.sum(ExpenseRecord.amount))\
+    record = (
+        db.query(ExpenseRecord)
         .filter(
+            ExpenseRecord.id == expense_id,
             ExpenseRecord.user_id == user_id,
-            ExpenseRecord.posted_at >= month_start,
-        )\
-        .scalar() or 0.0
+        )
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Expense not found.")
     
-    return {
-        "total_spent": round(float(total), 2),
-        "month": now.strftime("%B %Y"),
-    }
+    db.delete(record)
+    db.commit()
+    return {"deleted": expense_id}
+
 
 # JOURNAL
 # Add journal entries
@@ -397,19 +402,19 @@ def create_journal_entry(
 
         # If linked to an expense, use its category for better context
         if entry.expense_id:
-            expense = db.query(ExpenseRecord).filter(
-                ExpenseRecord.id == entry.expense_id,
-                ExpenseRecord.user_id == user_id,
-            ).first()
+            expense = (
+                db.query(ExpenseRecord)
+                .filter(
+                    ExpenseRecord.id == entry.expense_id,
+                    ExpenseRecord.user_id == user_id,
+                )
+                .first()
+            )
             if expense:
                 context["category"] = expense.category
-                context["amount"] = float(getattr(expense, 'amount', 0))
+                context["amount"] = float(getattr(expense, "amount", 0) or 0)
         
-        result = engine_juniper.suggest(context)
-        juniper_response = (
-            result.get("message", "") + " " +
-            result.get("suggestion", "")
-        ).strip()
+        juniper_response = juniper_text(engine_juniper.suggest(context))
     
     record = JournalEntry(
         id=str(uuid.uuid4()),
@@ -470,6 +475,7 @@ def delete_journal_entry(
     db.delete(record)
     db.commit()
     return {"deleted": entry_id}
+
 
 # SAVINGS GOALS
 # Create goals
@@ -558,12 +564,7 @@ def set_primary_goal(
     Clears primary status from all othre goals first so only
     one can be primary at a time.
     """
-    # Clear primary from all user's goals
-    db.query(SavingsGoal).filter(
-        SavingsGoal.user_id == user_id,
-    ).update({"is_primary": 0})
-
-    # Set one selected goal as primary
+    # Confirm goal exists
     record = (
         db.query(SavingsGoal)
         .filter(
@@ -574,12 +575,13 @@ def set_primary_goal(
     )
 
     if not record:
-        db.rollback()
         raise HTTPException(status_code=404, detail="Goal not found.")
 
+    db.query(SavingsGoal).filter(SavingsGoal.user_id == user_id).update(
+        {"is_primary": 0}
+    )
     setattr(record, 'is_primary', 1)
     db.commit()
-    db.refresh(record)
     return {"primary": goal_id}
 
 # Delete goal
@@ -608,6 +610,7 @@ def delete_goal(
     db.commit()
     return {"deleted": goal_id}
 
+
 # AFFIRMATIONS
 # Dynamic affirmations from encouragement engine
 @app.get("/affirmation")
@@ -615,22 +618,25 @@ def get_affirmation(user_id: str = Depends(verify_token)):
     """
     Return a random affirmation from the encouragement engine
     """
-    affirmation = engine_juniper._affirmation_fallback()
-    return {"affirmation": affirmation}
+    return {"affirmation": engine_juniper._affirmation_fallback()}
+
 
 # AI ENDPOINTS
 # -------------
+
 # Spending predictor model
+# Plain `def` so the CPU-bound prediction runs in the threadpool
+# instead of blocking the event loop
 @app.post("/predict")
-async def predict(
+def predict(
     entry: ExpenseEntry, 
     user_id: str = Depends(verify_token),
 ):
     """
     Run the spending prediction model on an expense entry.
     """
-    prediction = predictor.predict(entry.model_dump())
-    return {"prediction": prediction}
+    return {"prediction": predictor.predict(entry.model_dump())}
+
 
 # Encouragement model
 @app.post("/encourage")
@@ -641,8 +647,7 @@ def encourage(
     """
     Return encouragement and tips for a single expense row.
     """
-    result = engine_juniper.suggest(expense.model_dump())
-    return result
+    return engine_juniper.suggest(expense.model_dump())
 
 if __name__ == "__main__":
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
