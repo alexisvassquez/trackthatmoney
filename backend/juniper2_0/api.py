@@ -308,6 +308,48 @@ def expenses_summary(
         "month": now.strftime("%B %Y"),
     }
 
+# Analytics
+from datetime import timedelta
+
+@app.get("/analytics")
+def analytics(
+    days: int = 30,
+    user_id: str = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
+    """
+    Aggregated spending data for the analytics tab.
+    Covers the last 'days' days (default 30).
+    """
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    base = db.query(ExpenseRecord).filter(
+        ExpenseRecord.user_id == user_id,
+        ExpenseRecord.posted_at >= since,
+    )
+
+    def grouped(column):
+        rows = (
+            base.with_entities(column, func.sum(ExpenseRecord.amount), func.count())
+            .group_by(column)
+            .all()
+        )
+        return [
+            {"label": label or "untagged", "total": round(float(total), 2), "count": count}
+            for label, total, count in rows
+        ]
+
+    total = base.with_entities(func.sum(ExpenseRecord.amount)).scalar() or 0
+
+    return {
+        "days": days,
+        "total_spent": round(float(total), 2),
+        "by_category": grouped(ExpenseRecord.category),
+        "by_mood": grouped(ExpenseRecord.mood_tag),
+        "by_day_of_week": grouped(ExpenseRecord.entry_day_of_week),
+        "by_time_of_day": grouped(ExpenseRecord.entry_time),
+        "essential_split": grouped(ExpenseRecord.is_essential),
+    }
+
 # Edit expenses
 @app.patch("/expenses/{expense_id}", response_model=Expense)
 def update_expense(
