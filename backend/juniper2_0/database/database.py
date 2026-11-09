@@ -11,15 +11,14 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 load_dotenv()
 
 # Connect to Postgres
-# Migrating from SQLite
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ttm.db")
+DATABASE_URL = os.environ["DATABASEURL"]
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
 elif DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
-connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+connect_args = {}
 
 # Requests can be handled across multiple threads
 engine = create_engine(
