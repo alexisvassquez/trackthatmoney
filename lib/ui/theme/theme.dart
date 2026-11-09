@@ -4,13 +4,14 @@ import 'spacing.dart';
 
 /// Track That Money
 /// lib/ui/theme/theme.dart
-/// App theme, fed data from branding palette
+/// Global app theme, fed data from branding palette
 
 ThemeData buildAppTheme() {
   final scheme = AppColors.lightScheme;
 
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Nunito',
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.cream,
 
