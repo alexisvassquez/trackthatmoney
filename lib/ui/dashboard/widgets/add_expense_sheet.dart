@@ -25,6 +25,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
   String? _moodTag;
   bool _isEssential = false;
   bool _isSubscription = false;
+  bool _isPlanned = false;
   bool _isLoading = false;
   String? _juniperMessage;
   // shown inside the sheet when a save fails
@@ -44,7 +45,6 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
   ];
 
   static const _moods = [
-    'planned',
     'joy',
     'tired',
     'stressed',
@@ -80,6 +80,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
         amount: amount,
         isEssential: _isEssential ? 1 : 0,
         isSubscription: _isSubscription ? 1 : 0,
+        isPlanned: _isPlanned ? 1 : 0,
         moodTag: _moodTag,
       );
 
@@ -96,12 +97,10 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
     } catch (e) {
       debugPrint('Add expense failed: $e');
       if (mounted) {
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Couldn't save that one. Want to try again?"),
-          ),
-        );
+        setState(() {
+          _isLoading = false;
+          _error = "Couldn't save that one. Want to try again?";
+        });
       }
     }
   }
@@ -276,6 +275,23 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                     const SizedBox(width: 8),
                     Text(
                       "Recurring payment",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Planned toggle
+                Row(
+                  children: [
+                    Switch(
+                      value: _isPlanned,
+                      onChanged: (v) => setState(() => _isPlanned = v),
+                      activeThumbColor: AppColors.sage,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Planned ahead",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

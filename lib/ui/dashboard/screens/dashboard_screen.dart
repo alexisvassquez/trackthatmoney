@@ -323,6 +323,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     (e['is_essential'] as int? ?? 0) == 1,
                                 isSubscription:
                                     (e['is_subscription'] as int? ?? 0) == 1,
+                                isPlanned: (e['is_planned'] as int? ?? 0) == 1,
                                 note: e['note'] as String?,
                                 juniperMessage: e['juniper_message'] as String?,
                               ),
@@ -531,6 +532,7 @@ class _ExpenseRow {
   final String? moodTag;
   final bool isEssential;
   final bool isSubscription;
+  final bool isPlanned;
   final String? note;
   final String? juniperMessage;
 
@@ -542,6 +544,7 @@ class _ExpenseRow {
     this.moodTag,
     this.isEssential = false,
     this.isSubscription = false,
+    this.isPlanned = false,
     this.note,
     this.juniperMessage,
   });

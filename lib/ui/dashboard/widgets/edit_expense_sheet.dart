@@ -25,6 +25,7 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
   late String? _moodTag;
   late bool _isEssential;
   late bool _isSubscription;
+  late bool _isPlanned;
   bool _isLoading = false;
 
   static const _categories = [
@@ -41,7 +42,6 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
   ];
 
   static const _moods = [
-    'planned',
     'joy',
     'tired',
     'stressed',
@@ -68,6 +68,7 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
     _moodTag = widget.expense['mood_tag'] as String?;
     _isEssential = (widget.expense['is_essential'] as int? ?? 0) == 1;
     _isSubscription = (widget.expense['is_subscription'] as int? ?? 0) == 1;
+    _isPlanned = (widget.expense['is_planned'] as int? ?? 0) == 1;
   }
 
   @override
@@ -98,6 +99,7 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
         amount: amount,
         isEssential: _isEssential ? 1 : 0,
         isSubscription: _isSubscription ? 1 : 0,
+        isPlanned: _isPlanned ? 1 : 0,
         moodTag: _moodTag,
         note: note.isEmpty ? null : note,
       );
@@ -289,6 +291,23 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
                 ], // Children
               ),
               const SizedBox(height: AppSpacing.lg),
+
+              // Planned toggle
+              Row(
+                children: [
+                  Switch(
+                    value: _isPlanned,
+                    onChanged: (v) => setState(() => _isPlanned = v),
+                    activeThumbColor: AppColors.sage,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Planned ahead',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
 
               // Save button
               SizedBox(
