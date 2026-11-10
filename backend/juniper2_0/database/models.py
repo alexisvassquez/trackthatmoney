@@ -43,7 +43,7 @@ class ExpenseRecord(Base):
     # 1 = is recurring payment, 0 = false
     is_subscription = Column(Integer, default=0)
     # 1 = planned ahead, 0 = spontaneous
-    is_planned = Column(Integer, default=0)
+    is_planned = Column(Integer, nullable=False, server_default="0", default=0)
 
     # 0.0-1.0 stress score
     mood_score = Column(Float, nullable=True)
