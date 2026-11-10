@@ -24,4 +24,4 @@ requests
 sqlalchemy
 aiosqlite
 psycopg[binary]>=3.2
-alembic
+alembic>=1.13
