@@ -3,9 +3,9 @@
 # FastAPI endpoints, mirrors models.py
 
 import os
-from typing import Optional
+from typing import Optional, Literal
 from decimal import Decimal
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import uuid
 
 from dotenv import load_dotenv
@@ -308,46 +308,98 @@ def expenses_summary(
         "month": now.strftime("%B %Y"),
     }
 
-# Analytics
-from datetime import timedelta
-
+# ANALYTICS
 @app.get("/analytics")
 def analytics(
-    days: int = 30,
+    period: Literal["week", "month"] = "week",
     user_id: str = Depends(verify_token),
     db: Session = Depends(get_db),
 ):
     """
-    Aggregated spending data for the analytics tab.
-    Covers the last 'days' days (default 30).
+    Aggregated spending patterns for the analytics tab.
+    `period` is a rolling window: week = last 7 days, month = last 30.
+    Pre-aggregated for Flutter.
     """
-    since = datetime.now(timezone.utc) - timedelta(days=days)
+    now = datetime.now(timezone.utc)
+    since = now - timedelta(days=7 if period == "week" else 30)
+
     base = db.query(ExpenseRecord).filter(
         ExpenseRecord.user_id == user_id,
         ExpenseRecord.posted_at >= since,
     )
 
-    def grouped(column):
-        rows = (
-            base.with_entities(column, func.sum(ExpenseRecord.amount), func.count())
-            .group_by(column)
-            .all()
-        )
+    def grouped(column, skip_null: bool = False):
+        q = base.with_entities(column, func.sum(ExpenseRecord.amount), func.count())
+        if skip_null:
+            q = q.filter(column.isnot(None))
+        rows = q.group_by(column).order_by(func.sum(ExpenseRecord.amount).desc()).all()
         return [
-            {"label": label or "untagged", "total": round(float(total), 2), "count": count}
+            {
+                "label": label if label is not None else "untagged", 
+                "total": round(float(total), 2), 
+                "count": count,
+            }
             for label, total, count in rows
         ]
 
-    total = base.with_entities(func.sum(ExpenseRecord.amount)).scalar() or 0
+    total, count = base.with_entities(
+        func.sum(ExpenseRecord.amount), func.count()
+    ).one()
+
+    # Heatmap: (day, time of day) pairs
+    heat_rows = (
+        base.with_entities(
+            ExpenseRecord.entry_day_of_week,
+            ExpenseRecord.entry_time,
+            func.sum(ExpenseRecord.amount),
+        )
+        .filter(
+            ExpenseRecord.entry_day_of_week.isnot(None),
+            ExpenseRecord.entry_time.isnot(None),
+        )
+        .group_by(ExpenseRecord.entry_day_of_week, ExpenseRecord.entry_time)
+        .all()
+    )
+
+    # Week by week: last 4 rolling weeks, oldest first
+    recent = (
+        db.query(ExpenseRecord.posted_at, ExpenseRecord.amount)
+        .filter(
+            ExpenseRecord.user_id == user_id,
+            ExpenseRecord.posted_at >= now - timedelta(days=28),
+        )
+        .all()
+    )
+    weekly = [0.0] * 4
+    for posted_at, amount in recent:
+        weeks_ago = min((now - posted_at).days // 7, 3)
+        weekly[3 - weeks_ago] += float(amount)
+
+    essentials = {"essential": 0.0, "flexible": 0.0}
+    for row in grouped(ExpenseRecord.is_essential):
+        key = "essential" if row["label"] == 1 else "flexible"
+        essentials[key] += row["total"]
 
     return {
-        "days": days,
+        "period": period,
         "total_spent": round(float(total), 2),
+        "expense_count": count,
+        # Flutter shows empty state below this
+        "has_enough_data": count >= 3,
         "by_category": grouped(ExpenseRecord.category),
-        "by_mood": grouped(ExpenseRecord.mood_tag),
-        "by_day_of_week": grouped(ExpenseRecord.entry_day_of_week),
-        "by_time_of_day": grouped(ExpenseRecord.entry_time),
-        "essential_split": grouped(ExpenseRecord.is_essential),
+        "by_mood": grouped(ExpenseRecord.mood_tag, skip_null=True),
+        "heatmap": [
+            {"day": day, "time": time, "total": round(float(t or 0), 2)}
+            for day, time, t in heat_rows
+        ],
+        "weekly_totals": [
+            {
+                "week_start": (now - timedelta(days=7 * (3 - i))).date().isoformat(),
+                "total": round(v, 2),
+            }
+            for i, v in enumerate(weekly)
+        ],
+        "essential_split": {k: round(v, 2) for k, v in essentials.items()},
     }
 
 # Edit expenses

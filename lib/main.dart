@@ -17,7 +17,7 @@ void main() async {
   runApp(
     ProviderScope(
       retry: (retryCount, error) => null,
-      child: TrackThatMoneyApp()
+      child: TrackThatMoneyApp(),
     ),
   );
 }
