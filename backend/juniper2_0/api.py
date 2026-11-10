@@ -117,6 +117,7 @@ class ExpenseCreate(BaseModel):
     amount: float
     is_essential: int = 0
     is_subscription: int = 0
+    is_planned: int = 0
     mood_score: Optional[float] = None
     mood_tag: Optional[str] = None
     goal_contribution: Optional[float] = 0.0
@@ -145,6 +146,7 @@ class ExpenseUpdate(BaseModel):
     amount: Optional[float] = None
     is_essential: Optional[int] = None
     is_subscription: Optional[int] = None
+    is_planned: Optional[int] = None
     mood_tag: Optional[str] = None
     note: Optional[str] = None
 
