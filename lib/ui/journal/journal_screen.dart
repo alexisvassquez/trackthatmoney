@@ -122,20 +122,22 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         const SizedBox(width: 6),
                         Text(
                           'Your space',
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.sageDark,
-                            letterSpacing: 0.08,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(
+                                color: AppColors.sageDark,
+                                letterSpacing: 0.08,
+                              ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Text(
                       'Journal',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.deepMoss,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.deepMoss,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -166,118 +168,120 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 
               const SizedBox(height: 14),
 
-            // Mood filter chips
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  _FilterChip(
-                    label: 'All',
-                    selected: _moodFilter == null,
-                    onTap: () => setState(() => _moodFilter = null),
-                  ),
-                  const SizedBox(width: 6),
-                  ...[
-                    'anxious',
-                    'hopeful',
-                    'stressed',
-                    'calm',
-                    'proud',
-                    'tired',
-                    'grateful',
-                    'excited',
-                    'overwhelmed',
-                    'frustrated',
-                    'celebratory',
-                  ].map(
-                    (mood) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      child: _FilterChip(
-                        label: mood,
-                        selected: _moodFilter == mood,
-                        onTap: () => setState(
-                          () => _moodFilter = _moodFilter == mood ? null : mood,
+              // Mood filter chips
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    _FilterChip(
+                      label: 'All',
+                      selected: _moodFilter == null,
+                      onTap: () => setState(() => _moodFilter = null),
+                    ),
+                    const SizedBox(width: 6),
+                    ...[
+                      'anxious',
+                      'hopeful',
+                      'stressed',
+                      'calm',
+                      'proud',
+                      'tired',
+                      'grateful',
+                      'excited',
+                      'overwhelmed',
+                      'frustrated',
+                      'celebratory',
+                    ].map(
+                      (mood) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        child: _FilterChip(
+                          label: mood,
+                          selected: _moodFilter == mood,
+                          onTap: () => setState(
+                            () =>
+                                _moodFilter = _moodFilter == mood ? null : mood,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Divider
-            Divider(color: AppColors.warmLinen, height: 1),
-
-            const SizedBox(height: 16),
-
-            // Past entries label
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Past entries',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AppColors.deepMoss,
-                  letterSpacing: 0.06,
+                  ],
                 ),
               ),
-            ),
 
-            const SizedBox(height: 12),
+              // Divider
+              Divider(color: AppColors.warmLinen, height: 1),
 
-            // Entries list
-            Expanded(
-              child: ref
-                  .watch(journalProvider)
-                  .when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (e, _) => Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          "Couldn't load journal - is the backend running?",
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AppColors.inkMuted),
-                          textAlign: TextAlign.center,
+              const SizedBox(height: 16),
+
+              // Past entries label
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Past entries',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: AppColors.deepMoss,
+                    letterSpacing: 0.06,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Entries list
+              Expanded(
+                child: ref
+                    .watch(journalProvider)
+                    .when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (e, _) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            "Couldn't load journal - is the backend running?",
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: AppColors.inkMuted),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    ),
-                    data: (entries) {
-                      // apply mood filter
-                      final filtered = _moodFilter == null
-                          ? entries
-                          : entries
-                                .where((e) => e['mood_tag'] == _moodFilter)
-                                .toList();
+                      data: (entries) {
+                        // apply mood filter
+                        final filtered = _moodFilter == null
+                            ? entries
+                            : entries
+                                  .where((e) => e['mood_tag'] == _moodFilter)
+                                  .toList();
 
-                      if (filtered.isEmpty) {
-                        return const _EmptyJournal();
-                      }
-                      return ListView.separated(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 96),
-                        itemCount: filtered.length,
-                        separatorBuilder: (_, _) => const SizedBox(height: 10),
-                        itemBuilder: (context, i) => _JournalEntryTile(
-                          entry: filtered[i],
-                          onDelete: () async {
-                            await ExpenseApi.deleteJournalEntry(
-                              filtered[i]['id'] as String,
-                            );
-                            ref.invalidate(journalProvider);
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-             ],
-            ),
+                        if (filtered.isEmpty) {
+                          return const _EmptyJournal();
+                        }
+                        return ListView.separated(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 96),
+                          itemCount: filtered.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 10),
+                          itemBuilder: (context, i) => _JournalEntryTile(
+                            entry: filtered[i],
+                            onDelete: () async {
+                              await ExpenseApi.deleteJournalEntry(
+                                filtered[i]['id'] as String,
+                              );
+                              ref.invalidate(journalProvider);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -439,158 +443,162 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
             ],
           ),
 
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (moodTag != null)
-                  Container(
-                    width: 3,
-                    margin: const EdgeInsets.only(right: 12),
+          child: Stack(
+            children: [
+              // Content sets the tile's height
+              Padding(
+                padding: EdgeInsets.only(left: moodTag != null ? 15 : 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Top row (date / mood / chevron)
+                    Row(
+                      children: [
+                        Text(
+                          _formatDate(createdAt),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppColors.inkMuted),
+                        ),
+                        const SizedBox(width: 8),
+                        if (moodTag != null)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: tint,
+                              borderRadius: BorderRadius.circular(99),
+                              border: Border.all(
+                                color: accent.withValues(alpha: .4),
+                              ),
+                            ),
+                            child: Text(
+                              moodTag,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelSmall?.copyWith(color: accent),
+                            ),
+                          ),
+                        const Spacer(),
+                        AnimatedRotation(
+                          turns: _expanded ? 0.5 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                            color: AppColors.inkMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Content preview: 2 lines collapsed, full when expanded
+                    Text(
+                      content,
+                      maxLines: _expanded ? null : 2,
+                      overflow: _expanded
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.deepMoss,
+                        height: 1.5,
+                      ),
+                    ),
+
+                    // Expanded section
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 200),
+                      crossFadeState: _expanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      firstChild: const SizedBox(width: double.infinity),
+                      secondChild: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 12),
+                          Divider(color: AppColors.warmLinen, height: 1),
+                          const SizedBox(height: 12),
+
+                          // Juniper response
+                          if (juniperResponse != null)
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: ceilingTriggered != null
+                                    ? AppColors.peachLight
+                                    : tint,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: ceilingTriggered != null
+                                      ? AppColors.peach.withValues(alpha: .4)
+                                      : accent.withValues(alpha: .3),
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    ceilingTriggered != null
+                                        ? Icons.favorite_outline
+                                        : Icons.eco_rounded,
+                                    size: 14,
+                                    color: AppColors.sageDark,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      juniperResponse,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: AppColors.deepMoss,
+                                            height: 1.5,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          // Resources redirect hint (todo)
+                          if (ceilingTriggered != null) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              'Check the Resources tab for more support.',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: AppColors.sageDark,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          ],
+                        ], // closes secondChild Column children
+                      ), // closes secondChild Column
+                    ), // closes AnimatedCrossFade
+                  ], // closes main Column children
+                ), // closes main Column
+              ), // closes Padding
+              // Mood accent bar stretches to match the content
+              if (moodTag != null)
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 3,
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: accent,
                       borderRadius: BorderRadius.circular(99),
                     ),
                   ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Top row (date / mood / chevron)
-                      Row(
-                        children: [
-                          Text(
-                            _formatDate(createdAt),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppColors.inkMuted),
-                          ),
-                          const SizedBox(width: 8),
-                          if (moodTag != null)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: tint,
-                                borderRadius: BorderRadius.circular(99),
-                                border: Border.all(
-                                  color: accent.withValues(alpha: .4),
-                                ),
-                              ),
-                              child: Text(
-                                moodTag,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.labelSmall?.copyWith(color: accent),
-                              ),
-                            ),
-                          const Spacer(),
-
-                          AnimatedRotation(
-                            turns: _expanded ? 0.5 : 0,
-                            duration: const Duration(milliseconds: 200),
-                            child: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 20,
-                              color: AppColors.inkMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Content preview
-                      Text(
-                        _expanded
-                            ? content
-                            : (content.length > 80
-                                  ? '${content.substring(0, 80)}...'
-                                  : content),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.deepMoss,
-                          height: 1.5,
-                        ),
-                      ),
-
-                      // Expanded section
-                      AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 200),
-                        crossFadeState: _expanded
-                            ? CrossFadeState.showSecond
-                            : CrossFadeState.showFirst,
-                        firstChild: const SizedBox.shrink(),
-                        secondChild: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 12),
-                            Divider(color: AppColors.warmLinen, height: 1),
-                            const SizedBox(height: 12),
-
-                            // Juniper response
-                            if (juniperResponse != null)
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: ceilingTriggered != null
-                                      ? AppColors.peachLight
-                                      : tint,
-                                  border: Border.all(
-                                    color: ceilingTriggered != null
-                                        ? AppColors.peach.withValues(alpha: .4)
-                                        : accent.withValues(alpha: .3),
-                                  ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      ceilingTriggered != null
-                                          ? Icons.favorite_outline
-                                          : Icons.eco_rounded,
-                                      size: 14,
-                                      color: AppColors.sageDark,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        juniperResponse,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: AppColors.deepMoss,
-                                              height: 1.5,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            // Resources redirect hint (todo)
-                            if (ceilingTriggered != null) ...[
-                              const SizedBox(height: 10),
-                              Text(
-                                'Check the Resources tab for more support.',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: AppColors.sageDark,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                            ],
-                          ], // closes secondChild Column children
-                        ), // closes secondChild Column
-                      ), // closes AnimatedCrossFade
-                    ], // closes main Column children
-                  ), // closes main Column
-                ), // closes Expanded
-              ], // closes Row children
-            ), // closes Row
-          ), // closes IntrinsicHeight
+                ),
+            ], // closes Stack children
+          ), // closes Stack
         ), // closes Container
       ), // closes GestureDetector
     ); // closes Dismissible
