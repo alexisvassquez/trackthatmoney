@@ -46,7 +46,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       backgroundColor: cs.surface,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.sage,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.cream,
         onPressed: _openAddExpense,
         child: const Icon(Icons.add),
       ),
@@ -284,7 +284,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             child: const Icon(
                               Icons.delete_outline,
-                              color: Colors.white,
+                              color: AppColors.cream,
                             ),
                           ),
                           onDismissed: (_) async {

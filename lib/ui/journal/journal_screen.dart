@@ -417,7 +417,7 @@ class _JournalEntryTileState extends State<_JournalEntryTile> {
           color: AppColors.amber,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Icon(Icons.delete_outline, color: Colors.white),
+        child: const Icon(Icons.delete_outline, color: AppColors.cream),
       ),
       onDismissed: (_) => widget.onDelete(),
       child: GestureDetector(

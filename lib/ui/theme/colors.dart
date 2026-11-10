@@ -7,24 +7,28 @@ import 'package:flutter/material.dart';
 /// No red for a fintech app is a design choice by the
 /// developer.
 /// Warm, non-punitive tones
+/// Richer palette (Nov 2026): deeper, more saturated core tones,
+/// forest-green text, softer off-white background.
 
 class AppColors {
   AppColors._(); // non-instantiable
 
   // ----- Core brand -----
-  static const sage = Color(0xFF7AAE82); // primary — growth, calm, safety
-  static const peach = Color(0xFFF2A98A); // warmth, self-kindness, reward
-  static const honeyGold = Color(0xFFD4A843); // achievement, celebration
-  static const seafoam = Color(0xFF7EB5A6); // reflection, calm, flow
+  static const sage = Color(0xFF5E9A6A); // primary — growth, calm, safety
+  static const peach = Color(0xFFE9946F); // warmth, self-kindness, reward
+  static const honeyGold = Color(0xFFC99A2E); // achievement, celebration
+  static const seafoam = Color(0xFF5A9E8E); // reflection, calm, flow
 
   // ----- Neutrals & backgrounds -----
-  static const cream = Color(0xFFFAF6F0); // app background
-  static const sand = Color(0xFFE8D9BC); // card surfaces
+  static const cream = Color(0xFFF6F0E6); // app background — soft off-white
+  static const sand = Color(0xFFE5D4B3); // card surfaces
   static const warmLinen = Color(0xFFE8DFC8); // borders, dividers
-  static const deepMoss = Color(0xFF2C3828); // primary text
+  static const deepMoss = Color(0xFF243B2B); // primary text — forest green
 
   // ----- Supporting tones -----
-  static const sageDark = Color(0xFF4E7A55); // pressed states, deep accents
+  static const sageDark = Color(
+    0xFF3D6A49,
+  ); // buttons, pressed states, deep accents
   static const sageLight = Color(
     0xFFB8D9BC,
   ); // light accents, success backgrounds
@@ -35,9 +39,7 @@ class AppColors {
   static const card = Color(0xFFEDE4CC); // piggybank progress tile
 
   // ----- Text -----
-  static const inkWarm = Color(
-    0xFF2C3828,
-  ); // same as deepMoss — alias for clarity
+  static const inkWarm = deepMoss; // alias for clarity
   static const inkMuted = Color(0xFF6B6560); // secondary text, hints
 
   // ----- Semantic tokens -----
@@ -52,6 +54,8 @@ class AppColors {
   static Color o(Color c, int a) => c.withAlpha(a);
 
   // ---- Mood accent colors ----
+  // TODO: richer pass + collision fixes with the shared mood list
+  // (tired = stressed, grateful = hopeful, overwhelmed = frustrated; tired uses caution amber)
   // Each mood has a light background tint & border/text color
   static const calmTint = Color(0xFFF0F8F2);
   static const calmAccent = Color(0xFF7AAE82); // sage
@@ -128,22 +132,22 @@ class AppColors {
         brightness: Brightness.light,
       ).copyWith(
         primary: sage,
-        onPrimary: Colors.white,
+        onPrimary: deepMoss,
         primaryContainer: sageMist,
 
         secondary: peach,
-        onSecondary: Colors.white,
+        onSecondary: deepMoss,
         secondaryContainer: peachLight,
 
         tertiary: honeyGold,
-        onTertiary: Colors.white,
+        onTertiary: deepMoss,
 
         surface: cream,
         onSurface: deepMoss,
         surfaceContainerHighest: sand,
 
         error: amber,
-        onError: Colors.white,
+        onError: deepMoss,
 
         outline: warmLinen,
         outlineVariant: warmLinen.withValues(alpha: .6),

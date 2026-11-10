@@ -315,7 +315,7 @@ class _AddExpenseSheetState extends ConsumerState<AddExpenseSheet> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: AppColors.cream,
                             ),
                           )
                         : const Text("Save expense"),

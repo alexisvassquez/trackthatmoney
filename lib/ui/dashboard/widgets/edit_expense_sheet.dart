@@ -320,7 +320,7 @@ class _EditExpenseSheetState extends ConsumerState<EditExpenseSheet> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppColors.cream,
                           ),
                         )
                       : const Text('Save changes'),

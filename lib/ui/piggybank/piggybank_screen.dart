@@ -652,7 +652,7 @@ class _PiggyBankScreenState extends ConsumerState<PiggyBankScreen>
                                       ),
                                       child: const Icon(
                                         Icons.delete_outline,
-                                        color: Colors.white,
+                                        color: AppColors.cream,
                                       ),
                                     ),
                                     onDismissed: (_) async {

@@ -124,8 +124,10 @@ ThemeData buildAppTheme() {
     // Elevated buttons
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.sage,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.sageDark,
+        foregroundColor: AppColors.cream,
+        disabledBackgroundColor: AppColors.sageLight,
+        disabledForegroundColor: AppColors.deepMoss.withValues(alpha: .6),
         elevation: 0,
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg, 
